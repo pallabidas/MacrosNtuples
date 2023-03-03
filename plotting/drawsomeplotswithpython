@@ -1,0 +1,227 @@
+
+
+filezmumu=allzmumu.root
+filezee=allzee.root
+filemujet=allmujet.root
+filegamjet=allphotonjet.root
+
+filezee_2018=allzee_2018.root
+
+
+alias makeeff='python3 /media/laurent/Datas/MyBackupDell/home/laurent/MacrosRoot/drawplots.py -t efficiency --saveplot True'
+alias makeprof='python3 /media/laurent/Datas/MyBackupDell/home/laurent/MacrosRoot/drawplots.py -t profilex_fromh2 --saveplot True'
+alias makeresol='python3 /media/laurent/Datas/MyBackupDell/home/laurent/MacrosRoot/drawplots.py -t resolvsx --saveplot True'
+
+
+#Zmumu
+ makeeff -i $filezmumu --den h_Qual12_plots_eta1p24to2p4 --num h_Qual12_plots_eta1p24to2p4_l1thrgeq10 h_Qual12_plots_eta1p24to2p4_l1thrgeq15 h_Qual12_plots_eta1p24to2p4_l1thrgeq20 h_Qual12_plots_eta1p24to2p4_l1thrgeq22 h_Qual12_plots_eta1p24to2p4_l1thrgeq25 --xtitle 'p_{T}^{#mu}(reco) (GeV)' --ytitle 'L1 Efficiency (Qual>=12)' --legend 'p_{T}^{L1}>10 GeV' 'p_{T}^{L1}>15 GeV' 'p_{T}^{L1}>20 GeV' 'p_{T}^{L1}>22 GeV' 'p_{T}^{L1}>25 GeV' --extralabel '#splitline{Z#rightarrow#mu#mu}{1.24<|#eta^{#mu}(reco)|<2.4}' --setlogx True --plotname L1Mu_TurnOnQual12_EMTF
+
+makeeff -i $filezmumu --den h_Qual12_plots_eta0p0to0p83 --num h_Qual12_plots_eta0p0to0p83_l1thrgeq10 h_Qual12_plots_eta0p0to0p83_l1thrgeq15 h_Qual12_plots_eta0p0to0p83_l1thrgeq20 h_Qual12_plots_eta0p0to0p83_l1thrgeq22 h_Qual12_plots_eta0p0to0p83_l1thrgeq25 --xtitle 'p_{T}^{#mu}(reco) (GeV)' --ytitle 'L1 Efficiency (Qual>=12)' --legend 'p_{T}^{L1}>10 GeV' 'p_{T}^{L1}>15 GeV' 'p_{T}^{L1}>20 GeV' 'p_{T}^{L1}>22 GeV' 'p_{T}^{L1}>25 GeV' --extralabel '#splitline{Z#rightarrow#mu#mu}{0<|#eta^{#mu}(reco)|<0.83}' --setlogx True --plotname L1Mu_TurnOnQual12_BMTF
+
+makeeff -i $filezmumu --den h_Qual12_plots_eta0p83to1p24 --num h_Qual12_plots_eta0p83to1p24_l1thrgeq10 h_Qual12_plots_eta0p83to1p24_l1thrgeq15 h_Qual12_plots_eta0p83to1p24_l1thrgeq20 h_Qual12_plots_eta0p83to1p24_l1thrgeq22 h_Qual12_plots_eta0p83to1p24_l1thrgeq25 --xtitle 'p_{T}^{#mu}(reco) (GeV)' --ytitle 'L1 Efficiency (Qual>=12)' --legend 'p_{T}^{L1}>10 GeV' 'p_{T}^{L1}>15 GeV' 'p_{T}^{L1}>20 GeV' 'p_{T}^{L1}>22 GeV' 'p_{T}^{L1}>25 GeV' --extralabel '#splitline{Z#rightarrow#mu#mu}{0.8<|#eta^{#mu}(reco)|<1.24}' --setlogx True --plotname L1Mu_TurnOnQual12_OMTF
+
+
+ makeeff -i $filezmumu --den h_Qual8_plots_eta1p24to2p4 --num h_Qual8_plots_eta1p24to2p4_l1thrgeq10 h_Qual8_plots_eta1p24to2p4_l1thrgeq15 h_Qual8_plots_eta1p24to2p4_l1thrgeq20 h_Qual8_plots_eta1p24to2p4_l1thrgeq22 h_Qual8_plots_eta1p24to2p4_l1thrgeq25 --xtitle 'p_{T}^{#mu}(reco) (GeV)' --ytitle 'L1 Efficiency (Qual>=8)' --legend 'p_{T}^{L1}>10 GeV' 'p_{T}^{L1}>15 GeV' 'p_{T}^{L1}>20 GeV' 'p_{T}^{L1}>22 GeV' 'p_{T}^{L1}>25 GeV' --extralabel '#splitline{Z#rightarrow#mu#mu}{1.24<|#eta^{#mu}(reco)|<2.4}' --setlogx True --plotname L1Mu_TurnOnQual8_EMTF
+
+makeeff -i $filezmumu --den h_Qual8_plots_eta0p0to0p83 --num h_Qual8_plots_eta0p0to0p83_l1thrgeq10 h_Qual8_plots_eta0p0to0p83_l1thrgeq15 h_Qual8_plots_eta0p0to0p83_l1thrgeq20 h_Qual8_plots_eta0p0to0p83_l1thrgeq22 h_Qual8_plots_eta0p0to0p83_l1thrgeq25 --xtitle 'p_{T}^{#mu}(reco) (GeV)' --ytitle 'L1 Efficiency (Qual>=8)' --legend 'p_{T}^{L1}>10 GeV' 'p_{T}^{L1}>15 GeV' 'p_{T}^{L1}>20 GeV' 'p_{T}^{L1}>22 GeV' 'p_{T}^{L1}>25 GeV' --extralabel '#splitline{Z#rightarrow#mu#mu}{0<|#eta^{#mu}(reco)|<0.83}' --setlogx True --plotname L1Mu_TurnOnQual8_BMTF
+
+makeeff -i $filezmumu --den h_Qual8_plots_eta0p83to1p24 --num h_Qual8_plots_eta0p83to1p24_l1thrgeq10 h_Qual8_plots_eta0p83to1p24_l1thrgeq15 h_Qual8_plots_eta0p83to1p24_l1thrgeq20 h_Qual8_plots_eta0p83to1p24_l1thrgeq22 h_Qual8_plots_eta0p83to1p24_l1thrgeq25 --xtitle 'p_{T}^{#mu}(reco) (GeV)' --ytitle 'L1 Efficiency (Qual>=8)' --legend 'p_{T}^{L1}>10 GeV' 'p_{T}^{L1}>15 GeV' 'p_{T}^{L1}>20 GeV' 'p_{T}^{L1}>22 GeV' 'p_{T}^{L1}>25 GeV' --extralabel '#splitline{Z#rightarrow#mu#mu}{0.83<|#eta^{#mu}(reco)|<1.24}' --setlogx True --plotname L1Mu_TurnOnQual8_OMTF
+
+
+
+ makeeff -i $filezmumu --den h_AllQual_plots_eta1p24to2p4 --num h_AllQual_plots_eta1p24to2p4_l1thrgeq10 h_AllQual_plots_eta1p24to2p4_l1thrgeq15 h_AllQual_plots_eta1p24to2p4_l1thrgeq20 h_AllQual_plots_eta1p24to2p4_l1thrgeq22 h_AllQual_plots_eta1p24to2p4_l1thrgeq25 --xtitle 'p_{T}^{#mu}(reco) (GeV)' --ytitle 'L1 Efficiency (All qual.)' --legend 'p_{T}^{L1}>10 GeV' 'p_{T}^{L1}>15 GeV' 'p_{T}^{L1}>20 GeV' 'p_{T}^{L1}>22 GeV' 'p_{T}^{L1}>25 GeV' --extralabel '#splitline{Z#rightarrow#mu#mu}{1.24<|#eta^{#mu}(reco)|<2.4}' --setlogx True --plotname L1Mu_TurnOnAllQual_EMTF
+
+makeeff -i $filezmumu --den h_AllQual_plots_eta0p0to0p83 --num h_AllQual_plots_eta0p0to0p83_l1thrgeq10 h_AllQual_plots_eta0p0to0p83_l1thrgeq15 h_AllQual_plots_eta0p0to0p83_l1thrgeq20 h_AllQual_plots_eta0p0to0p83_l1thrgeq22 h_AllQual_plots_eta0p0to0p83_l1thrgeq25 --xtitle 'p_{T}^{#mu}(reco) (GeV)' --ytitle 'L1 Efficiency (All qual.)' --legend 'p_{T}^{L1}>10 GeV' 'p_{T}^{L1}>15 GeV' 'p_{T}^{L1}>20 GeV' 'p_{T}^{L1}>22 GeV' 'p_{T}^{L1}>25 GeV' --extralabel '#splitline{Z#rightarrow#mu#mu}{0<|#eta^{#mu}(reco)|<0.83}' --setlogx True --plotname L1Mu_TurnOnAllQual_BMTF
+
+makeeff -i $filezmumu --den h_AllQual_plots_eta0p83to1p24 --num h_AllQual_plots_eta0p83to1p24_l1thrgeq10 h_AllQual_plots_eta0p83to1p24_l1thrgeq15 h_AllQual_plots_eta0p83to1p24_l1thrgeq20 h_AllQual_plots_eta0p83to1p24_l1thrgeq22 h_AllQual_plots_eta0p83to1p24_l1thrgeq25 --xtitle 'p_{T}^{#mu}(reco) (GeV)' --ytitle 'L1 Efficiency (All qual.)' --legend 'p_{T}^{L1}>10 GeV' 'p_{T}^{L1}>15 GeV' 'p_{T}^{L1}>20 GeV' 'p_{T}^{L1}>22 GeV' 'p_{T}^{L1}>25 GeV' --extralabel '#splitline{Z#rightarrow#mu#mu}{0.83<|#eta^{#mu}(reco)|<1.24}' --setlogx True --plotname L1Mu_TurnOnAllQual_OMTF
+
+
+makeeff -i $filezmumu --den h_PlateauEffVsRunNb_Denominator_AllQual_plots_eta0p0to0p83 --num h_PlateauEffVsRunNb_Numerator_AllQual_plots_eta0p0to0p83 h_PlateauEffVsRunNb_Numerator_Qual8_plots_eta0p0to0p83 h_PlateauEffVsRunNb_Numerator_Qual12_plots_eta0p0to0p83  --xtitle 'run number' --ytitle 'L1Mu22 efficiency (p_{T}^{#mu}(reco)>27 GeV)' --legend 'All qual.' 'Qual.>=8' 'Qual.>=12' --extralabel '#splitline{Z#rightarrow#mu#mu}{0<|#eta^{#mu}(reco)|<0.83}' --plotname L1Mu_EffvsRunNb_BMTF
+
+makeeff -i $filezmumu --den h_PlateauEffVsRunNb_Denominator_AllQual_plots_eta0p83to1p24 --num h_PlateauEffVsRunNb_Numerator_AllQual_plots_eta0p83to1p24 h_PlateauEffVsRunNb_Numerator_Qual8_plots_eta0p83to1p24 h_PlateauEffVsRunNb_Numerator_Qual12_plots_eta0p83to1p24  --xtitle 'run number' --ytitle 'L1Mu22 efficiency (p_{T}^{#mu}(reco)>27 GeV)' --legend 'All qual.' 'Qual.>=8' 'Qual.>=12' --extralabel '#splitline{Z#rightarrow#mu#mu}{0.83<|#eta^{#mu}(reco)|<1.24}' --plotname L1Mu_EffvsRunNb_OMTF
+
+makeeff -i $filezmumu --den h_PlateauEffVsRunNb_Denominator_AllQual_plots_eta1p24to2p4 --num h_PlateauEffVsRunNb_Numerator_AllQual_plots_eta1p24to2p4 h_PlateauEffVsRunNb_Numerator_Qual8_plots_eta1p24to2p4 h_PlateauEffVsRunNb_Numerator_Qual12_plots_eta1p24to2p4  --xtitle 'run number' --ytitle 'L1Mu22 efficiency (p_{T}^{#mu}(reco)>27 GeV)' --legend 'All qual.' 'Qual.>=8' 'Qual.>=12' --extralabel '#splitline{Z#rightarrow#mu#mu}{1.24<|#eta^{#mu}(reco)|<2.4}' --plotname L1Mu_EffvsRunNb_EMTF
+
+makeresol -i $filezmumu --h2d h_ResponseVsRunNb_AllQual_plots_eta0p0to0p83  h_ResponseVsRunNb_AllQual_plots_eta0p83to1p24 h_ResponseVsRunNb_AllQual_plots_eta1p24to2p4 --xtitle 'run number' --ytitle '<p_{T}^{#mu}(L1)/p_{T}^{#mu}(reco)>' --extralabel '#splitline{Z#rightarrow#mu#mu}{All qual.}' --legend 'BMTF' 'OMTF' 'EMTF'  --axisranges 355381 357901 0 2 --plotname L1Mu_ResponsevsRunNb 
+
+
+m -i $filezmumu --h2d h_ResponseVsPt_AllQual_plots_eta0p0to0p83  h_ResponseVsPt_AllQual_plots_eta0p83to1p24 h_ResponseVsPt_AllQual_plots_eta1p24to2p4 --xtitle 'p_{T}^{#mu}(reco)' --ytitle '<p_{T}^{#mu}(L1)/p_{T}^{#mu}(reco)>' --extralabel '#splitline{Z#rightarrow#mu#mu}{All qual.}' --legend 'BMTF' 'OMTF' 'EMTF' --axisranges 0 100 0 2  --plotname L1Mu_ResponsevsPt 
+
+
+#Eff vs eta phi 
+makeeff -i $filezmumu --num h_Mu22_EtaPhi_Numerator --den h_Mu22_EtaPhi_Denominator   --xtitle '#eta^{#mu}(reco)' --ytitle '#phi^{#mu}(reco)' --ztitle 'L1Mu22 efficiency (p_{T}^{#mu}(reco)>27 GeV)' --legend '' --extralabel '#splitline{Z#rightarrow#mu#mu}{L1 Qual.>= 12}' --plotname L1Mu_EffvsEtaPhi --axisranges -2.4 2.4 -3.1416 3.1416 0 1.1
+
+ makeeff -i $filezmumu --num L1Mu10to21_bxplus1_etaphi  --den L1Mu10to21_bx0_etaphi  --xtitle '#eta^{#mu}(reco)' --ytitle '#phi^{#mu}(reco)' --ztitle 'bx+1 / (bx0 or bx+1)' --legend '' --extralabel '#splitline{Z#rightarrow#mu#mu}{10<=p_{T}^{#mu}(L1)<21, L1 Qual.>= 12}' --plotname L1Mu_PostfiringvsEtaPhi --axisranges -2.4 2.4 -3.1416 3.1416 0 1.1 --addnumtoden True
+
+ makeeff -i $filezmumu --num L1Mu10to21_bxmin1_etaphi  --den L1Mu10to21_bx0_etaphi  --xtitle '#eta^{#mu}(reco)' --ytitle '#phi^{#mu}(reco)' --ztitle 'bx-1 / (bx0 or bx-1)' --legend '' --extralabel '#splitline{Z#rightarrow#mu#mu}{10<=p_{T}^{#mu}(L1)<21, L1 Qual.>= 12}' --plotname L1Mu_PrefiringvsEtaPhi --axisranges -2.4 2.4 -3.1416 3.1416 0 1.1 --addnumtoden True
+
+
+
+ makeeff -i $filezee --den h_EGNonIso_plots_eta0p0to1p479 --num h_EGNonIso_plots_eta0p0to1p479_l1thrgeq10 h_EGNonIso_plots_eta0p0to1p479_l1thrgeq15 h_EGNonIso_plots_eta0p0to1p479_l1thrgeq20 h_EGNonIso_plots_eta0p0to1p479_l1thrgeq25 h_EGNonIso_plots_eta0p0to1p479_l1thrgeq30 h_EGNonIso_plots_eta0p0to1p479_l1thrgeq35 --xtitle 'p_{T}^{e}(reco) (GeV)' --ytitle 'L1 EG (non iso) Efficiency' --legend 'p_{T}^{L1}>10 GeV' 'p_{T}^{L1}>15 GeV' 'p_{T}^{L1}>20 GeV' 'p_{T}^{L1}>25 GeV' 'p_{T}^{L1}>30 GeV' 'p_{T}^{L1}>35 GeV' --extralabel '#splitline{Z#rightarrowee}{0<|#eta^{e}(reco)|<1.479}' --setlogx True --plotname L1EG_EffTurnOnNonIso_barrel 
+
+
+ makeeff -i $filezee --den h_EGLooseIso_plots_eta0p0to1p479 --num h_EGLooseIso_plots_eta0p0to1p479_l1thrgeq10 h_EGLooseIso_plots_eta0p0to1p479_l1thrgeq15 h_EGLooseIso_plots_eta0p0to1p479_l1thrgeq20 h_EGLooseIso_plots_eta0p0to1p479_l1thrgeq25 h_EGLooseIso_plots_eta0p0to1p479_l1thrgeq30 h_EGLooseIso_plots_eta0p0to1p479_l1thrgeq35 --xtitle 'p_{T}^{e}(reco) (GeV)' --ytitle 'L1 EG (non iso) Efficiency' --legend 'p_{T}^{L1}>10 GeV' 'p_{T}^{L1}>15 GeV' 'p_{T}^{L1}>20 GeV' 'p_{T}^{L1}>25 GeV' 'p_{T}^{L1}>30 GeV' 'p_{T}^{L1}>35 GeV' --extralabel '#splitline{Z#rightarrowee}{0<|#eta^{e}(reco)|<1.479}' --setlogx True --plotname L1EG_EffTurnOnLooseIso_barrel 
+
+
+ makeeff -i $filezee --den h_EGTightIso_plots_eta0p0to1p479 --num h_EGTightIso_plots_eta0p0to1p479_l1thrgeq10 h_EGTightIso_plots_eta0p0to1p479_l1thrgeq15 h_EGTightIso_plots_eta0p0to1p479_l1thrgeq20 h_EGTightIso_plots_eta0p0to1p479_l1thrgeq25 h_EGTightIso_plots_eta0p0to1p479_l1thrgeq30 h_EGTightIso_plots_eta0p0to1p479_l1thrgeq35 --xtitle 'p_{T}^{e}(reco) (GeV)' --ytitle 'L1 EG (non iso) Efficiency' --legend 'p_{T}^{L1}>10 GeV' 'p_{T}^{L1}>15 GeV' 'p_{T}^{L1}>20 GeV' 'p_{T}^{L1}>25 GeV' 'p_{T}^{L1}>30 GeV' 'p_{T}^{L1}>35 GeV' --extralabel '#splitline{Z#rightarrowee}{0<|#eta^{e}(reco)|<1.479}' --setlogx True --plotname L1EG_EffTurnOnTightIso_barrel 
+
+
+
+
+ makeeff -i $filezee --den h_EGNonIso_plots_eta1p479to2p5 --num h_EGNonIso_plots_eta1p479to2p5_l1thrgeq10 h_EGNonIso_plots_eta1p479to2p5_l1thrgeq15 h_EGNonIso_plots_eta1p479to2p5_l1thrgeq20 h_EGNonIso_plots_eta1p479to2p5_l1thrgeq25 h_EGNonIso_plots_eta1p479to2p5_l1thrgeq30 h_EGNonIso_plots_eta1p479to2p5_l1thrgeq35 --xtitle 'p_{T}^{e}(reco) (GeV)' --ytitle 'L1 EG (non iso) Efficiency' --legend 'p_{T}^{L1}>10 GeV' 'p_{T}^{L1}>15 GeV' 'p_{T}^{L1}>20 GeV' 'p_{T}^{L1}>25 GeV' 'p_{T}^{L1}>30 GeV' 'p_{T}^{L1}>35 GeV' --extralabel '#splitline{Z#rightarrowee}{1.479<|#eta^{e}(reco)|<2.5}' --setlogx True --plotname L1EG_EffTurnOnNonIso_endcap
+
+
+ makeeff -i $filezee --den h_EGLooseIso_plots_eta1p479to2p5 --num h_EGLooseIso_plots_eta1p479to2p5_l1thrgeq10 h_EGLooseIso_plots_eta1p479to2p5_l1thrgeq15 h_EGLooseIso_plots_eta1p479to2p5_l1thrgeq20 h_EGLooseIso_plots_eta1p479to2p5_l1thrgeq25 h_EGLooseIso_plots_eta1p479to2p5_l1thrgeq30 h_EGLooseIso_plots_eta1p479to2p5_l1thrgeq35 --xtitle 'p_{T}^{e}(reco) (GeV)' --ytitle 'L1 EG (non iso) Efficiency' --legend 'p_{T}^{L1}>10 GeV' 'p_{T}^{L1}>15 GeV' 'p_{T}^{L1}>20 GeV' 'p_{T}^{L1}>25 GeV' 'p_{T}^{L1}>30 GeV' 'p_{T}^{L1}>35 GeV' --extralabel '#splitline{Z#rightarrowee}{1.479<|#eta^{e}(reco)|<2.5}' --setlogx True --plotname L1EG_EffTurnOnLooseIso_endcap 
+
+
+ makeeff -i $filezee --den h_EGTightIso_plots_eta1p479to2p5 --num h_EGTightIso_plots_eta1p479to2p5_l1thrgeq10 h_EGTightIso_plots_eta1p479to2p5_l1thrgeq15 h_EGTightIso_plots_eta1p479to2p5_l1thrgeq20 h_EGTightIso_plots_eta1p479to2p5_l1thrgeq25 h_EGTightIso_plots_eta1p479to2p5_l1thrgeq30 h_EGTightIso_plots_eta1p479to2p5_l1thrgeq35 --xtitle 'p_{T}^{e}(reco) (GeV)' --ytitle 'L1 EG (non iso) Efficiency' --legend 'p_{T}^{L1}>10 GeV' 'p_{T}^{L1}>15 GeV' 'p_{T}^{L1}>20 GeV' 'p_{T}^{L1}>25 GeV' 'p_{T}^{L1}>30 GeV' 'p_{T}^{L1}>35 GeV' --extralabel '#splitline{Z#rightarrowee}{1.479<|#eta^{e}(reco)|<2.5}' --setlogx True --plotname L1EG_EffTurnOnTightIso_endcap
+
+
+makeeff -i $filezee --den h_PlateauEffVsRunNb_Denominator_EGNonIso_plots_eta0p0to1p479 --num h_PlateauEffVsRunNb_Numerator_EGNonIso_plots_eta0p0to1p479 h_PlateauEffVsRunNb_Numerator_EGLooseIso_plots_eta0p0to1p479 h_PlateauEffVsRunNb_Numerator_EGLooseIso_plots_eta0p0to1p479  --xtitle 'run number' --ytitle 'L1EG30 efficiency (p_{T}^{e}(reco)>35 GeV)' --legend 'Non iso' 'Loose iso' 'Tight iso' --extralabel '#splitline{Z#rightarrowee}{0<|#eta^{e}(reco)|<1.479}' --plotname L1EG_EffvsRunNb_barrel
+
+makeeff -i $filezee --den h_PlateauEffVsRunNb_Denominator_EGNonIso_plots_eta1p479to2p5 --num h_PlateauEffVsRunNb_Numerator_EGNonIso_plots_eta1p479to2p5 h_PlateauEffVsRunNb_Numerator_EGLooseIso_plots_eta1p479to2p5 h_PlateauEffVsRunNb_Numerator_EGLooseIso_plots_eta1p479to2p5  --xtitle 'run number' --ytitle 'L1EG30 efficiency (p_{T}^{e}(reco)>35 GeV)' --legend 'Non iso' 'Loose iso' 'Tight iso' --extralabel '#splitline{Z#rightarrowee}{1.479<|#eta^{e}(reco)|<2.5}' --plotname L1EG_EffvsRunNb_endcap
+
+makeprof -i $filezee --h2d h_ResponseVsRunNb_EGNonIso_plots_eta0p0to1p479  h_ResponseVsRunNb_EGNonIso_plots_eta1p479to2p5  --xtitle 'run number' --ytitle '<p_{T}(L1EG)/p_{T}^{e}(reco)>' --extralabel '#splitline{Z#rightarrowee}{Non iso EG}' --legend 'Barrel' 'Endcaps'  --plotname L1EG_ResponsevsRunNb  --axisranges 355381 357901 0 2
+
+
+makeprof -i $filezee --h2d h_ResponseVsPt_EGNonIso_plots_eta0p0to1p479  h_ResponseVsPt_EGNonIso_plots_eta1p479to2p5 --xtitle 'p_{T}^{e}(reco)' --ytitle '<p_{T}(L1EG)/p_{T}^{e}(reco)>' --extralabel '#splitline{Z#rightarrowee}{Non iso EG}' --legend 'Barrel' 'Endcaps'  --axisranges 0 100 0 2  --plotname L1EG_ResponsevsPt
+
+
+#Eff vs eta phi 
+makeeff -i $filezee --num h_EG25_EtaPhi_Numerator --den h_EG25_EtaPhi_Denominator   --xtitle '#eta^{e}(reco)' --ytitle '#phi^{e}(reco)' --ztitle 'L1EG25 Tight Iso efficiency (p_{T}^{e}(reco)>30 GeV)' --legend '' --extralabel '#splitline{Z#rightarrowee}{L1 EG Tight Iso}' --plotname L1EG_EffvsEtaPhi --axisranges -2.5 2.5 -3.1416 3.1416 0 1.1
+
+ makeeff -i $filezee --num L1EG15to26_bxplus1_etaphi  --den L1EG15to26_bx0_etaphi  --xtitle '#eta^{e}(reco)' --ytitle '#phi^{e}(reco)' --ztitle 'bx+1 / (bx0 or bx+1)' --legend '' --extralabel '#splitline{Z#rightarrowee}{15<=p_{T}^{e}(L1)<26, L1 EG Non Iso}' --plotname L1EG_PostfiringvsEtaPhi --axisranges -2.5 2.5 -3.1416 3.1416 0 1.1 --addnumtoden True
+
+ makeeff -i $filezee --num L1EG15to26_bxmin1_etaphi  --den L1EG15to26_bx0_etaphi  --xtitle '#eta^{e}(reco)' --ytitle '#phi^{e}(reco)' --ztitle 'bx-1 / (bx0 or bx-1)' --legend '' --extralabel '#splitline{Z#rightarrowee}{15<=p_{T}^{e}(L1)<26, L1 EG Non Iso}' --plotname L1EG_PrefiringvsEtaPhi --axisranges -2.5 2.5 -3.1416 3.1416 0 1.1 --addnumtoden True
+
+
+makeeff -i $filemujet --num h_HLT_PFMETNoMu120_PFMHTNoMu120_IDTight   --den h_MetNoMu_Denominator --xtitle 'PFMET(#mu subtracted) (GeV)' --ytitle '#splitline{HLT_PFMETNoMu120_PFMHTNoMu120_IDTight}{efficiency}'  --extralabel '#splitline{>=1 tight muon (p_{T}>27 GeV), pass HLT_IsoMu24}{>=1 jet (p_{T}>30 GeV, 0<|#eta|<5)}' --axisranges 0. 400. 0. 1.3   --plotname L1ETSum_FromSingleMuon_HLTMET120_TurnOn_Zoom 
+
+makeeff -i $filemujet --num h_HLT_PFMETNoMu120_PFMHTNoMu120_IDTight   --den h_MetNoMu_Denominator --xtitle 'PFMET(#mu subtracted) (GeV)' --ytitle '#splitline{HLT_PFMETNoMu120_PFMHTNoMu120_IDTight}{efficiency}'  --extralabel '#splitline{>=1 tight muon (p_{T}>27 GeV), pass HLT_IsoMu24}{>=1 jet (p_{T}>30 GeV, 0<|#eta|<5)}' --axisranges 0. 2000. 0. 1.3   --plotname L1ETSum_FromSingleMuon_HLTMET120_TurnOn
+
+
+makeeff -i $filemujet --num h_HLT_PFHT1050   --den h_HT_Denominator --xtitle 'HT=#sum(p_{T}^{jets}(p_{T}>30 GeV, 0<|#eta|<2.5)) (GeV)' --ytitle '#splitline{HLT_PFHT1050}{efficiency}'  --extralabel '#splitline{>=1 tight muon (p_{T}>27 GeV), pass HLT_IsoMu24}{>=1 jet (p_{T}>30 GeV, 0<|#eta|<5)}'  --plotname L1ETSum_FromSingleMuon_HLT1050_TurnOn 
+
+
+makeeff -i $filemujet --num h_MetNoMu_ETMHF80 h_MetNoMu_ETMHF100   --den h_MetNoMu_Denominator --xtitle 'PFMET(#mu subtracted) (GeV)' --ytitle '#splitline{L1_ETMHF}{efficiency}'  --extralabel '#splitline{>=1 tight muon (p_{T}>27 GeV), pass HLT_IsoMu24}{>=1 jet (p_{T}>30 GeV, 0<|#eta|<5)}' --axisranges 0. 400. 0. 1.3  --legend 'ETMHF80' 'ETMHF100' --plotname L1ETSum_FromSingleMuon_ETMHF_TurnOn_Zoom
+
+makeeff -i $filemujet --num h_MetNoMu_ETMHF80 h_MetNoMu_ETMHF100   --den h_MetNoMu_Denominator --xtitle 'PFMET(#mu subtracted) (GeV)' --ytitle '#splitline{L1_ETMHF}{efficiency}'  --extralabel '#splitline{>=1 tight muon (p_{T}>27 GeV), pass HLT_IsoMu24}{>=1 jet (p_{T}>30 GeV, 0<|#eta|<5)}' --axisranges 0. 2000. 0. 1.3  --legend 'ETMHF80' 'ETMHF100' --plotname L1ETSum_FromSingleMuon_ETMHF_TurnOn
+
+makeeff -i $filemujet --num h_HT_L1_HTT200er h_HT_L1_HTT280er h_HT_L1_HTT360er   --den h_HT_Denominator --xtitle 'HT=#sum(p_{T}^{jets}(p_{T}>30 GeV, 0<|#eta|<2.5)) (GeV)' --ytitle '#splitline{L1_HTT}{efficiency}'  --extralabel '#splitline{>=1 tight muon (p_{T}>27 GeV), pass HLT_IsoMu24}{>=1 jet (p_{T}>30 GeV, 0<|#eta|<5)}' --axisranges 0. 1000. 0. 1.3  --legend 'HTT200er' 'HTT280er' 'HTT360er' --plotname L1ETSum_FromSingleMuon_HTT_TurnOn_Zoom
+
+makeeff -i $filemujet --num h_HT_L1_HTT200er h_HT_L1_HTT280er h_HT_L1_HTT360er   --den h_HT_Denominator --xtitle 'HT=#sum(p_{T}^{jets}(p_{T}>30 GeV, 0<|#eta|<2.5)) (GeV)' --ytitle '#splitline{L1_HTT}{efficiency}'  --extralabel '#splitline{>=1 tight muon (p_{T}>27 GeV), pass HLT_IsoMu24}{>=1 jet (p_{T}>30 GeV, 0<|#eta|<5)}' --axisranges 0. 3000. 0. 1.3  --legend 'HTT200er' 'HTT280er' 'HTT360er' --plotname L1ETSum_FromSingleMuon_HTT_TurnOn
+
+
+
+makeeff -i $filemujet --num h_Jet_plots_eta0p0to1p3_l1thrgeq30p0 h_Jet_plots_eta0p0to1p3_l1thrgeq40p0 h_Jet_plots_eta0p0to1p3_l1thrgeq60p0 h_Jet_plots_eta0p0to1p3_l1thrgeq80p0 h_Jet_plots_eta0p0to1p3_l1thrgeq100p0 h_Jet_plots_eta0p0to1p3_l1thrgeq120p0 h_Jet_plots_eta0p0to1p3_l1thrgeq140p0 h_Jet_plots_eta0p0to1p3_l1thrgeq160p0 h_Jet_plots_eta0p0to1p3_l1thrgeq180p0 h_Jet_plots_eta0p0to1p3_l1thrgeq200p0 --den h_Jet_plots_eta0p0to1p3 --xtitle 'p_{T}^{jet}(reco) (GeV)' --ytitle 'L1 Efficiency' --legend 'p_{T}^{L1}>30 GeV' 'p_{T}^{L1}>40 GeV' 'p_{T}^{L1}>60 GeV' 'p_{T}^{L1}>80 GeV' 'p_{T}^{L1}>100 GeV' 'p_{T}^{L1}>120 GeV' 'p_{T}^{L1}>140 GeV' 'p_{T}^{L1}>160 GeV' 'p_{T}^{L1}>180 GeV' 'p_{T}^{L1}>200 GeV' --extralabel '#splitline{>=1 tight muon (p_{T}>27 GeV), pass HLT_IsoMu24}{#color[4]{0<|#eta^{jet}(reco)|<1.3}}' --plotname L1Jet_FromSingleMuon_TurnOn_barrel
+
+makeeff -i $filemujet --num h_Jet_plots_eta1p3to2p5_l1thrgeq30p0 h_Jet_plots_eta1p3to2p5_l1thrgeq40p0 h_Jet_plots_eta1p3to2p5_l1thrgeq60p0 h_Jet_plots_eta1p3to2p5_l1thrgeq80p0 h_Jet_plots_eta1p3to2p5_l1thrgeq100p0 h_Jet_plots_eta1p3to2p5_l1thrgeq120p0 h_Jet_plots_eta1p3to2p5_l1thrgeq140p0 h_Jet_plots_eta1p3to2p5_l1thrgeq160p0 h_Jet_plots_eta1p3to2p5_l1thrgeq180p0 h_Jet_plots_eta1p3to2p5_l1thrgeq200p0 --den h_Jet_plots_eta1p3to2p5 --xtitle 'p_{T}^{jet}(reco) (GeV)' --ytitle 'L1 Efficiency' --legend 'p_{T}^{L1}>30 GeV' 'p_{T}^{L1}>40 GeV' 'p_{T}^{L1}>60 GeV' 'p_{T}^{L1}>80 GeV' 'p_{T}^{L1}>100 GeV' 'p_{T}^{L1}>120 GeV' 'p_{T}^{L1}>140 GeV' 'p_{T}^{L1}>160 GeV' 'p_{T}^{L1}>180 GeV' 'p_{T}^{L1}>200 GeV' --extralabel '#splitline{>=1 tight muon (p_{T}>27 GeV), pass HLT_IsoMu24}{#color[4]{1.3<|#eta^{jet}(reco)|<2.5}}' --plotname L1Jet_FromSingleMuon_TurnOn_endcap1 --axisranges 0 1000
+
+makeeff -i $filemujet --num h_Jet_plots_eta2p5to3p0_l1thrgeq30p0 h_Jet_plots_eta2p5to3p0_l1thrgeq40p0 h_Jet_plots_eta2p5to3p0_l1thrgeq60p0 h_Jet_plots_eta2p5to3p0_l1thrgeq80p0 h_Jet_plots_eta2p5to3p0_l1thrgeq100p0 h_Jet_plots_eta2p5to3p0_l1thrgeq120p0 h_Jet_plots_eta2p5to3p0_l1thrgeq140p0 h_Jet_plots_eta2p5to3p0_l1thrgeq160p0 h_Jet_plots_eta2p5to3p0_l1thrgeq180p0 h_Jet_plots_eta2p5to3p0_l1thrgeq200p0 --den h_Jet_plots_eta2p5to3p0 --xtitle 'p_{T}^{jet}(reco) (GeV)' --ytitle 'L1 Efficiency' --legend 'p_{T}^{L1}>30 GeV' 'p_{T}^{L1}>40 GeV' 'p_{T}^{L1}>60 GeV' 'p_{T}^{L1}>80 GeV' 'p_{T}^{L1}>100 GeV' 'p_{T}^{L1}>120 GeV' 'p_{T}^{L1}>140 GeV' 'p_{T}^{L1}>160 GeV' 'p_{T}^{L1}>180 GeV' 'p_{T}^{L1}>200 GeV' --extralabel '#splitline{>=1 tight muon (p_{T}>27 GeV), pass HLT_IsoMu24}{#color[4]{2.5<|#eta^{jet}(reco)|<3.0}}' --plotname L1Jet_FromSingleMuon_TurnOn_endcap2 --axisranges 0 500
+
+makeeff -i $filemujet --num h_Jet_plots_eta3p0to3p5_l1thrgeq30p0 h_Jet_plots_eta3p0to3p5_l1thrgeq40p0 h_Jet_plots_eta3p0to3p5_l1thrgeq60p0 h_Jet_plots_eta3p0to3p5_l1thrgeq80p0 h_Jet_plots_eta3p0to3p5_l1thrgeq100p0 h_Jet_plots_eta3p0to3p5_l1thrgeq120p0 h_Jet_plots_eta3p0to3p5_l1thrgeq140p0 h_Jet_plots_eta3p0to3p5_l1thrgeq160p0 h_Jet_plots_eta3p0to3p5_l1thrgeq180p0 h_Jet_plots_eta3p0to3p5_l1thrgeq200p0 --den h_Jet_plots_eta3p0to3p5 --xtitle 'p_{T}^{jet}(reco) (GeV)' --ytitle 'L1 Efficiency' --legend 'p_{T}^{L1}>30 GeV' 'p_{T}^{L1}>40 GeV' 'p_{T}^{L1}>60 GeV' 'p_{T}^{L1}>80 GeV' 'p_{T}^{L1}>100 GeV' 'p_{T}^{L1}>120 GeV' 'p_{T}^{L1}>140 GeV' 'p_{T}^{L1}>160 GeV' 'p_{T}^{L1}>180 GeV' 'p_{T}^{L1}>200 GeV' --extralabel '#splitline{>=1 tight muon (p_{T}>27 GeV), pass HLT_IsoMu24}{#color[4]{3.0<|#eta^{jet}(reco)|<3.5}}' --plotname L1Jet_FromSingleMuon_TurnOn_hf1 --axisranges 0 300
+
+makeeff -i $filemujet --num h_Jet_plots_eta3p5to4p0_l1thrgeq30p0 h_Jet_plots_eta3p5to4p0_l1thrgeq40p0 h_Jet_plots_eta3p5to4p0_l1thrgeq60p0 h_Jet_plots_eta3p5to4p0_l1thrgeq80p0 h_Jet_plots_eta3p5to4p0_l1thrgeq100p0 h_Jet_plots_eta3p5to4p0_l1thrgeq120p0 h_Jet_plots_eta3p5to4p0_l1thrgeq140p0 h_Jet_plots_eta3p5to4p0_l1thrgeq160p0 h_Jet_plots_eta3p5to4p0_l1thrgeq180p0 h_Jet_plots_eta3p5to4p0_l1thrgeq200p0 --den h_Jet_plots_eta3p5to4p0 --xtitle 'p_{T}^{jet}(reco) (GeV)' --ytitle 'L1 Efficiency' --legend 'p_{T}^{L1}>30 GeV' 'p_{T}^{L1}>40 GeV' 'p_{T}^{L1}>60 GeV' 'p_{T}^{L1}>80 GeV' 'p_{T}^{L1}>100 GeV' 'p_{T}^{L1}>120 GeV' 'p_{T}^{L1}>140 GeV' 'p_{T}^{L1}>160 GeV' 'p_{T}^{L1}>180 GeV' 'p_{T}^{L1}>200 GeV' --extralabel '#splitline{>=1 tight muon (p_{T}>27 GeV), pass HLT_IsoMu24}{#color[4]{3.5<|#eta^{jet}(reco)|<4}}' --plotname L1Jet_FromSingleMuon_TurnOn_hf1 --axisranges 0 200
+
+makeeff -i $filegamjet --num h_Jet_plots_eta0p0to1p3_l1thrgeq30p0 h_Jet_plots_eta0p0to1p3_l1thrgeq40p0 h_Jet_plots_eta0p0to1p3_l1thrgeq60p0 h_Jet_plots_eta0p0to1p3_l1thrgeq80p0 h_Jet_plots_eta0p0to1p3_l1thrgeq100p0 h_Jet_plots_eta0p0to1p3_l1thrgeq120p0 h_Jet_plots_eta0p0to1p3_l1thrgeq140p0 h_Jet_plots_eta0p0to1p3_l1thrgeq160p0 h_Jet_plots_eta0p0to1p3_l1thrgeq180p0 h_Jet_plots_eta0p0to1p3_l1thrgeq200p0 --den h_Jet_plots_eta0p0to1p3 --xtitle 'p_{T}^{jet}(reco) (GeV)' --ytitle 'L1 Efficiency' --legend 'p_{T}^{L1}>30 GeV' 'p_{T}^{L1}>40 GeV' 'p_{T}^{L1}>60 GeV' 'p_{T}^{L1}>80 GeV' 'p_{T}^{L1}>100 GeV' 'p_{T}^{L1}>120 GeV' 'p_{T}^{L1}>140 GeV' 'p_{T}^{L1}>160 GeV' 'p_{T}^{L1}>180 GeV' 'p_{T}^{L1}>200 GeV' --extralabel '#splitline{>=1 tight photon (p_{T}>115 GeV, |#eta|<1.479), PFMET<50 GeV}{#color[4]{0.0<|#eta^{jet}(reco)|<1.3}}' --plotname L1Jet_FromEGamma_TurnOn_barrel --axisranges 0 2000
+
+makeeff -i $filegamjet --num h_Jet_plots_eta1p3to2p5_l1thrgeq30p0 h_Jet_plots_eta1p3to2p5_l1thrgeq40p0 h_Jet_plots_eta1p3to2p5_l1thrgeq60p0 h_Jet_plots_eta1p3to2p5_l1thrgeq80p0 h_Jet_plots_eta1p3to2p5_l1thrgeq100p0 h_Jet_plots_eta1p3to2p5_l1thrgeq120p0 h_Jet_plots_eta1p3to2p5_l1thrgeq140p0 h_Jet_plots_eta1p3to2p5_l1thrgeq160p0 h_Jet_plots_eta1p3to2p5_l1thrgeq180p0 h_Jet_plots_eta1p3to2p5_l1thrgeq200p0 --den h_Jet_plots_eta1p3to2p5 --xtitle 'p_{T}^{jet}(reco) (GeV)' --ytitle 'L1 Efficiency' --legend 'p_{T}^{L1}>30 GeV' 'p_{T}^{L1}>40 GeV' 'p_{T}^{L1}>60 GeV' 'p_{T}^{L1}>80 GeV' 'p_{T}^{L1}>100 GeV' 'p_{T}^{L1}>120 GeV' 'p_{T}^{L1}>140 GeV' 'p_{T}^{L1}>160 GeV' 'p_{T}^{L1}>180 GeV' 'p_{T}^{L1}>200 GeV' --extralabel '#splitline{>=1 tight photon (p_{T}>115 GeV, |#eta|<1.479), PFMET<50 GeV}{#color[4]{1.3<|#eta^{jet}(reco)|<2.5}}' --plotname L1Jet_FromEGamma_TurnOn_endcap1 --axisranges 0 1000
+ 
+makeeff -i $filegamjet --num h_Jet_plots_eta2p5to3p0_l1thrgeq30p0 h_Jet_plots_eta2p5to3p0_l1thrgeq40p0 h_Jet_plots_eta2p5to3p0_l1thrgeq60p0 h_Jet_plots_eta2p5to3p0_l1thrgeq80p0 h_Jet_plots_eta2p5to3p0_l1thrgeq100p0 h_Jet_plots_eta2p5to3p0_l1thrgeq120p0 h_Jet_plots_eta2p5to3p0_l1thrgeq140p0 h_Jet_plots_eta2p5to3p0_l1thrgeq160p0 h_Jet_plots_eta2p5to3p0_l1thrgeq180p0 h_Jet_plots_eta2p5to3p0_l1thrgeq200p0 --den h_Jet_plots_eta2p5to3p0 --xtitle 'p_{T}^{jet}(reco) (GeV)' --ytitle 'L1 Efficiency' --legend 'p_{T}^{L1}>30 GeV' 'p_{T}^{L1}>40 GeV' 'p_{T}^{L1}>60 GeV' 'p_{T}^{L1}>80 GeV' 'p_{T}^{L1}>100 GeV' 'p_{T}^{L1}>120 GeV' 'p_{T}^{L1}>140 GeV' 'p_{T}^{L1}>160 GeV' 'p_{T}^{L1}>180 GeV' 'p_{T}^{L1}>200 GeV' --extralabel '#splitline{>=1 tight photon (p_{T}>115 GeV, |#eta|<1.479), PFMET<50 GeV}{#color[4]{2.5<|#eta^{jet}(reco)|<3.0}}' --plotname L1Jet_FromEGamma_TurnOn_endcap2 --axisranges 0 500
+ 
+makeeff -i $filegamjet --num h_Jet_plots_eta3p0to3p5_l1thrgeq30p0 h_Jet_plots_eta3p0to3p5_l1thrgeq40p0 h_Jet_plots_eta3p0to3p5_l1thrgeq60p0 h_Jet_plots_eta3p0to3p5_l1thrgeq80p0 h_Jet_plots_eta3p0to3p5_l1thrgeq100p0 h_Jet_plots_eta3p0to3p5_l1thrgeq120p0 h_Jet_plots_eta3p0to3p5_l1thrgeq140p0 h_Jet_plots_eta3p0to3p5_l1thrgeq160p0 h_Jet_plots_eta3p0to3p5_l1thrgeq180p0 h_Jet_plots_eta3p0to3p5_l1thrgeq200p0 --den h_Jet_plots_eta3p0to3p5 --xtitle 'p_{T}^{jet}(reco) (GeV)' --ytitle 'L1 Efficiency' --legend 'p_{T}^{L1}>30 GeV' 'p_{T}^{L1}>40 GeV' 'p_{T}^{L1}>60 GeV' 'p_{T}^{L1}>80 GeV' 'p_{T}^{L1}>100 GeV' 'p_{T}^{L1}>120 GeV' 'p_{T}^{L1}>140 GeV' 'p_{T}^{L1}>160 GeV' 'p_{T}^{L1}>180 GeV' 'p_{T}^{L1}>200 GeV' --extralabel '#splitline{>=1 tight photon (p_{T}>115 GeV, |#eta|<1.479), PFMET<50 GeV}{#color[4]{3.0<|#eta^{jet}(reco)|<3.5}}' --plotname L1Jet_FromEGamma_TurnOn_hf1 --axisranges 0 500
+ 
+makeeff -i $filegamjet --num h_Jet_plots_eta3p5to4p0_l1thrgeq30p0 h_Jet_plots_eta3p5to4p0_l1thrgeq40p0 h_Jet_plots_eta3p5to4p0_l1thrgeq60p0 h_Jet_plots_eta3p5to4p0_l1thrgeq80p0 h_Jet_plots_eta3p5to4p0_l1thrgeq100p0 h_Jet_plots_eta3p5to4p0_l1thrgeq120p0 h_Jet_plots_eta3p5to4p0_l1thrgeq140p0 h_Jet_plots_eta3p5to4p0_l1thrgeq160p0 h_Jet_plots_eta3p5to4p0_l1thrgeq180p0 h_Jet_plots_eta3p5to4p0_l1thrgeq200p0 --den h_Jet_plots_eta3p5to4p0 --xtitle 'p_{T}^{jet}(reco) (GeV)' --ytitle 'L1 Efficiency' --legend 'p_{T}^{L1}>30 GeV' 'p_{T}^{L1}>40 GeV' 'p_{T}^{L1}>60 GeV' 'p_{T}^{L1}>80 GeV' 'p_{T}^{L1}>100 GeV' 'p_{T}^{L1}>120 GeV' 'p_{T}^{L1}>140 GeV' 'p_{T}^{L1}>160 GeV' 'p_{T}^{L1}>180 GeV' 'p_{T}^{L1}>200 GeV' --extralabel '#splitline{>=1 tight photon (p_{T}>115 GeV, |#eta|<1.479), PFMET<50 GeV}{#color[4]{3.5<|#eta^{jet}(reco)|<4.0}}' --plotname L1Jet_FromEGamma_TurnOn_hf2 --axisranges 0 300
+ 
+makeeff -i $filegamjet --num h_Jet_plots_eta4p0to5p0_l1thrgeq30p0 h_Jet_plots_eta4p0to5p0_l1thrgeq40p0 h_Jet_plots_eta4p0to5p0_l1thrgeq60p0 h_Jet_plots_eta4p0to5p0_l1thrgeq80p0 h_Jet_plots_eta4p0to5p0_l1thrgeq100p0 h_Jet_plots_eta4p0to5p0_l1thrgeq120p0 h_Jet_plots_eta4p0to5p0_l1thrgeq140p0 h_Jet_plots_eta4p0to5p0_l1thrgeq160p0 h_Jet_plots_eta4p0to5p0_l1thrgeq180p0 h_Jet_plots_eta4p0to5p0_l1thrgeq200p0 --den h_Jet_plots_eta4p0to5p0 --xtitle 'p_{T}^{jet}(reco) (GeV)' --ytitle 'L1 Efficiency' --legend 'p_{T}^{L1}>30 GeV' 'p_{T}^{L1}>40 GeV' 'p_{T}^{L1}>60 GeV' 'p_{T}^{L1}>80 GeV' 'p_{T}^{L1}>100 GeV' 'p_{T}^{L1}>120 GeV' 'p_{T}^{L1}>140 GeV' 'p_{T}^{L1}>160 GeV' 'p_{T}^{L1}>180 GeV' 'p_{T}^{L1}>200 GeV' --extralabel '#splitline{>=1 tight photon (p_{T}>115 GeV, |#eta|<1.479), PFMET<50 GeV}{#color[4]{4.0<|#eta^{jet}(reco)|<5.0}}' --plotname L1Jet_FromEGamma_TurnOn_hf3 --axisranges 0 200
+ 
+
+ 
+
+#makeprof -i $filegamjet --h2d h_ResponseVsRunNb_Jet_plots_eta0p0to1p3 h_ResponseVsRunNb_Jet_plots_eta1p3to2p5 h_ResponseVsRunNb_Jet_plots_eta2p5to3p0 h_ResponseVsRunNb_Jet_plots_eta3p0to3p5 h_ResponseVsRunNb_Jet_plots_eta3p5to4p0 h_ResponseVsRunNb_Jet_plots_eta4p0to5p0 --xtitle 'run number' --ytitle '<p_{T}^{jet}(L1)/p_{T}^{jet}(reco)>' --extralabel '#splitline{>=1 tight photon (p_{T}>115 GeV, |#eta|<1.479), PFMET<50 GeV}{#color[4]{jets with p_{T}>30 GeV}}' --legend '0<|#eta|<1.3' '1.3<|#eta|<2.5' '2.5<|#eta|<3.0' '3.0<|#eta|<3.5' '3.5<|#eta|<4.0' '4.0<|#eta|<5.0'  --plotname L1Jet_FromEGamma_ResponsevsRunNb --axisranges 355381 357901 0 1.5
+
+
+#makeprof -i $filegamjet --h2d h_L1PtBalanceVsRunNb_eta0p0to1p3 h_L1PtBalanceVsRunNb_eta1p3to2p5 h_L1PtBalanceVsRunNb_eta2p5to3p0 h_L1PtBalanceVsRunNb_eta3p0to3p5 h_L1PtBalanceVsRunNb_eta3p5to4p0 h_L1PtBalanceVsRunNb_eta4p0to5p0 --xtitle 'run number' --ytitle '<p_{T}^{jet}(L1)/p_{T}^{#gamma}(reco)>' --extralabel '#splitline{>=1 tight photon (p_{T}>115 GeV, |#eta|<1.479), PFMET<50 GeV}{#color[4]{jets with p_{T}>30 GeV, #Delta#phi(#gamma, jet)>2.9}}' --legend '0<|#eta|<1.3' '1.3<|#eta|<2.5' '2.5<|#eta|<3.0' '3.0<|#eta|<3.5' '3.5<|#eta|<4.0' '4.0<|#eta|<5.0'  --plotname L1Jet_FromEGamma_PtBalancevsRunNb --axisranges 355381 357901 0 1.5
+
+
+
+
+#Eff vs eta phi 
+makeeff -i $filegamjet --num h_L1Jet100vsEtaPhi_Numerator --den h_L1Jet100vsEtaPhi_EtaRestricted --xtitle '#eta^{jet}(reco)' --ytitle '#phi^{jet}(reco)' --ztitle 'L1Jet100 efficiency' --legend '' --extralabel '#splitline{#gamma+jets}{#color[4]{jets with p_{T}>200 GeV}}' --plotname L1Jet_FromEGamma_EffvsEtaPhi --axisranges -5 5 -3.1416 3.1416 0 1.1
+
+ makeeff -i $filegamjet --num L1Jet100to150_bxplus1_etaphi  --den L1Jet100to150_bx0_etaphi  --xtitle '#eta^{jet}(reco)' --ytitle '#phi^{jet}(reco)' --ztitle 'bx+1 / (bx0 or bx+1)' --legend '' --extralabel '#splitline{#gamma+jets}{100<=p_{T}^{jet}(L1) <150}' --plotname  L1Jet_FromEGamma_PostfiringvsEtaPhi --axisranges -5 5 -3.1416 3.1416 0 1.1 --addnumtoden True
+
+ makeeff -i $filegamjet --num L1Jet100to150_bxmin1_etaphi  --den L1Jet100to150_bx0_etaphi  --xtitle '#eta^{jet}(reco)' --ytitle '#phi^{jet}(reco)' --ztitle 'bx-1 / (bx0 or bx-1)' --legend '' --extralabel '#splitline{#gamma+jets}{100<=p_{T}^{jet}(L1) <150}' --plotname  L1Jet_FromEGamma_PrefiringvsEtaPhi --axisranges -5 5 -3.1416 3.1416 0 1.1 --addnumtoden True
+
+
+makeresol -i $filezee --h2d h_ResponseVsPt_EGNonIso_plots_eta0p0to1p479 h_ResponseVsPt_EGNonIso_plots_eta1p479to2p5  --xtitle 'p_{T}^{reco ele} (GeV)' --ytitle '(p_{T}^{L1EG}/p_{T}^{reco ele})' --extralabel 'Z#rightarrowee' --legend '0<|#eta|<1.479' '1.479<|#eta|<2.5'  --plotname L1EGNonIso_FromEGamma_PtBalancevsPt --axisranges 10 100 0.5 1.5
+
+makeresol -i $filezee --h2d h_ResponseVsRunNb_EGNonIso_plots_eta0p0to1p479 h_ResponseVsRunNb_EGNonIso_plots_eta1p479to2p5  --xtitle 'run number' --ytitle '(p_{T}^{L1EG}/p_{T}^{reco ele})' --extralabel 'Z#rightarrowee' --legend '0<|#eta|<1.479' '1.479<|#eta|<2.5'  --plotname L1EGNonIso_FromEGamma_PtBalanceVsRunNb --axisranges 355381 357901 0.5 1.5
+
+ 
+makeresol -i $filezmumu --h2d h_ResponseVsPt_AllQual_plots_eta0p0to0p83 h_ResponseVsPt_AllQual_plots_eta0p83to1p24 h_ResponseVsPt_AllQual_plots_eta1p24to2p4  --xtitle 'p_{T}^{reco muon} (GeV)' --ytitle '(p_{T}^{L1Mu}/p_{T}^{reco muon})' --extralabel 'Z#rightarrow#mu#mu' --legend '0<|#eta|<0.83' '0.83<|#eta|<1.24' '1.24<|#eta|<2.4'  --plotname L1Mu_L1AllQual_PtBalancevsPt --axisranges 10 50 0.5 1.5
+
+makeresol -i $filezmumu --h2d h_ResponseVsRunNb_AllQual_plots_eta0p0to0p83 h_ResponseVsRunNb_AllQual_plots_eta0p83to1p24 h_ResponseVsRunNb_AllQual_plots_eta1p24to2p4  --xtitle 'run number' --ytitle '(p_{T}^{L1Mu}/p_{T}^{reco muon})' --extralabel 'Z#rightarrow#mu#mu' --legend '0<|#eta|<0.83' '0.83<|#eta|<1.24' '1.24<|#eta|<2.4'  --plotname L1Mu_L1AllQual_PtBalanceVsRunNb --axisranges 355381 357901 0.5 1.5
+
+
+makeresol -i $filegamjet --h2d h_ResponseVsPt_Jet_plots_eta0p0to1p3 h_ResponseVsPt_Jet_plots_eta1p3to2p5 h_ResponseVsPt_Jet_plots_eta2p5to3p0  --xtitle 'p_{T}^{reco jet} (GeV)' --ytitle '(p_{T}^{L1Jet}/p_{T}^{reco jet})' --extralabel '#gamma+jets' --legend '0<|#eta|<1.3' '1.3<|#eta|<2.5' '2.5<|#eta|<3.0'  --plotname L1Jet_PtBalancevsPt --axisranges 30 200 0 1
+
+makeresol -i $filegamjet --h2d h_ResponseVsRunNb_Jet_plots_eta0p0to1p3 h_ResponseVsRunNb_Jet_plots_eta1p3to2p5 h_ResponseVsRunNb_Jet_plots_eta2p5to3p0  --xtitle 'run number' --ytitle '(p_{T}^{L1Jet}/p_{T}^{reco jet})' --extralabel '#gamma+jets' --legend '0<|#eta|<1.3' '1.3<|#eta|<2.5' '2.5<|#eta|<3.0'  --plotname L1Jet_FromEGamma_PtBalanceVsRunNb --axisranges 355381 357901 0.5 1.5
+
+
+ 
+makeresol -i $filegamjet --h2d h_ResponseVsPt_Jet_plots_eta3p0to3p5 h_ResponseVsPt_Jet_plots_eta3p5to4p0 h_ResponseVsPt_Jet_plots_eta4p0to5p0  --xtitle 'p_{T}^{reco jet} (GeV)' --ytitle '(p_{T}^{L1Jet}/p_{T}^{reco jet})' --extralabel '#gamma+jets' --legend '3.0<|#eta|<3.5' '3.5<|#eta|<4.' '4.<|#eta|<5.0'   --plotname L1Jet_PtBalancevsPt_bis --axisranges 30 100 0 1
+
+makeresol -i $filegamjet --h2d h_ResponseVsRunNb_Jet_plots_eta3p0to3p5 h_ResponseVsRunNb_Jet_plots_eta3p5to4p0 h_ResponseVsRunNb_Jet_plots_eta4p0to5p0  --xtitle 'run number' --ytitle '(p_{T}^{L1Jet}/p_{T}^{reco jet})' --extralabel '#gamma+jets' --legend '3.0<|#eta|<3.5' '3.5<|#eta|<4.' '4.<|#eta|<5.0'  --plotname L1Jet_FromEGamma_PtBalanceVsRunNb_bis --axisranges 355381 357901 0.5 1.5
+
+
+
+
+makeresol -i $filezmumu --h2d h_L1PtBalanceVsRunNb_eta0p0to1p3 h_L1PtBalanceVsRunNb_eta1p3to2p5 h_L1PtBalanceVsRunNb_eta2p5to3p0 h_L1PtBalanceVsRunNb_eta3p0to3p5 h_L1PtBalanceVsRunNb_eta3p5to4p0 h_L1PtBalanceVsRunNb_eta4p0to5p0 --xtitle 'run number' --ytitle '<p_{T}^{jet}(L1)/p_{T}^{#gamma}(reco)>' --extralabel '#splitline{>=1 tight photon (p_{T}>115 GeV, |#eta|<1.479), PFMET<50 GeV}{#color[4]{jets with p_{T}>30 GeV, #Delta#phi(#gamma, jet)>2.9}}' --legend '0<|#eta|<1.3' '1.3<|#eta|<2.5' '2.5<|#eta|<3.0' '3.0<|#eta|<3.5' '3.5<|#eta|<4.0' '4.0<|#eta|<5.0'  --plotname L1Jet_FromEGamma_PtBalancevsRunNb --axisranges 355381 357901 0 1.5
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+#####WIP
+
+ makeresol -i $filemujet --h2d h_ResponseVsRunNb_Jet_plots_eta0p0to1p3 h_ResponseVsRunNb_Jet_plots_eta1p3to2p5 h_ResponseVsRunNb_Jet_plots_eta2p5to3p0  h_ResponseVsRunNb_Jet_plots_eta3p0to3p5 h_ResponseVsRunNb_Jet_plots_eta3p5to4p0 h_ResponseVsRunNb_Jet_plots_eta4p0to5p0  --xtitle 'run number' --ytitle '(p_{T}^{L1Jet}/p_{T}^{reco jet})' --extralabel '#mu+jets' --legend '0<|#eta|<1.3' '1.3<|#eta|<2.5' '2.5<|#eta|<3.0' '3.0<|#eta|<3.5' '3.5<|#eta|<4.' '4.<|#eta|<5.0'  --plotname L1Jet_FromSingleMuon_PtBalanceVsRunNb --axisranges 355381 357902 0 1.5
+makeresol -i $filemujet --h2d h_ResponseVsRunNb_Jet_plots_eta0p0to1p3 h_ResponseVsRunNb_Jet_plots_eta1p3to2p5 h_ResponseVsRunNb_Jet_plots_eta2p5to3p0  h_ResponseVsRunNb_Jet_plots_eta3p0to3p5 h_ResponseVsRunNb_Jet_plots_eta3p5to4p0 h_ResponseVsRunNb_Jet_plots_eta4p0to5p0  --xtitle 'run number' --ytitle '(p_{T}^{L1Jet}/p_{T}^{reco jet})' --extralabel '#mu+jets' --legend '0<|#eta|<1.3' '1.3<|#eta|<2.5' '2.5<|#eta|<3.0' '3.0<|#eta|<3.5' '3.5<|#eta|<4.' '4.<|#eta|<5.0'  --plotname L1Jet_FromSingleMuon_PtBalanceVsRunNb --axisranges 355381 357901 0 1.5
+ makeresol -i $filegamjet --h2d h_ResponseVsRunNb_Jet_plots_eta0p0to1p3 h_ResponseVsRunNb_Jet_plots_eta1p3to2p5 h_ResponseVsRunNb_Jet_plots_eta2p5to3p0  h_ResponseVsRunNb_Jet_plots_eta3p0to3p5 h_ResponseVsRunNb_Jet_plots_eta3p5to4p0 h_ResponseVsRunNb_Jet_plots_eta4p0to5p0  --xtitle 'run number' --ytitle '(p_{T}^{L1Jet}/p_{T}^{reco jet})' --extralabel '#gamma+jets' --legend '0<|#eta|<1.3' '1.3<|#eta|<2.5' '2.5<|#eta|<3.0' '3.0<|#eta|<3.5' '3.5<|#eta|<4.' '4.<|#eta|<5.0'  --plotname L1Jet_FromEGamma_PtBalanceVsRunNb --axisranges 355381 357901 0 1.5
+ makeresol -i $filegamjet --h2d h_ResponseVsRunNb_Jet_plots_eta0p0to1p3 h_ResponseVsRunNb_Jet_plots_eta1p3to2p5 h_ResponseVsRunNb_Jet_plots_eta2p5to3p0  h_ResponseVsRunNb_Jet_plots_eta3p0to3p5 h_ResponseVsRunNb_Jet_plots_eta3p5to4p0 h_ResponseVsRunNb_Jet_plots_eta4p0to5p0  --xtitle 'run number' --ytitle '(p_{T}^{L1Jet}/p_{T}^{reco jet})' --extralabel '#gamma+jets' --legend '0<|#eta|<1.3' '1.3<|#eta|<2.5' '2.5<|#eta|<3.0' '3.0<|#eta|<3.5' '3.5<|#eta|<4.' '4.<|#eta|<5.0'  --plotname L1Jet_FromEGamma_PtBalanceVsRunNb --axisranges 355381 357901 0 1.5
+
+
+
+
+ makeresol -i $filemujet --h2d h_ResponseVsPt_Jet_plots_eta0p0to1p3 h_ResponseVsPt_Jet_plots_eta1p3to2p5 h_ResponseVsPt_Jet_plots_eta2p5to3p0  h_ResponseVsPt_Jet_plots_eta3p0to3p5 h_ResponseVsPt_Jet_plots_eta3p5to4p0 h_ResponseVsPt_Jet_plots_eta4p0to5p0  --xtitle 'p_{T}^{reco jet}(GeV)' --ytitle '(p_{T}^{L1Jet}/p_{T}^{reco jet})' --extralabel '#mu+jets' --legend '0<|#eta|<1.3' '1.3<|#eta|<2.5' '2.5<|#eta|<3.0' '3.0<|#eta|<3.5' '3.5<|#eta|<4.' '4.<|#eta|<5.0'  --plotname L1Jet_FromSingleMuon_PtBalanceVsPt --axisranges 355381 357901 0 1.5
+makeresol -i $filemujet --h2d h_ResponseVsPt_Jet_plots_eta0p0to1p3 h_ResponseVsPt_Jet_plots_eta1p3to2p5 h_ResponseVsPt_Jet_plots_eta2p5to3p0  h_ResponseVsPt_Jet_plots_eta3p0to3p5 h_ResponseVsPt_Jet_plots_eta3p5to4p0 h_ResponseVsPt_Jet_plots_eta4p0to5p0  --xtitle 'p_{T}^{reco jet}(GeV)' --ytitle '(p_{T}^{L1Jet}/p_{T}^{reco jet})' --extralabel '#mu+jets' --legend '0<|#eta|<1.3' '1.3<|#eta|<2.5' '2.5<|#eta|<3.0' '3.0<|#eta|<3.5' '3.5<|#eta|<4.' '4.<|#eta|<5.0'  --plotname L1Jet_FromSingleMuon_PtBalanceVsPt --axisranges 355381 357901 0 1.5
+ makeresol -i $filemujet --h2d h_ResponseVsPt_Jet_plots_eta0p0to1p3 h_ResponseVsPt_Jet_plots_eta1p3to2p5 h_ResponseVsPt_Jet_plots_eta2p5to3p0  h_ResponseVsPt_Jet_plots_eta3p0to3p5 h_ResponseVsPt_Jet_plots_eta3p5to4p0 h_ResponseVsPt_Jet_plots_eta4p0to5p0  --xtitle 'p_{T}^{reco jet}(GeV)' --ytitle '(p_{T}^{L1Jet}/p_{T}^{reco jet})' --extralabel '#gamma+jets' --legend '0<|#eta|<1.3' '1.3<|#eta|<2.5' '2.5<|#eta|<3.0' '3.0<|#eta|<3.5' '3.5<|#eta|<4.' '4.<|#eta|<5.0'  --plotname L1Jet_FromEGamma_PtBalanceVsPt --axisranges 355381 357901 0 1.5
+ makeresol -i $filegamjet --h2d h_ResponseVsPt_Jet_plots_eta0p0to1p3 h_ResponseVsPt_Jet_plots_eta1p3to2p5 h_ResponseVsPt_Jet_plots_eta2p5to3p0  h_ResponseVsPt_Jet_plots_eta3p0to3p5 h_ResponseVsPt_Jet_plots_eta3p5to4p0 h_ResponseVsPt_Jet_plots_eta4p0to5p0  --xtitle 'p_{T}^{reco jet}(GeV)' --ytitle '(p_{T}^{L1Jet}/p_{T}^{reco jet})' --extralabel '#gamma+jets' --legend '0<|#eta|<1.3' '1.3<|#eta|<2.5' '2.5<|#eta|<3.0' '3.0<|#eta|<3.5' '3.5<|#eta|<4.' '4.<|#eta|<5.0'  --plotname L1Jet_FromEGamma_PtBalanceVsPt --axisranges 355381 357901 0 1.5
+
+
+
+
+
+#Run 2 vs Run 3 comparison
+
+
+ makeeff -i $filezee $filezee_2018 --den h_EGNonIso_plots_eta0p0to1p479  --num  h_EGNonIso_plots_eta0p0to1p479_l1thrgeq30 h_EGNonIso_plots_eta1p479to2p5_l1thrgeq30 --xtitle 'p_{T}^{e}(reco) (GeV)' --ytitle 'L1 EG30 (non iso) Efficiency' --legend '0<|#eta^{e}(reco)|<1.479' '1.479<|#eta^{e}(reco)|<2.5' --extralabel '#splitline{Z#rightarrowee}{}' --setlogx True --plotname L1EG30_EffTurnOnNonIso_barrelendcap_2018vsRun3 --suffix_files ' Run 3' ' 2018'
+
+
+
+
+
