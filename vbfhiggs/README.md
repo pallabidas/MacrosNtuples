@@ -12,4 +12,4 @@ https://github.com/iihe-cms-sw/GenericTreeProducerMINIAOD
 
 ## Running the code
 
-```python3 hinvchecks.py -i INPUTFILE -o OUTPUTFILE -s STUDY -f DATAFORMAT``` Higgs 
+```python3 hinvchecks.py -i INPUTFILE -o OUTPUTFILE -s STUDY -f DATAFORMAT``` 
