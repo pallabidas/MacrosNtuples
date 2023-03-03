@@ -1,4 +1,4 @@
-# Script for basic
+# Script for basic studies on VBF Higgs 
 ## Introduction 
 
 The script ```hinvchecks.py``` currently does two types of simple studies;
