@@ -76,7 +76,7 @@ The code for the last step, computing and plotting rates is available in the plo
 ```
 cd ../plotting
 ```
-Assuming you ran the previous step for the ```ZeroBias``` dataset and that your histos are saved in ```file.root```, here's an example command to compute and draw the rate of an example menu:sssssssssssssssssssssssssssssssssssssssssssss
+Assuming you ran the previous step for the ```ZeroBias``` dataset and that your histos are saved in ```file.root```, here's an example command to compute and draw the rate of an example menu:
 ```
 TBA
 ```
