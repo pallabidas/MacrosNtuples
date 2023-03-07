@@ -14,7 +14,7 @@ ROOT.gInterpreter.Declare('#include "../helpers/Helper.h"')
 
 #A few global variables
 lumisection_in_seconds = 23.2
-prescale = 450. #Prescale of HLTPhysics
+#prescale = 450. #Prescale of HLTPhysics
 pu_ref = 70 #
 rate_meas = 5.7*2450. #SingleMu22 @PU70 from fill 8456, for ZB this would be 3e8/26659*2450
 
@@ -589,36 +589,23 @@ def processfile(channel, input_file, max_events, str_l1finalor, h_allevents_vs_p
             print("found non empty run:lumi: ", run, ": ", lumi, ", pile up is ", pu)
 
             for ctr in range(int(histo_all.GetBinContent(i,j))):
-                h_allevents_vs_pu.Fill(pu, prescale)
+                h_allevents_vs_pu.Fill(pu)
             for ctr in range(int(histo_ref.GetBinContent(i,j))):
-                h_passreferencetriggerevents_vs_pu.Fill(pu, prescale)
+                h_passreferencetriggerevents_vs_pu.Fill(pu)
 
             for k in histos_pass.keys():
                 for ctr in range(int(histos_pass[k].GetBinContent(i,j))):
-                    h_passevents_vs_pu[k].Fill(pu, prescale)
+                    h_passevents_vs_pu[k].Fill(pu)
 
 
             h_lsprocessed_vs_pu.Fill(pu) 
-    #print("Uncorrected Rate is ", n_passevents/lumisection_in_seconds/n_processed_ls*prescale)
-    #print("NLS is ", n_processed_ls)
 
-    #for i in histos:
-    #    histos[i].GetValue().Write()
-
-    #histos_all.GetValue().Write() 
-    #histos_pass.GetValue().Write()
     df_report.Print()
 
-    #    return h_allevents_vs_pu, h_passevents_vs_pu
 
 
-    '''
-    Ideally this should run on all events in the file 
-    and return the number of total passing events vs PU
-    A good format could be a dictionnary? result = {}   where key is an int representing PU and value is a tuple: total counts times prescale, passing counts times prescale
-    It's probably computationnally inefficient to retrieve PU for each event 
-    
-    '''
+
+
 
 if __name__ == '__main__':
     main()

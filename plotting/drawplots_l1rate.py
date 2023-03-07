@@ -7,9 +7,8 @@ colors = [ROOT.kBlack, ROOT.kRed, ROOT.kBlue, ROOT.kOrange, ROOT.kMagenta, ROOT.
 dirname = 'plotL1Run3_prov2/'
 
 lumisection_in_seconds = 23.3
-prescale = 450.
-rate_meas = 5.7*2450.
-rate_zb = 3e8/26659*2450
+
+
 iszerobias = True
 def canvas():
     c = ROOT.TCanvas("c_eff","c_eff",700,600)
@@ -18,22 +17,25 @@ def canvas():
     return c
 
 
-def deadtime_correction(h_ref_rate_meas_vs_pu, rate_ref=5.7*2450, pu_ref=70):
+def eventcount_normalization(h_ref_rate_meas_vs_pu, rate_ref=5.7*2450, pu_ref=70, rate_zb=3e8/26659*2450, dataset='ZeroBias'):
     '''
-    Define a PU dependent correction factor to account for dead time.
-    A good reference is SingleMu22 which is quite linear with PU.
+    Derive a correction to convert event counts into rates, using counts for reference trigger (in the histo h_ref_rate_meas_vs_pu).
+    For ZeroBias, the reference is just the L1_ZeroBias bit for which the rate is known and is rate_zb. 
+
+    For HLTPhysics, things are more tricky as dead time can alter the measurement and is PU dependent. 
+    The reference trigger here is L1_SingleMu22 whose rate is linear vs PU. 
     https://cmsoms.cern.ch/api/resources/rateplots/8456/L1_SingleMu22
     '''
-    h_deadtime_correction = ROOT.TH1F("h_deadtime_correction_vs_pu","",100,0.5,100.5)
-    for i in range(1, h_deadtime_correction.GetNbinsX()):
-        rate = rate_meas/pu_ref*h_deadtime_correction.GetBinCenter(i)
-        if iszerobias:
+    h_normalization_correction = ROOT.TH1F("h_normalization_correction_vs_pu","",100,0.5,100.5)
+    for i in range(1, h_normalization_correction.GetNbinsX()):
+        rate = rate_ref/pu_ref*h_normalization_correction.GetBinCenter(i)
+        if dataset == 'ZeroBias':
             rate = rate_zb
-        h_deadtime_correction.SetBinContent(i,rate)
+        h_normalization_correction.SetBinContent(i,rate)
         
-    h_deadtime_correction.Divide(h_ref_rate_meas_vs_pu)
+    h_normalization_correction.Divide(h_ref_rate_meas_vs_pu)
 
-    return h_deadtime_correction
+    return h_normalization_correction
 #At PU70, unprescaled rate of L1_SingleMu22 is 5.7 Hz per bunch crossing. There are 2450 colliding bx in a typical fill
 
 
@@ -44,7 +46,7 @@ def main():
         formatter_class=argparse.RawTextHelpFormatter)
 
     parser.add_argument("-i", "--input", dest="inputFile", help="Input file", type=str, default='')
-    
+    parser.add_argument("-d", "--dataset", dest="dataset", help="Dataset (HLTPhysics or ZeroBias)", type=str, default='')
     parser.add_argument("--histos", dest="histos", help="Name(s) of the histo(s)", nargs='+', type=str, default='')
     parser.add_argument("--href", dest="href", help="histo for ref", type=str, default='')
     parser.add_argument("--hlumis", dest="hlumis", help="histo for processed ls", type=str, default='')
@@ -64,6 +66,10 @@ def main():
     parser.add_argument("--suffix_files", dest="suffix_files", help="Input files suffix", nargs='+', type=str, default='')
         
     args = parser.parse_args()
+
+    if args.dataset != 'ZeroBias' and args.dataset != 'HLTPhysics':
+        raise Exception('Invalid dataset')
+    dataset = args.dataset
     
     if args.interactive == False:
         ROOT.gROOT.SetBatch(1)
@@ -76,7 +82,7 @@ def main():
     href = inputFile.Get(args.href)
     href.Divide(hlumis)
     href.Scale(1./lumisection_in_seconds)
-    h_deadtime_correction = deadtime_correction(href)
+    h_normalization_correction = eventcount_normalization(href, dataset)
     
 
     c = canvas()
@@ -100,7 +106,7 @@ def main():
     for ctr, i in reversed(list(enumerate(histos))):
         i.Divide(hlumis) 
         i.Scale(1./lumisection_in_seconds)
-        i.Multiply(h_deadtime_correction)
+        i.Multiply(h_normalization_correction)
         i.SetMarkerStyle(20)
         i.SetLineColor(colors[ctr%len(colors)])
         #i.SetFillColor(colors[ctr%len(colors)])

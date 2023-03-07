@@ -6,7 +6,7 @@ This folder contains several scripts:
 
 - ```performances.py```: for L1T performances studies of the various objects (efficiency, response, resolution, pre/postfiring). 
 
-- ```rate.py```: for L1 menu rate estimate vs PU, using HLTPhysics or ZeroBias (use the latter unless you know what you do!). The script allows you to define your customized menu. It 
+- ```rate.py```: for L1 menu rate estimate vs PU, using HLTPhysics or ZeroBias (use the latter unless you know what you do!). The script allows you to define your customized menu. 
 
 Currently these take as inputs customized IIHE-CMS ntuples (https://github.com/iihe-cms-sw/GenericTreeProducerMINIAOD) but can fairly easily be adapted to run on L1 ntuples or custom NANO containing L1 objects/decisions. 
 
@@ -76,8 +76,8 @@ The code for the last step, computing and plotting rates is available in the plo
 ```
 cd ../plotting
 ```
-Assuming you ran the previous step for the ```ZeroBias``` dataset and that your histos are saved in ```file.root```, here's an example command to compute and draw the rate of an example menu:
+Assuming you ran the previous step for the ```ZeroBias``` dataset and that your histos are saved in ```file.root```, here's an example command to compute and draw the rate of two example menus whose passing event counts are stored in ```HISTONAME_1``` and ```HISTONAME_2```:
 ```
-TBA
+python3  drawplots_l1rate.py -i file.root  --histos HISTONAME_1 HISTONAME_2 ... --hlumis h_lsprocessed_vs_pu --href  h_allevents_vs_pu  -d ZeroBias
 ```
 
