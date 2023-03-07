@@ -28,6 +28,7 @@ def eventcount_normalization(h_ref_rate_meas_vs_pu, rate_ref=5.7*2450, pu_ref=70
     '''
     h_normalization_correction = ROOT.TH1F("h_normalization_correction_vs_pu","",100,0.5,100.5)
     for i in range(1, h_normalization_correction.GetNbinsX()):
+        print(type(rate_ref),type(pu_ref),type(h_normalization_correction.GetBinCenter(i)))
         rate = rate_ref/pu_ref*h_normalization_correction.GetBinCenter(i)
         if dataset == 'ZeroBias':
             rate = rate_zb
@@ -69,7 +70,6 @@ def main():
 
     if args.dataset != 'ZeroBias' and args.dataset != 'HLTPhysics':
         raise Exception('Invalid dataset')
-    dataset = args.dataset
     
     if args.interactive == False:
         ROOT.gROOT.SetBatch(1)
@@ -82,7 +82,7 @@ def main():
     href = inputFile.Get(args.href)
     href.Divide(hlumis)
     href.Scale(1./lumisection_in_seconds)
-    h_normalization_correction = eventcount_normalization(href, dataset)
+    h_normalization_correction = eventcount_normalization(href, dataset=args.dataset)
     
 
     c = canvas()
