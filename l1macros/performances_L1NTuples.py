@@ -8,7 +8,7 @@ import argparse
 sys.path.insert(0, '../helpers')
 from helper_L1Ntuples import *
 
-ROOT.gInterpreter.Declare('#include "../helper/Helper.h"')
+ROOT.gInterpreter.Declare('#include "../helpers/Helper.h"')
 def main():
     parser = argparse.ArgumentParser(
         description='''L1 performance studies (turnons, scale/resolution/...)                                                                                                                                
@@ -29,7 +29,7 @@ def main():
     args = parser.parse_args()
     inputFile = ROOT.TFile.Open(args.inputFile)
     tree = inputFile.Get('l1EventTree/L1EventTree')
-    tree_Upgrade = inputFile.Get('l1UpgradeEmuTree/L1UpgradeTree')
+    tree_Upgrade = inputFile.Get('l1UpgradeTree/L1UpgradeTree')
     tree_uGT  = inputFile.Get('l1uGTTree/L1uGTTree')
     tree_Reco = inputFile.Get('l1RecoTree/RecoTree')
     tree_RecoJet = inputFile.Get('l1JetRecoTree/JetRecoTree')

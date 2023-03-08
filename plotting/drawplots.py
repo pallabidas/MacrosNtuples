@@ -32,7 +32,7 @@ def main():
     parser.add_argument("--h2d", dest="h2d", help="2D histo (for profile etc)", nargs='+',type=str)
     parser.add_argument("--axisranges", dest="axisranges", help="Axis ranges [xmin, xmax, ymin, ymax, zmin, zmax]", nargs='+', type=float, default=[])
     parser.add_argument("--addnumtoden", dest="addnumtoden", help="Add numerator histo to denominator (because it only contains complementary events e.g. failing probes)",type=bool, default=False)
-    parser.add_argument("--saveplot", dest="saveplot", help="Save plots or not",type=bool, default = False)
+    parser.add_argument("--saveplot", dest="saveplot", help="Save plots or not",type=bool, default = True)
     parser.add_argument("--interactive", dest="interactive", help="Run in interactive mode (keep plot drawn)", type=bool, default=False)
     parser.add_argument("--suffix_files", dest="suffix_files", help="Input files suffix", nargs='+', type=str, default='')
     parser.add_argument("--txtformat", dest="txtformat", help="SetPaintTextFormat option", type=str, default='2.2f')
@@ -309,8 +309,8 @@ def drawplots(objs, legendlabels, xtitle='', ytitle='', ztitle='', lumilabel='',
     if interactive:
         input()
     if saveplot: 
-        c.SaveAs(dirname+'/'+plotname+'.png')
-        c.SaveAs(dirname+'/'+plotname+'.pdf')
+        c.SaveAs('plots/'+plotname+'.png')
+        c.SaveAs('plots/'+plotname+'.pdf')
         
 
 def compute_eff(hdens, hnums, addnumtoden):
