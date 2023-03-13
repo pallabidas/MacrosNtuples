@@ -204,7 +204,7 @@ def ZMuMu_MuSelection(df):
 
     df = df.Define('isTag','_lPt>25&&abs(_lpdgId)==13&&_lPassTightID&&_lpassHLT_IsoMu24')
     df = df.Filter('Sum(isTag)>0')
-    df = df.Define('isProbe','_lPt>5&&abs(_lpdgId)==13&&_lPassTightID&& (Sum(isTag)>=2|| isTag==0)')
+    df = df.Define('isProbe','_lPt>3&&abs(_lpdgId)==13&&_lPassTightID&& (Sum(isTag)>=2|| isTag==0)')
     df = df.Filter('_mll>80&&_mll<100')
 
     df = df.Define('probe_Pt','_lPt[isProbe]')
