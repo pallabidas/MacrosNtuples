@@ -1,13 +1,16 @@
 # Files
 executable = scriptcondor_performances.sh
-output = /user/lathomas/PortingCodeToGitIIHECMS/CMSSW_12_4_8/src/MacrosNtuples/l1macros/condorsubmission/OUTPUTDIR/log/scriptcondor_$(Process).out
-error = /user/lathomas/PortingCodeToGitIIHECMS/CMSSW_12_4_8/src/MacrosNtuples/l1macros/condorsubmission/OUTPUTDIR/log/scriptcondor_$(Process).err
-log = /user/lathomas/PortingCodeToGitIIHECMS/CMSSW_12_4_8/src/MacrosNtuples/l1macros/condorsubmission/OUTPUTDIR/log/scriptcondor_$(Process).log
+#output = /user/lathomas/PortingCodeToGitIIHECMS/CMSSW_12_4_8/src/MacrosNtuples/l1macros/condorsubmission/OUTPUTDIR/log/scriptcondor_$(Process).out
+#error = /user/lathomas/PortingCodeToGitIIHECMS/CMSSW_12_4_8/src/MacrosNtuples/l1macros/condorsubmission/OUTPUTDIR/log/scriptcondor_$(Process).err
+#log = /user/lathomas/PortingCodeToGitIIHECMS/CMSSW_12_4_8/src/MacrosNtuples/l1macros/condorsubmission/OUTPUTDIR/log/scriptcondor_$(Process).log
+output = /user/hevard/CMSSW_12_4_8/src/MacrosNtuples/l1macros/condorsubmission/OUTPUTDIR/log/scriptcondor_$(Process).out
+error = /user/hevard/CMSSW_12_4_8/src/MacrosNtuples/l1macros/condorsubmission/OUTPUTDIR/log/scriptcondor_$(Process).err
+log = /user/hevard/CMSSW_12_4_8/src/MacrosNtuples/l1macros/condorsubmission/OUTPUTDIR/log/scriptcondor_$(Process).log
 #arguments    = $(Process)
 
 
 transfer_input_files = $(filename)
-arguments            = $(filename)  /user/lathomas/PortingCodeToGitIIHECMS/CMSSW_12_4_8/src/MacrosNtuples/l1macros/condorsubmission/OUTPUTDIR/output_$(Process).root CHANNEL
+arguments            = $(filename)  /user/hevard/CMSSW_12_4_8/src/MacrosNtuples/l1macros/condorsubmission/OUTPUTDIR/output_$(Process).root CHANNEL
 
 
 
