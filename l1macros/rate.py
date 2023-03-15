@@ -14,7 +14,7 @@ ROOT.gInterpreter.Declare('#include "../helpers/Helper.h"')
 
 #A few global variables
 lumisection_in_seconds = 23.2
-prescale = 450. #Prescale of HLTPhysics
+#prescale = 450. #Prescale of HLTPhysics
 pu_ref = 70 #
 rate_meas = 5.7*2450. #SingleMu22 @PU70 from fill 8456, for ZB this would be 3e8/26659*2450
 
@@ -420,7 +420,10 @@ def main():
     addmenu(dict_menus, "2p2e34_nops_nozb_dijet30detalt1p5mass200", df_menu, 'HighPU', disableprescaledseeds=True, disable_zerobias=True, disabledtriggers=[], manually_enabledtriggers=['L1_DoubleJet30er2p5_Mass_Min200_dEta_Max1p5'])
 
     
-    #Make many copies of 'High PU' column, disable the VBF dijet seeds, and replace them by a customized one. 
+    #Make many copies of 'High PU' column, in each case, one disables all the VBF dijet seeds, and replaces them by a customized one with a customized choice of threshold on pt1, pt2, mjj, deta, dphi.
+    #Currently this code is pretty ugly since it requires the corresponding bits to be defined beforehand in the dataframe (in the processfile() function)
+    #If you uncomment the next few lines, make sure to the same in processfile as well. 
+    '''
     for h in dphi:
         for i in leadingpt:
             for j in trailingpt:
@@ -431,7 +434,7 @@ def main():
                     addmenu(dict_menus, '2p2e34_nops_nozb_L1_DoubleJetPt{}_{}_dEta{}_dPhi{}'.format(i,j,k,h).replace(".","p"), df_menu, 'HighPU', disableprescaledseeds=True, disable_zerobias=True, disabledtriggers=['L1_DoubleJet_120_45_DoubleJet45_Mass_Min620', 'L1_DoubleJet_115_40_DoubleJet40_Mass_Min620_Jet60TT28', 'L1_DoubleJet_120_45_DoubleJet45_Mass_Min620_Jet60TT28', 'L1_DoubleJet35_Mass_Min450_IsoTau45er2p1_RmOvlp_dR0p5'], manually_enabledtriggers=[], customseeds=['passL1_DoubleJetPt{}_{}_dEta{}_dPhi{}'.format(i,j,k,h).replace(".","p")])
                 for k in mjj:
                     addmenu(dict_menus, '2p2e34_nops_nozb_L1_DoubleJetPt{}_{}_Mjj{}_dPhi{}'.format(i,j,k,h).replace(".","p"), df_menu, 'HighPU', disableprescaledseeds=True, disable_zerobias=True, disabledtriggers=['L1_DoubleJet_120_45_DoubleJet45_Mass_Min620', 'L1_DoubleJet_115_40_DoubleJet40_Mass_Min620_Jet60TT28', 'L1_DoubleJet_120_45_DoubleJet45_Mass_Min620_Jet60TT28', 'L1_DoubleJet35_Mass_Min450_IsoTau45er2p1_RmOvlp_dR0p5'], manually_enabledtriggers=[], customseeds=['passL1_DoubleJetPt{}_{}_Mjj{}_dPhi{}'.format(i,j,k,h).replace(".","p")])
-
+    '''
 
     #Some more menus
     '''
@@ -527,6 +530,8 @@ def processfile(channel, input_file, max_events, str_l1finalor, h_allevents_vs_p
     runmin, runmax = int(df.Min('_runNb').GetValue()), int(df.Max('_runNb').GetValue())
     
 
+
+    '''
     #Creating the various customized VBF seeds
     for h in dphi:
         for i in leadingpt:
@@ -538,7 +543,8 @@ def processfile(channel, input_file, max_events, str_l1finalor, h_allevents_vs_p
                     df = df.Define("passL1_DoubleJetPt{}_{}_dEta{}_dPhi{}".format(i,j,k,h).replace(".","p"),"L1SeedDoubleJetEtaMin(_L1jet_pt, _L1jet_eta, _L1jet_phi, _L1jet_bx, {}, {}, {}, {})".format(i, j, k, h))
                 for k in mjj:    
                     df = df.Define("passL1_DoubleJetPt{}_{}_Mjj{}_dPhi{}".format(i,j,k,h).replace(".","p"),"L1SeedDoubleJetMassMin(_L1jet_pt, _L1jet_eta, _L1jet_phi, _L1jet_bx, {}, {}, {}, {})".format(i, j, k, h))
-
+    '''
+    
     #The next line does nothing, just prints a line every 100k events
     df = df.Filter('if(tdfentry_ %100000 == 0) {cout << "Event is  " << tdfentry_ << endl;} return true;')
 
@@ -589,36 +595,23 @@ def processfile(channel, input_file, max_events, str_l1finalor, h_allevents_vs_p
             print("found non empty run:lumi: ", run, ": ", lumi, ", pile up is ", pu)
 
             for ctr in range(int(histo_all.GetBinContent(i,j))):
-                h_allevents_vs_pu.Fill(pu, prescale)
+                h_allevents_vs_pu.Fill(pu)
             for ctr in range(int(histo_ref.GetBinContent(i,j))):
-                h_passreferencetriggerevents_vs_pu.Fill(pu, prescale)
+                h_passreferencetriggerevents_vs_pu.Fill(pu)
 
             for k in histos_pass.keys():
                 for ctr in range(int(histos_pass[k].GetBinContent(i,j))):
-                    h_passevents_vs_pu[k].Fill(pu, prescale)
+                    h_passevents_vs_pu[k].Fill(pu)
 
 
             h_lsprocessed_vs_pu.Fill(pu) 
-    #print("Uncorrected Rate is ", n_passevents/lumisection_in_seconds/n_processed_ls*prescale)
-    #print("NLS is ", n_processed_ls)
 
-    #for i in histos:
-    #    histos[i].GetValue().Write()
-
-    #histos_all.GetValue().Write() 
-    #histos_pass.GetValue().Write()
     df_report.Print()
 
-    #    return h_allevents_vs_pu, h_passevents_vs_pu
 
 
-    '''
-    Ideally this should run on all events in the file 
-    and return the number of total passing events vs PU
-    A good format could be a dictionnary? result = {}   where key is an int representing PU and value is a tuple: total counts times prescale, passing counts times prescale
-    It's probably computationnally inefficient to retrieve PU for each event 
-    
-    '''
+
+
 
 if __name__ == '__main__':
     main()
