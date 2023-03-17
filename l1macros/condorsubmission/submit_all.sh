@@ -1,7 +1,6 @@
 #!/bin/bash
 
-#for run in 'C1' 'D1' 'D2' 'E1' 'F1' 'G1'
-for run in 'G1'
+for run in 'C1' 'D1' 'D2' 'E1' 'F1' 'G1'
 do
     #for skim in "Muon","ZToMuMu" "Muon","SingleMuforJME" "EGamma","ZToEE" "EGamma","SinglePhotonforJME"
     for skim in "Muon","ZToMuMu"
