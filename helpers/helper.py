@@ -334,20 +334,20 @@ def ZMuMu_Plots(df, suffix = ''):
     
     for i in range(3):
         if i == 0:
-            df_mu[i] = df.Define('probe_idxL1jet','FindL1ObjIdx(_L1mu_eta, _L1mu_phi, probe_Eta, probe_Phi, probe_Pt, _L1mu_charge)')
-            df_mu[i] = df_mu[i].Define('probe_idxL1jet_Bx0','FindL1ObjIdx_setBx(_L1mu_eta, _L1mu_phi, _L1mu_bx, probe_Eta, probe_Phi, probe_Pt, _L1mu_charge, 0)')
-            df_mu[i] = df_mu[i].Define('probe_idxL1jet_Bxmin1','FindL1ObjIdx_setBx(_L1mu_eta, _L1mu_phi, _L1mu_bx, probe_Eta, probe_Phi, probe_Pt, _L1mu_charge, -1)')
-            df_mu[i] = df_mu[i].Define('probe_idxL1jet_Bxplus1','FindL1ObjIdx_setBx(_L1mu_eta, _L1mu_phi, _L1mu_bx, probe_Eta, probe_Phi, probe_Pt, _L1mu_charge, 1)')
+            df_mu[i] = df.Define('probe_idxL1jet','FindL1MuIdx(_L1mu_eta, _L1mu_phi, probe_Eta, probe_Phi, probe_Pt, _L1mu_charge)')
+            df_mu[i] = df_mu[i].Define('probe_idxL1jet_Bx0','FindL1MuIdx_setBx(_L1mu_eta, _L1mu_phi, _L1mu_bx, probe_Eta, probe_Phi, probe_Pt, _L1mu_charge, 0)')
+            df_mu[i] = df_mu[i].Define('probe_idxL1jet_Bxmin1','FindL1MuIdx_setBx(_L1mu_eta, _L1mu_phi, _L1mu_bx, probe_Eta, probe_Phi, probe_Pt, _L1mu_charge, -1)')
+            df_mu[i] = df_mu[i].Define('probe_idxL1jet_Bxplus1','FindL1MuIdx_setBx(_L1mu_eta, _L1mu_phi, _L1mu_bx, probe_Eta, probe_Phi, probe_Pt, _L1mu_charge, 1)')
         if i == 1:
-            df_mu[i] = df.Define('probe_idxL1jet','FindL1ObjIdx(_L1mu_eta, _L1mu_phi, probe_Eta, probe_Phi, probe_Pt, _L1mu_charge, _L1mu_Qual, 8)')
-            df_mu[i] = df_mu[i].Define('probe_idxL1jet_Bx0','FindL1ObjIdx_setBx(_L1mu_eta, _L1mu_phi, _L1mu_bx, probe_Eta, probe_Phi, probe_Pt, _L1mu_charge, 0, _L1mu_Qual, 8)')
-            df_mu[i] = df_mu[i].Define('probe_idxL1jet_Bxmin1','FindL1ObjIdx_setBx(_L1mu_eta, _L1mu_phi, _L1mu_bx, probe_Eta, probe_Phi, probe_Pt, _L1mu_charge, -1, _L1mu_Qual, 8)')
-            df_mu[i] = df_mu[i].Define('probe_idxL1jet_Bxplus1','FindL1ObjIdx_setBx(_L1mu_eta, _L1mu_phi, _L1mu_bx, probe_Eta, probe_Phi, probe_Pt, _L1mu_charge, 1, _L1mu_Qual, 8)')
+            df_mu[i] = df.Define('probe_idxL1jet','FindL1MuIdx(_L1mu_eta, _L1mu_phi, probe_Eta, probe_Phi, probe_Pt, _L1mu_charge, _L1mu_Qual, 8)')
+            df_mu[i] = df_mu[i].Define('probe_idxL1jet_Bx0','FindL1MuIdx_setBx(_L1mu_eta, _L1mu_phi, _L1mu_bx, probe_Eta, probe_Phi, probe_Pt, _L1mu_charge, 0, _L1mu_Qual, 8)')
+            df_mu[i] = df_mu[i].Define('probe_idxL1jet_Bxmin1','FindL1MuIdx_setBx(_L1mu_eta, _L1mu_phi, _L1mu_bx, probe_Eta, probe_Phi, probe_Pt, _L1mu_charge, -1, _L1mu_Qual, 8)')
+            df_mu[i] = df_mu[i].Define('probe_idxL1jet_Bxplus1','FindL1MuIdx_setBx(_L1mu_eta, _L1mu_phi, _L1mu_bx, probe_Eta, probe_Phi, probe_Pt, _L1mu_charge, 1, _L1mu_Qual, 8)')
         if i == 2:
-            df_mu[i] = df.Define('probe_idxL1jet','FindL1ObjIdx(_L1mu_eta, _L1mu_phi, probe_Eta, probe_Phi, probe_Pt, _L1mu_charge, _L1mu_Qual, 12)')
-            df_mu[i] = df_mu[i].Define('probe_idxL1jet_Bx0','FindL1ObjIdx_setBx(_L1mu_eta, _L1mu_phi, _L1mu_bx, probe_Eta, probe_Phi, probe_Pt, _L1mu_charge, 0, _L1mu_Qual, 12)')
-            df_mu[i] = df_mu[i].Define('probe_idxL1jet_Bxmin1','FindL1ObjIdx_setBx(_L1mu_eta, _L1mu_phi, _L1mu_bx, probe_Eta, probe_Phi, probe_Pt, _L1mu_charge, -1, _L1mu_Qual, 12)')
-            df_mu[i] = df_mu[i].Define('probe_idxL1jet_Bxplus1','FindL1ObjIdx_setBx(_L1mu_eta, _L1mu_phi, _L1mu_bx, probe_Eta, probe_Phi, probe_Pt, _L1mu_charge, 1, _L1mu_Qual, 12)')
+            df_mu[i] = df.Define('probe_idxL1jet','FindL1MuIdx(_L1mu_eta, _L1mu_phi, probe_Eta, probe_Phi, probe_Pt, _L1mu_charge, _L1mu_Qual, 12)')
+            df_mu[i] = df_mu[i].Define('probe_idxL1jet_Bx0','FindL1MuIdx_setBx(_L1mu_eta, _L1mu_phi, _L1mu_bx, probe_Eta, probe_Phi, probe_Pt, _L1mu_charge, 0, _L1mu_Qual, 12)')
+            df_mu[i] = df_mu[i].Define('probe_idxL1jet_Bxmin1','FindL1MuIdx_setBx(_L1mu_eta, _L1mu_phi, _L1mu_bx, probe_Eta, probe_Phi, probe_Pt, _L1mu_charge, -1, _L1mu_Qual, 12)')
+            df_mu[i] = df_mu[i].Define('probe_idxL1jet_Bxplus1','FindL1MuIdx_setBx(_L1mu_eta, _L1mu_phi, _L1mu_bx, probe_Eta, probe_Phi, probe_Pt, _L1mu_charge, 1, _L1mu_Qual, 12)')
 
             
 
@@ -516,7 +516,7 @@ def AnalyzeCleanJets(df, JetRecoPtCut, L1JetPtCut, suffix = ''):
     df = df.Define('cleanJet_L1Bx','GetVal(cleanJet_idxL1jet,_L1jet_bx)')
     df = df.Define('cleanJet_L1PtoverRecoPt','cleanJet_L1Pt/cleanJet_Pt')
     df = df.Filter(stringFailingJets)
-    #Now some plotting (turn ons for now)
+    ##Now some plotting (turn ons for now)
     L1PtCuts = [30., 40., 60., 80., 100., 120., 140., 160., 170., 180., 200.]
 
 
