@@ -9,6 +9,7 @@ import argparse
 
 #In case you want to load an helper for C++ functions
 ROOT.gInterpreter.Declare('#include "../helpers/Helper.h"')
+ROOT.gInterpreter.Declare('#include "../helpers/Helper_InvariantMass.h"')
 #Importing stuff from other python files
 sys.path.insert(0, '../helpers')
 
@@ -173,7 +174,7 @@ def main():
         for i, df_element in enumerate(df_list):
             df_element, histos_jets = AnalyzeCleanJets(df_element, 100, 50, suffix = suffix_list[i]) 
             df_element, histos_sum = EtSum(df_element, suffix = suffix_list[i])
-            df_element, histos_hf = HFNoiseStudy(df, suffix = suffix_list[i])
+            df_element, histos_hf = HFNoiseStudy(df_element, suffix = suffix_list[i])
 
             for key, val in histos_jets.items():
                 all_histos_jets[key] = val
