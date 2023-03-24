@@ -26,12 +26,19 @@ The code can be run using the following command:
 
 ``` python3 performances.py -i INPUTFILE -o OUTPUTFILE -c CHANNEL --max_events MAX_EVENTS```
  
-It can also be run on condor:
+### Submission to condor
+
+`performances.py` can also be run on condor:
 
 ```
 cd condorsubmission/
 sh SubmitToCondor.sh OUTPUTDIR CHANNEL 'list of files'
 ```
+
+in `condorsubmission/`, you can also find the `submit_all.sh` script, that will 
+submit jobs for all of 2022, and all skims.
+
+### Plotting the results
 
 The code for the last step, computing and plotting efficiencies... etc., is available in the plotting folder: 
 
@@ -51,6 +58,8 @@ h_Jet_plots_eta0p0to1p3_l1thrgeq200p0\
 --extralabel '#splitline{>=1 tight muon (p_{T}>27 GeV), pass HLT_IsoMu24}{#color[4]{0<|#eta^{jet}(reco)|<1.3}}'\
 --plotname L1Jet_FromSingleMuon_TurnOn_barrel
 ```
+
+You can find more explanations in `MacrosNtuples/plotting/README.md`.
  
 
 ## Rate studies  ```rate.py``` 
