@@ -1,9 +1,9 @@
 #!/bin/bash
 
 for run in 'C1' 'D1' 'D2' 'E1' 'F1' 'G1'
+#for run in 'G1'
 do
-    #for skim in "Muon","ZToMuMu" "Muon","SingleMuforJME" "EGamma","ZToEE" "EGamma","SinglePhotonforJME"
-    for skim in "Muon","ZToMuMu"
+    for skim in "Muon","ZToMuMu" "Muon","SingleMuforJME" "EGamma","ZToEE" "EGamma","SinglePhotonforJME"
     do 
         IFS=","
         set $skim
@@ -29,11 +29,8 @@ do
                 ;;
         esac
 
-        #outdir="2022Run${run:0:1}v${run:1:1}_golden"
         outdir="2022Run${run:0:1}v${run:1:1}"
 
-        #condor_submit submit.sub skim=$condor_skim input_files=$dir/*/*.root out_dir=$outdir/outputcondor_$condor_skim
-        #echo SubmitToCondor.sh "$outdir"/outputcondor_"$condor_skim" "$condor_skim" \'"$dir/*/*.root"\'
         sh SubmitToCondor.sh outdir/"$outdir"/outputcondor_"$condor_skim" "$condor_skim" "$dir/*/*.root"
 
 
@@ -42,6 +39,9 @@ done
 
 #./submit.sh ZToMuMu "/pnfs/iihe/cms/store/user/hevard/SingleMuon/Run2022C_PromptReco_v1_DataRun3_L1Study_ZToMuMu/221214_155554/*/*.root" 2022RunCv1_golden/outputcondor_SingleMuon_ZToMuMu
 #./submit.sh MuonJet "/pnfs/iihe/cms/store/user/hevard/SingleMuon/Run2022C_PromptReco_v1_DataRun3_L1Study_SingleMuforJME/221214_155734/*/*.root" 2022RunCv1_golden/outputcondor_SingleMuon_MuonJet
+
+sh SubmitToCondor.sh outdir/2022RunCv1_start/outputcondor_ZToMuMu ZToMuMu "/pnfs/iihe/cms/store/user/hevard/SingleMuon/Run2022C_PromptReco_v1_DataRun3_L1Study_ZToMuMu/221214_155554/*/*.root" 
+sh SubmitToCondor.sh outdir/2022RunCv1_start/outputcondor_MuonJet MuonJet "/pnfs/iihe/cms/store/user/hevard/SingleMuon/Run2022C_PromptReco_v1_DataRun3_L1Study_SingleMuforJME/221214_155734/*/*.root" 
 
 
 # 2018D
