@@ -105,6 +105,7 @@ def canvas(width=700, height=600, lmargin_frac=0.15, rmargin_frac=0.15):
     c.SetLeftMargin(lmargin_frac)
     c.SetRightMargin(rmargin_frac)
     c.SetGrid()
+    c.SetFillStyle(4000)
     return c
 
 
