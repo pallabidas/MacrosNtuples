@@ -23,7 +23,7 @@ makedist="python3 $PWD/drawplots.py -t distribution --saveplot True $nvtx_arg"
 
 # move to workdir
 cd $dir
-filezee=all_zee.root
+filezee=all_ZToEE.root
 
 # set some labels
 toplabel="#sqrt{s} = 13.6 TeV, L_{int} = $lumi fb^{-1}"

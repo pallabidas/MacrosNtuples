@@ -23,8 +23,8 @@ makedist="python3 $PWD/drawplots.py -t distribution --saveplot True $nvtx_arg"
 
 # move to workdir
 cd $dir
-filemujet=all_mujet.root
-filegamjet=all_photonjet.root
+filemujet=all_MuonJet.root
+filegamjet=all_PhotonJet.root
 
 # set some labels
 toplabel="#sqrt{s} = 13.6 TeV, L_{int} = $lumi fb^{-1}"
