@@ -419,7 +419,12 @@ def main():
     addmenu(dict_menus, "2p2e34_nops_no_zb_dijet30detalt1p5mass250", df_menu, 'HighPU', disableprescaledseeds=True, disable_zerobias=True, disabledtriggers=[], manually_enabledtriggers=['L1_DoubleJet30er2p5_Mass_Min250_dEta_Max1p5'])
     addmenu(dict_menus, "2p2e34_nops_nozb_dijet30detalt1p5mass200", df_menu, 'HighPU', disableprescaledseeds=True, disable_zerobias=True, disabledtriggers=[], manually_enabledtriggers=['L1_DoubleJet30er2p5_Mass_Min200_dEta_Max1p5'])
 
-    
+    addmenu(dict_menus, "2p2e34_nops_nozb_novbf", df_menu, 'HighPU', disableprescaledseeds=True, disable_zerobias=True, disabledtriggers=['L1_DoubleJet_120_45_DoubleJet45_Mass_Min620', 'L1_DoubleJet_115_40_DoubleJet40_Mass_Min620_Jet60TT28', 'L1_DoubleJet_120_45_DoubleJet45_Mass_Min620_Jet60TT28', 'L1_DoubleJet35_Mass_Min450_IsoTau45er2p1_RmOvlp_dR0p5'], manually_enabledtriggers=[])
+
+    addmenu(dict_menus, "2p2e34_nops_no_zb_dimu4p5_sq_os", df_menu, 'HighPU', disableprescaledseeds=True, disable_zerobias=True, disabledtriggers=['L1_TripleMu_3SQ_2p5SQ_0OQ_Mass_Max12','L1_DoubleMu0er2p0_SQ_OS_dEta_Max1p5'], manually_enabledtriggers=['L1_DoubleMu4p5_SQ_OS'])
+    addmenu(dict_menus, "2p2e34_nops_no_zb_dimu4_sq_os", df_menu, 'HighPU', disableprescaledseeds=True, disable_zerobias=True, disabledtriggers=['L1_TripleMu_3SQ_2p5SQ_0OQ_Mass_Max12','L1_DoubleMu0er2p0_SQ_OS_dEta_Max1p5'], manually_enabledtriggers=['L1_DoubleMu4_SQ_OS'])
+    addmenu(dict_menus, "2p2e34_nops_no_zb_ref_dimu4p5_sq_os", df_menu, 'HighPU', disableprescaledseeds=True, disable_zerobias=True, disabledtriggers=['L1_TripleMu_3SQ_2p5SQ_0OQ_Mass_Max12','L1_DoubleMu0er2p0_SQ_OS_dEta_Max1p5'])
+
     #Make many copies of 'High PU' column, in each case, one disables all the VBF dijet seeds, and replaces them by a customized one with a customized choice of threshold on pt1, pt2, mjj, deta, dphi.
     #Currently this code is pretty ugly since it requires the corresponding bits to be defined beforehand in the dataframe (in the processfile() function)
     #If you uncomment the next few lines, make sure to the same in processfile as well. 
