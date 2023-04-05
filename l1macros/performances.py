@@ -9,6 +9,7 @@ import argparse
 
 #In case you want to load an helper for C++ functions
 ROOT.gInterpreter.Declare('#include "../helpers/Helper.h"')
+ROOT.gInterpreter.Declare('#include "../helpers/Helper_InvariantMass.h"')
 #Importing stuff from other python files
 sys.path.insert(0, '../helpers')
 
@@ -37,6 +38,11 @@ def main():
     parser.add_argument("--nvtx_bins", dest="nvtx_bins", help="Edges of the nvtx bins to use if plotNvtx is set to True. Default=[10, 20, 30, 40, 50, 60]", nargs='+', type=int, default=[10, 20, 30, 40, 50, 60])
     args = parser.parse_args() 
 
+    ### TESTING: only using MuonJet skim for now
+    if args.channel != 'MuonJet':
+        print("Only 'MuonJet' channel supported for now")
+        exit()
+
     
     ###Define the RDataFrame from the input tree
     inputFile = args.inputFile
@@ -57,7 +63,7 @@ def main():
 
     # bins of nvtx
     if args.plot_nvtx == True:
-        filter_list += ["_n_PV>{}&&_n_PV<{}".format(low, high) for (low, high) \
+        filter_list += ["PV_npvs>{}&&PV_npvs<{}".format(low, high) for (low, high) \
                 in zip(args.nvtx_bins[:-1],args.nvtx_bins[1:])]
         suffix_list += ["_nvtx{}to{}".format(low, high) for (low, high) \
                 in zip(args.nvtx_bins[:-1],args.nvtx_bins[1:])]
@@ -67,8 +73,12 @@ def main():
     df = ROOT.RDataFrame('ntuplizer/tree', inputFile)    
     nEvents = df.Count().GetValue()
 
+    #if nEvents == 0:
+    #    df = ROOT.RDataFrame('jmeanalyzer/tree', inputFile)
+    #    nEvents = df.Count().GetValue()
+
     if nEvents == 0:
-        df = ROOT.RDataFrame('jmeanalyzer/tree', inputFile)
+        df = ROOT.RDataFrame('Events', inputFile)
         nEvents = df.Count().GetValue()
     
     print('There are {} events'.format(nEvents))
@@ -92,7 +102,7 @@ def main():
         return 
 
     # add nvtx histo
-    nvtx_histo = df.Histo1D(ROOT.RDF.TH1DModel("h_nvtx" , "Number of reco vertices;N_{vtx};Events"  ,    100, 0., 100.), "_n_PV")
+    nvtx_histo = df.Histo1D(ROOT.RDF.TH1DModel("h_nvtx" , "Number of reco vertices;N_{vtx};Events"  ,    100, 0., 100.), "PV_npvs")
     nvtx_histo.GetValue().Write()
         
     if args.channel == 'PhotonJet':
@@ -172,8 +182,9 @@ def main():
 
         for i, df_element in enumerate(df_list):
             df_element, histos_jets = AnalyzeCleanJets(df_element, 100, 50, suffix = suffix_list[i]) 
+            df_element = MuonJet_lepton(df_element)
             df_element, histos_sum = EtSum(df_element, suffix = suffix_list[i])
-            df_element, histos_hf = HFNoiseStudy(df, suffix = suffix_list[i])
+            df_element, histos_hf = HFNoiseStudy(df_element, suffix = suffix_list[i])
 
             for key, val in histos_jets.items():
                 all_histos_jets[key] = val

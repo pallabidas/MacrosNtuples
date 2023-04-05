@@ -19,7 +19,7 @@ def runbinning():
         binsforrunnb.append(run)
         if i == len(runs_sorted)-1:
             binsforrunnb.append(run+1)
-            binsforrunnb.append(360000)
+            binsforrunnb.append(363000)
         else:
             if runs_sorted[i+1] != run+1:
                 binsforrunnb.append(run+1)
