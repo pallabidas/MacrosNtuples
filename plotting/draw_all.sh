@@ -1,20 +1,24 @@
 #!/bin/bash
-lumi_file=lumis/dec19.txt
-for dir in "2022RunCv1" "2022RunDv1" "2022RunDv2" "2022RunEv1" "2022RunFv1" "2022RunGv1" "all_2022"
+lumi_file=lumis/2023Mar29.txt
+
+for dir in "2022RunCv1" "2022RunDv1" "2022RunDv2" "2022RunEv1" "2022RunFv1" "2022RunGv1" "all_2022" "2018D"
 do
     case $dir in
         2022Run?v?)
             lumi=`awk -v d=$dir -F ' ' '{if ( $0 ~ d ){ printf "%.1f\n", $2 }}' $lumi_file`
-            #echo $dir $lumi
             ;;
 
         all_2022*)
-            #lumi=`awk 'BEGIN{ sum = 0 } { sum += $2 } END{ printf "%.1f\n", sum }' $lumi_file`
-            lumi="34"
-            #echo $dir $lumi
+            lumi=`awk 'BEGIN{ sum = 0 } /2022/ { sum += $2 } END{ printf "%.1f\n", sum }' $lumi_file`
+            #lumi="34"
+            ##echo $dir $lumi
             ;;
 
+        2018D)
+            lumi=`awk -v d=$dir -F ' ' '{if ( $0 ~ d ){ printf "%.1f\n", $2 }}' $lumi_file`
+            ;;
         *)
+            lumi="X"
             ;;
     esac
     echo $dir

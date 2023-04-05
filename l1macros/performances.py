@@ -82,6 +82,9 @@ def main():
 
     #Apply MET filters
     df = df.Filter('Flag_HBHENoiseFilter&&Flag_HBHENoiseIsoFilter&&Flag_goodVertices&&Flag_EcalDeadCellTriggerPrimitiveFilter&&Flag_BadPFMuonFilter&&Flag_BadPFMuonDzFilter')
+
+    # binning for run number
+    set_runnb_bins(df)
     
     if args.outputFile == '':
         args.outputFile = 'output_'+args.channel+'.root'

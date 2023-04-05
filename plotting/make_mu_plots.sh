@@ -22,7 +22,7 @@ makedist="python3 $PWD/drawplots.py -t distribution --saveplot True $nvtx_arg"
 
 # move to workdir
 cd $dir
-filezmumu=all_zmumu.root
+filezmumu=all_ZToMuMu.root
 
 toplabel="#sqrt{s} = 13.6 TeV, L_{int} = $lumi fb^{-1}"
 

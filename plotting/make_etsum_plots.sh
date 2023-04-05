@@ -21,7 +21,7 @@ makeresol="python3 $PWD/drawplots.py -t resolvsx --saveplot True $nvtx_arg"
 
 # move to workdir
 cd $dir
-filemujet=all_mujet.root
+filemujet=all_MuonJet.root
 
 # set some labels
 toplabel="#sqrt{s} = 13.6 TeV, L_{int} = $lumi fb^{-1}"

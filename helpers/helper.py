@@ -1,5 +1,6 @@
 import ROOT
 from array import array
+from math import floor, ceil
 
 from bins import *
 
@@ -15,11 +16,23 @@ leptonpt_bins = array('f',[ i for i in range(50) ] + [ 50+2*i for i in range(10)
 jetmetpt_bins = array('f',[ i*5 for i in range(50) ] +  [250+10*i for i in range(25) ]  + [500+20*i for i in range(10) ] + [700, 800, 900, 1000, 1200, 1500, 2000 ])
 '''
 
-from runsBinning import *
-runnb_bins = array('f', runbinning())
-
+#from runsBinning import *
+#runnb_bins = array('f', runbinning())
 
 response_bins = array('f',[0.+float(i)/100. for i in range(200)] )
+
+runnb_bins = None
+
+def set_runnb_bins(df):
+    global runnb_bins
+    if runnb_bins is None:
+        # +1: to get [run, run+1] bin, +0.5 and floor to prevent float rounding errors + high bound
+        # in range is excluded, so feed run, and run+2 to get [run, run+1]
+        runNb_max = ceil(df.Max("_runNb").GetValue() + 1.5)
+        runNb_min = floor(df.Min("_runNb").GetValue())
+        runnb_bins = array('f', [r for r in range(runNb_min, runNb_max)])
+    else:
+        print("runnb_bins are already set")
 
 #String printing stuff for a few events
 stringToPrint = '''
@@ -220,6 +233,11 @@ def ZMuMu_MuSelection(df):
 def makehistosforturnons_inprobeetaranges(df, histos, etavarname, phivarname, ptvarname, responsevarname, etabins, l1varname, l1thresholds, prefix, binning, l1thresholdforeffvsrunnb, offlinethresholdforeffvsrunnb, suffix = ''):
     '''Make histos for turnons vs pt (1D histos for numerator and denominator) in ranges of eta
     Also look at response vs run number (2D histo) '''
+
+    # check that runnb_bins are set
+    if runnb_bins is None:
+        set_runnbbins(df)
+
     for i in range(len(etabins)-1):
         str_bineta = "eta{}to{}".format(etabins[i],etabins[i+1]).replace(".","p")
         #Define columns corresponding to pt and response for the selected eta range 
@@ -374,6 +392,8 @@ def ZMuMu_Plots(df, suffix = ''):
 
         df_mu[i] = makehistosforturnons_inprobeetaranges(df_mu[i], histos, etavarname='probe_Eta', phivarname='probe_Phi', ptvarname='probe_Pt', responsevarname='probe_L1PtoverRecoPt', etabins=muEtaBins, l1varname='probe_L1Pt', l1thresholds=[3, 5,10,15,20,22,26],  prefix=label[i]+"_plots" , binning = pt_binning, l1thresholdforeffvsrunnb = 22, offlinethresholdforeffvsrunnb = 27, suffix = suffix)
         
+        # Same plots, with smaller bins in EMTF
+        df_mu[i] = makehistosforturnons_inprobeetaranges(df_mu[i], histos, etavarname='probe_Eta', phivarname='probe_Phi', ptvarname='probe_Pt', responsevarname='probe_L1PtoverRecoPt', etabins=muEMTFBins, l1varname='probe_L1Pt', l1thresholds=[3, 5,10,15,20,22,26],  prefix=label[i]+"_plots" , binning = pt_binning, l1thresholdforeffvsrunnb = 22, offlinethresholdforeffvsrunnb = 27, suffix = suffix)
     
         df_mu[i] = df_mu[i].Define('probePt30_Eta','probe_Eta[probe_Pt>30]')
         df_mu[i] = df_mu[i].Define('probePt30_Phi','probe_Phi[probe_Pt>30]')
