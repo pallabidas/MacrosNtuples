@@ -445,6 +445,11 @@ def ZMuMu_Plots(df, suffix = ''):
 
 def CleanJets(df):
     #List of cleaned jets (noise cleaning + lepton/photon overlap removal)
+    df = df.Define('isCleanJet','_puppijetPassID&&_puppijetLeptonPhotonCleaned&&_puppijetPt>30')
+    df = df.Define('cleanJet_Pt','_puppijetPt[isCleanJet]')
+    df = df.Define('cleanJet_Eta','_puppijetEta[isCleanJet]')
+    df = df.Define('cleanJet_Phi','_puppijetPhi[isCleanJet]')
+    '''
     df = df.Define('isCleanJet','_jetPassID&&_jetLeptonPhotonCleaned&&_jetPt>30&&_jet_MUEF<0.5&&_jet_CEEF<0.5')
     df = df.Define('cleanJet_Pt','_jetPt[isCleanJet]')
     df = df.Define('cleanJet_Eta','_jetEta[isCleanJet]')
@@ -455,6 +460,7 @@ def CleanJets(df):
     df = df.Define('cleanJet_CEEF','_jet_CEEF[isCleanJet]')
     df = df.Define('cleanJet_MUEF','_jet_MUEF[isCleanJet]')
     df = df.Filter(stringToPrintJets)
+    '''
     df = df.Filter('Sum(isCleanJet)>=1','>=1 clean jet with p_{T}>30 GeV')
 
     return df
@@ -473,10 +479,20 @@ def EtSum(df, suffix = ''):
     df = df.Define('metnomu_x','_met*cos(_met_phi)+muons_px')
     df = df.Define('metnomu_y','_met*sin(_met_phi)+muons_py')
     df = df.Define('MetNoMu','sqrt(metnomu_x*metnomu_x+metnomu_y*metnomu_y)')
+    df = df.Define('L1_ETMHF65','_L1etsum_etmhf[2]>=65')
     df = df.Define('L1_ETMHF80','passL1_Initial_bx0[419]')
     df = df.Define('L1_ETMHF90','passL1_Initial_bx0[420]')
     df = df.Define('L1_ETMHF100','passL1_Initial_bx0[421]')
     df = df.Define('L1_ETMHF110','passL1_Initial_bx0[422]')
+    
+    df = df.Define("mhthf","L1MHTHF(_L1jet_pt, _L1jet_eta, _L1jet_phi, _L1jet_bx)[0]")
+    df = df.Define("passL1_MHTHF100","mhthf>=100")
+    df = df.Define("passL1_MHTHF110","mhthf>=110")
+    df = df.Define("passL1_MHTHF120","mhthf>=120")
+    df = df.Define("passL1_MHTHF130","mhthf>=130")
+    df = df.Define("passL1_MHTHF140","mhthf>=140")
+    df = df.Define("passL1_MHTHF150","mhthf>=150")
+
 
     # Dijet selections
     df = df.Define('hastwocleanjets', 'PassDiJet80_40_Mjj500(cleanJet_Pt, cleanJet_Eta, cleanJet_Phi)')
@@ -486,6 +502,9 @@ def EtSum(df, suffix = ''):
 
     histos['h_MetNoMu_Denominator'+suffix] = df.Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_Denominator'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu') 
     
+    
+    dfmetl1 = df.Filter('L1_ETMHF65')
+    histos['L1_ETMHF65'+suffix] = dfmetl1.Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_ETMHF65'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
     dfmetl1 = df.Filter('passL1_Initial_bx0[419]')
     histos['L1_ETMHF80'+suffix] = dfmetl1.Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_ETMHF80'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
     dfmetl1 = df.Filter('passL1_Initial_bx0[420]')
@@ -504,6 +523,21 @@ def EtSum(df, suffix = ''):
     histos['L1_HTT280er'+suffix] = df.Filter('passL1_Initial_bx0[402]').Filter('_met<50').Histo1D(ROOT.RDF.TH1DModel('h_HT_L1_HTT280er'+suffix, '', len(ht_bins)-1, array('d',ht_bins)), 'HT')
     histos['L1_HTT360er'+suffix] = df.Filter('passL1_Initial_bx0[404]').Filter('_met<50').Histo1D(ROOT.RDF.TH1DModel('h_HT_L1_HTT360er'+suffix, '', len(ht_bins)-1, array('d',ht_bins)), 'HT')
     histos['HLT_PFHT1050'+suffix] =  df.Filter('HLT_PFHT1050').Filter('_met<50').Histo1D(ROOT.RDF.TH1DModel('h_HLT_PFHT1050'+suffix, '', len(ht_bins)-1, array('d',ht_bins)), 'HT')
+
+
+    dfmhthfl1 = df.Filter('passL1_MHTHF100')
+    histos['L1_MHTHF100'+suffix] = dfmetl1.Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_MHTHF100'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
+    dfmhthfl1 = df.Filter('passL1_MHTHF110')
+    histos['L1_MHTHF110'+suffix] = dfmetl1.Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_MHTHF110'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
+    dfmhthfl1 = df.Filter('passL1_MHTHF120')
+    histos['L1_MHTHF120'+suffix] = dfmetl1.Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_MHTHF120'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
+    dfmhthfl1 = df.Filter('passL1_MHTHF130')
+    histos['L1_MHTHF130'+suffix] = dfmetl1.Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_MHTHF130'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
+    dfmhthfl1 = df.Filter('passL1_MHTHF140')
+    histos['L1_MHTHF140'+suffix] = dfmetl1.Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_MHTHF140'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
+    dfmhthfl1 = df.Filter('passL1_MHTHF150')
+    histos['L1_MHTHF150'+suffix] = dfmetl1.Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_MHTHF150'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
+
 
     # DiJet selections:
 
@@ -540,7 +574,7 @@ def AnalyzeCleanJets(df, JetRecoPtCut, L1JetPtCut, suffix = ''):
     df = df.Define('cleanJet_L1Pt','GetVal(cleanJet_idxL1jet,_L1jet_pt)')
     df = df.Define('cleanJet_L1Bx','GetVal(cleanJet_idxL1jet,_L1jet_bx)')
     df = df.Define('cleanJet_L1PtoverRecoPt','cleanJet_L1Pt/cleanJet_Pt')
-    df = df.Filter(stringFailingJets)
+    #df = df.Filter(stringFailingJets)
     ##Now some plotting (turn ons for now)
     L1PtCuts = [30., 40., 60., 80., 100., 120., 140., 160., 170., 180., 200.]
 
