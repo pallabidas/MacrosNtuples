@@ -31,6 +31,7 @@ def set_runnb_bins(df):
         runNb_max = ceil(df.Max("_runNb").GetValue() + 1.5)
         runNb_min = floor(df.Min("_runNb").GetValue())
         runnb_bins = array('f', [r for r in range(runNb_min, runNb_max)])
+        print("minimum run number: {}".format(runNb_min))
     else:
         print("runnb_bins are already set")
 
@@ -345,6 +346,9 @@ def ZEE_Plots(df, suffix = ''):
 
 
 def ZMuMu_Plots(df, suffix = ''):
+
+    df = df.Define('L1_FirstBunchInTrain', 'passL1_Initial_bx0[473]')
+    #df = df.Filter('L1_FirstBunchInTrain')
                                                                                           
     histos = {}
     label = ['AllQual', 'Qual8', 'Qual12']
@@ -437,9 +441,13 @@ def ZMuMu_Plots(df, suffix = ''):
             histos['L1Mu22_bx0_eta'+suffix] = df_mu[i].Filter("Flag_IsUnprefirable").Histo1D(ROOT.RDF.TH1DModel('L1Mu22_bx0_eta'+suffix, '', 100, -5, 5), 'probeL1Mu22Bx0_Eta') 
             histos['L1Mu22_bxplus1_eta'+suffix] = df_mu[i].Filter("Flag_IsUnprefirable").Histo1D(ROOT.RDF.TH1DModel('L1Mu22_bxplus1_eta'+suffix, '', 100, -5, 5), 'probeL1Mu22Bxplus1_Eta')
 
-            histos['L1Mu22_bxmin1_eta_noflag'+suffix] = df_mu[i].Histo1D(ROOT.RDF.TH1DModel('L1Mu22_bxmin1_eta_noflag'+suffix, '', 100, -5, 5), 'probeL1Mu22Bxmin1_Eta')
-            histos['L1Mu22_bx0_eta_noflag'+suffix] = df_mu[i].Histo1D(ROOT.RDF.TH1DModel('L1Mu22_bx0_eta_noflag'+suffix, '', 100, -5, 5), 'probeL1Mu22Bx0_Eta')
-            histos['L1Mu22_bxplus1_eta_noflag'+suffix] = df_mu[i].Histo1D(ROOT.RDF.TH1DModel('L1Mu22_bxplus1_eta_noflag'+suffix, '', 100, -5, 5), 'probeL1Mu22Bxplus1_Eta')
+            histos['L1Mu22_FirstBunchInTrain_bxmin1_eta'+suffix] = df_mu[i].Filter("L1_FirstBunchInTrain").Histo1D(ROOT.RDF.TH1DModel('L1Mu22_bxmin1_eta'+suffix, '', 100, -5, 5), 'probeL1Mu22Bxmin1_Eta') 
+            histos['L1Mu22_FirstBunchInTrain_bx0_eta'+suffix] = df_mu[i].Filter("L1_FirstBunchInTrain").Histo1D(ROOT.RDF.TH1DModel('L1Mu22_bx0_eta'+suffix, '', 100, -5, 5), 'probeL1Mu22Bx0_Eta') 
+            histos['L1Mu22_FirstBunchInTrain_bxplus1_eta'+suffix] = df_mu[i].Filter("L1_FirstBunchInTrain").Histo1D(ROOT.RDF.TH1DModel('L1Mu22_bxplus1_eta'+suffix, '', 100, -5, 5), 'probeL1Mu22Bxplus1_Eta')
+
+            #histos['L1Mu22_bxmin1_eta_noflag'+suffix] = df_mu[i].Histo1D(ROOT.RDF.TH1DModel('L1Mu22_bxmin1_eta_noflag'+suffix, '', 100, -5, 5), 'probeL1Mu22Bxmin1_Eta')
+            #histos['L1Mu22_bx0_eta_noflag'+suffix] = df_mu[i].Histo1D(ROOT.RDF.TH1DModel('L1Mu22_bx0_eta_noflag'+suffix, '', 100, -5, 5), 'probeL1Mu22Bx0_Eta')
+            #histos['L1Mu22_bxplus1_eta_noflag'+suffix] = df_mu[i].Histo1D(ROOT.RDF.TH1DModel('L1Mu22_bxplus1_eta_noflag'+suffix, '', 100, -5, 5), 'probeL1Mu22Bxplus1_Eta')
 
             '''
             #L1 prefiring measurement with unprefirable events
@@ -553,13 +561,13 @@ def EtSum(df, suffix = ''):
     histos['L1_MHTHF120'+suffix] = dfmetl1.Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_MHTHF120'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
     dfmhthfl1 = df.Filter('passL1_MHTHF130')
     histos['L1_MHTHF130'+suffix] = dfmetl1.Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_MHTHF130'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
-    dfmhthfl1 = df.Filter('passL1_MHTHF140')
+    dFmhthfl1 = df.Filter('passL1_MHTHF140')
     histos['L1_MHTHF140'+suffix] = dfmetl1.Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_MHTHF140'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
     dfmhthfl1 = df.Filter('passL1_MHTHF150')
     histos['L1_MHTHF150'+suffix] = dfmetl1.Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_MHTHF150'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
 
 
-    # DiJet selections:
+    # DiJet selections:
 
     # DiJet 80 40
     histos['h_MetNoMu_Denominator_DiJet80_40_Mjj500'+suffix] = df.Filter('hastwocleanjets').Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_Denominator_DiJet80_40_Mjj500'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu') 
@@ -570,7 +578,7 @@ def EtSum(df, suffix = ''):
     histos['h_MetNoMu_Denominator_DiJet80_40_Mjj500_central'+suffix] = df.Filter('hastwocentraljets').Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_Denominator_DiJet80_40_Mjj500_central'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu') 
     histos['HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_DiJet80_40_Mjj500_central'+suffix] = df.Filter('HLT_PFMETNoMu120_PFMHTNoMu120_IDTight&&hastwocentraljets').Histo1D(ROOT.RDF.TH1DModel('h_HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_DiJet80_40_Mjj500_central'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
 
-    # HF dijets
+    # HF dijets
     histos['h_MetNoMu_Denominator_DiJet80_40_Mjj500_HF'+suffix] = df.Filter('hastwoHFjets').Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_Denominator_DiJet80_40_Mjj500_HF'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu') 
     histos['HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_DiJet80_40_Mjj500_HF'+suffix] = df.Filter('HLT_PFMETNoMu120_PFMHTNoMu120_IDTight&&hastwoHFjets').Histo1D(ROOT.RDF.TH1DModel('h_HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_DiJet80_40_Mjj500_HF'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
 

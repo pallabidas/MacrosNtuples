@@ -71,6 +71,20 @@ def main():
     if nEvents == 0:
         df = ROOT.RDataFrame('jmeanalyzer/tree', inputFile)
         nEvents = df.Count().GetValue()
+
+    # Filtering on runNb, needs to contain L1_FirstBunchInTrain bit
+    df = df.Filter("_runNb>=361468")
+    #df = df.Define('L1_FirstBunchInTrain', 'passL1_Initial_bx0[473]')
+    #df.Display("L1_FirstBunchInTrain").Print()
+    #df = df.Filter('L1_FirstBunchInTrain')
+    #df = df.Filter("passL1_Initial_bx0[473]")
+    #df = df.Filter("Sum(passL1_Initial_bx0)>0")
+
+
+    nEvents = df.Count().GetValue()
+    if nEvents == 0:
+        print('There are no events, exiting...')
+        exit()
     
     print('There are {} events'.format(nEvents))
     
