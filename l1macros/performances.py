@@ -39,8 +39,8 @@ def main():
     args = parser.parse_args() 
 
     ### TESTING: only using MuonJet skim for now
-    if args.channel != 'MuonJet':
-        print("Only 'MuonJet' channel supported for now")
+    if args.channel not in  ['MuonJet', 'PhotonJet']:
+        print("Only 'MuonJet' and 'PhotonJet' channels supported for now")
         exit()
 
     
@@ -70,16 +70,19 @@ def main():
 
     ###
 
-    df = ROOT.RDataFrame('ntuplizer/tree', inputFile)    
+    df = ROOT.RDataFrame('Events', inputFile)
     nEvents = df.Count().GetValue()
+
+    #df = ROOT.RDataFrame('ntuplizer/tree', inputFile)    
+    #nEvents = df.Count().GetValue()
 
     #if nEvents == 0:
     #    df = ROOT.RDataFrame('jmeanalyzer/tree', inputFile)
     #    nEvents = df.Count().GetValue()
 
-    if nEvents == 0:
-        df = ROOT.RDataFrame('Events', inputFile)
-        nEvents = df.Count().GetValue()
+    #if nEvents == 0:
+    #    df = ROOT.RDataFrame('Events', inputFile)
+    #    nEvents = df.Count().GetValue()
     
     print('There are {} events'.format(nEvents))
     
@@ -120,6 +123,7 @@ def main():
         # run for each bin of nvtx:
         for i, df_element in enumerate(df_list):
             df_element, histos_jets = AnalyzeCleanJets(df_element, 200, 100, suffix = suffix_list[i])
+            df_element = PhotonJet_lepton(df_element)
             df_element = PtBalanceSelection(df_element)
             df_element, histos_balance = AnalyzePtBalance(df_element, suffix = suffix_list[i])
             #df_report = df_element.Report()

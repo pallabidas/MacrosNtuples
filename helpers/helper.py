@@ -142,6 +142,10 @@ def SinglePhotonSelection(df):
     df = df.Filter('HLT_Photon110EB_TightID_TightIso')
     df = df.Define('photonsptgt20','Photon_pt>20')
     df = df.Filter('Sum(photonsptgt20)==1','=1 photon with p_{T}>20 GeV')
+
+    # TEMPORARY: bypasses
+    df = df.Define("_phPassTightID", "true")
+    df = df.Define("_phPassIso", "true")
     
     df = df.Define('isRefPhoton','_phPassTightID&&_phPassIso&&Photon_pt>115&&abs(Photon_eta)<1.479')
     df = df.Filter('Sum(isRefPhoton)==1','Photon has p_{T}>115 GeV, passes tight ID and is in EB')
@@ -448,6 +452,13 @@ def MuonJet_lepton(df):
     df = df.Define('_lEta', 'Muon_eta')
     df = df.Define('_lPhi', 'Muon_phi')
     df = df.Define('_lpdgId', 'Muon_pdgId')
+    return(df)
+
+def PhotonJet_lepton(df):
+    df = df.Define('_lPt', 'Electron_pt')
+    df = df.Define('_lEta', 'Electron_eta')
+    df = df.Define('_lPhi', 'Electron_phi')
+    df = df.Define('_lpdgId', 'Electron_pdgId')
     return(df)
 
 def EtSum(df, suffix = ''):
