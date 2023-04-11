@@ -347,7 +347,7 @@ def ZEE_Plots(df, suffix = ''):
 
 def ZMuMu_Plots(df, suffix = ''):
 
-    df = df.Define('L1_FirstBunchInTrain', 'passL1_Initial_bx0[473]')
+    #df = df.Define('L1_FirstBunchInTrain', 'passL1_Initial_bx0[473]')
     #df = df.Filter('L1_FirstBunchInTrain')
                                                                                           
     histos = {}
@@ -433,17 +433,32 @@ def ZMuMu_Plots(df, suffix = ''):
             histos['L1Mu10to21_bx0_eta'+suffix] = df_mu[i].Histo1D(ROOT.RDF.TH1DModel('L1Mu10to21_bx0_eta'+suffix, '', 100, -5, 5), 'probeL1Mu10to21Bx0_Eta')
             histos['L1Mu10to21_bxplus1_eta'+suffix] = df_mu[i].Histo1D(ROOT.RDF.TH1DModel('L1Mu10to21_bxplus1_eta'+suffix, '', 100, -5, 5), 'probeL1Mu10to21Bxplus1_Eta')
 
-            histos['L1Mu22_bxmin1_etaphi'+suffix] = df_mu[i].Filter("Flag_IsUnprefirable").Histo2D(ROOT.RDF.TH2DModel('L1Mu22_bxmin1_etaphi'+suffix, '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1Mu22Bxmin1_Eta', 'probeL1Mu22Bxmin1_Phi')
-            histos['L1Mu22_bx0_etaphi'+suffix] = df_mu[i].Filter("Flag_IsUnprefirable").Histo2D(ROOT.RDF.TH2DModel('L1Mu22_bx0_etaphi'+suffix, '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1Mu22Bx0_Eta', 'probeL1Mu22Bx0_Phi')
-            histos['L1Mu22_bxplus1_etaphi'+suffix] = df_mu[i].Filter("Flag_IsUnprefirable").Histo2D(ROOT.RDF.TH2DModel('L1Mu22_bxplus1_etaphi'+suffix, '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1Mu22Bxplus1_Eta', 'probeL1Mu22Bxplus1_Phi')
+            ###
 
-            histos['L1Mu22_bxmin1_eta'+suffix] = df_mu[i].Filter("Flag_IsUnprefirable").Histo1D(ROOT.RDF.TH1DModel('L1Mu22_bxmin1_eta'+suffix, '', 100, -5, 5), 'probeL1Mu22Bxmin1_Eta') 
-            histos['L1Mu22_bx0_eta'+suffix] = df_mu[i].Filter("Flag_IsUnprefirable").Histo1D(ROOT.RDF.TH1DModel('L1Mu22_bx0_eta'+suffix, '', 100, -5, 5), 'probeL1Mu22Bx0_Eta') 
-            histos['L1Mu22_bxplus1_eta'+suffix] = df_mu[i].Filter("Flag_IsUnprefirable").Histo1D(ROOT.RDF.TH1DModel('L1Mu22_bxplus1_eta'+suffix, '', 100, -5, 5), 'probeL1Mu22Bxplus1_Eta')
+            histos['L1Mu22_bxplus1_etaphi'+suffix] = df_mu[i].Histo2D(ROOT.RDF.TH2DModel('L1Mu22_bxplus1_etaphi'+suffix, '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1Mu22Bxplus1_Eta', 'probeL1Mu22Bxplus1_Phi')
+            histos['L1Mu22_bx0_etaphi'+suffix] = df_mu[i].Histo2D(ROOT.RDF.TH2DModel('L1Mu22_bx0_etaphi'+suffix, '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1Mu22Bx0_Eta', 'probeL1Mu22Bx0_Phi')
 
-            histos['L1Mu22_FirstBunchInTrain_bxmin1_eta'+suffix] = df_mu[i].Filter("L1_FirstBunchInTrain").Histo1D(ROOT.RDF.TH1DModel('L1Mu22_bxmin1_eta'+suffix, '', 100, -5, 5), 'probeL1Mu22Bxmin1_Eta') 
-            histos['L1Mu22_FirstBunchInTrain_bx0_eta'+suffix] = df_mu[i].Filter("L1_FirstBunchInTrain").Histo1D(ROOT.RDF.TH1DModel('L1Mu22_bx0_eta'+suffix, '', 100, -5, 5), 'probeL1Mu22Bx0_Eta') 
-            histos['L1Mu22_FirstBunchInTrain_bxplus1_eta'+suffix] = df_mu[i].Filter("L1_FirstBunchInTrain").Histo1D(ROOT.RDF.TH1DModel('L1Mu22_bxplus1_eta'+suffix, '', 100, -5, 5), 'probeL1Mu22Bxplus1_Eta')
+            histos['L1Mu22_bxplus1_eta'+suffix] = df_mu[i].Histo1D(ROOT.RDF.TH1DModel('L1Mu22_bxplus1_eta'+suffix, '', 100, -5, 5), 'probeL1Mu22Bxplus1_Eta')
+            histos['L1Mu22_bx0_eta'+suffix] = df_mu[i].Histo1D(ROOT.RDF.TH1DModel('L1Mu22_bx0_eta'+suffix, '', 100, -5, 5), 'probeL1Mu22Bx0_Eta') 
+
+            #
+
+            histos['L1Mu22_IsUnprefireable_bx0_etaphi'+suffix] = df_mu[i].Filter("Flag_IsUnprefirable").Histo2D(ROOT.RDF.TH2DModel('L1Mu22_IsUnprefireable_bx0_etaphi'+suffix, '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1Mu22Bx0_Eta', 'probeL1Mu22Bx0_Phi')
+            histos['L1Mu22_IsUnprefireable_bx0_eta'+suffix] = df_mu[i].Filter("Flag_IsUnprefirable").Histo1D(ROOT.RDF.TH1DModel('L1Mu22_IsUnprefireable_bx0_eta'+suffix, '', 100, -5, 5), 'probeL1Mu22Bx0_Eta') 
+
+            histos['L1Mu22_IsUnprefireable_bxmin1_etaphi'+suffix] = df_mu[i].Filter("Flag_IsUnprefirable").Histo2D(ROOT.RDF.TH2DModel('L1Mu22_IsUnprefireable_bxmin1_etaphi'+suffix, '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1Mu22Bxmin1_Eta', 'probeL1Mu22Bxmin1_Phi')
+            histos['L1Mu22_IsUnprefireable_bxmin1_eta'+suffix] = df_mu[i].Filter("Flag_IsUnprefirable").Histo1D(ROOT.RDF.TH1DModel('L1Mu22_IsUnprefireable_bxmin1_eta'+suffix, '', 100, -5, 5), 'probeL1Mu22Bxmin1_Eta') 
+
+            #
+
+            histos['L1Mu22_FirstBunchInTrain_bx0_etaphi'+suffix] = df_mu[i].Filter("passL1_Initial_bx0[473]").Histo2D(ROOT.RDF.TH2DModel('L1Mu22_FirstBunchInTrain_bx0_etaphi'+suffix, '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1Mu22Bx0_Eta', 'probeL1Mu22Bx0_Phi')
+            histos['L1Mu22_FirstBunchInTrain_bx0_eta'+suffix] = df_mu[i].Filter("passL1_Initial_bx0[473]").Histo1D(ROOT.RDF.TH1DModel('L1Mu22_FirstBunchInTrain_bx0_eta'+suffix, '', 100, -5, 5), 'probeL1Mu22Bx0_Eta') 
+
+            histos['L1Mu22_FirstBunchInTrain_bxmin1_etaphi'+suffix] = df_mu[i].Filter("passL1_Initial_bx0[473]").Histo2D(ROOT.RDF.TH2DModel('L1Mu22_FirstBunchInTrain_bxmin1_etaphi'+suffix, '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1Mu22Bxmin1_Eta', 'probeL1Mu22Bxmin1_Phi')
+
+            histos['L1Mu22_FirstBunchInTrain_bxmin1_eta'+suffix] = df_mu[i].Filter("passL1_Initial_bx0[473]").Histo1D(ROOT.RDF.TH1DModel('L1Mu22_FirstBunchInTrain_bxmin1_eta'+suffix, '', 100, -5, 5), 'probeL1Mu22Bxmin1_Eta') 
+
+            ###
 
             #histos['L1Mu22_bxmin1_eta_noflag'+suffix] = df_mu[i].Histo1D(ROOT.RDF.TH1DModel('L1Mu22_bxmin1_eta_noflag'+suffix, '', 100, -5, 5), 'probeL1Mu22Bxmin1_Eta')
             #histos['L1Mu22_bx0_eta_noflag'+suffix] = df_mu[i].Histo1D(ROOT.RDF.TH1DModel('L1Mu22_bx0_eta_noflag'+suffix, '', 100, -5, 5), 'probeL1Mu22Bx0_Eta')
