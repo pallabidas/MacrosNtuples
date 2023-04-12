@@ -3,7 +3,7 @@ import json
 def runbinning():
     '''Creates a dynamic binning on run number, based on runs in a JSON file, such that each run in the file is one bin and intervals between runs are merged into a single bin'''
     goodrunsandlumisections = {}
-    with open('../json_csv_files/Cert_Collisions2016to2022_273158_357900_Golden.json', 'r', encoding='utf-8') as f_goodlumi:
+    with open('../json_csv_files/Cert_Collisions2016to2022_273158_362760_Golden.json', 'r', encoding='utf-8') as f_goodlumi:
         goodrunsandlumisections = json.load(f_goodlumi)
         
     runs_sorted = []

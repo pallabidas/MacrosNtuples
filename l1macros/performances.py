@@ -38,11 +38,6 @@ def main():
     parser.add_argument("--nvtx_bins", dest="nvtx_bins", help="Edges of the nvtx bins to use if plotNvtx is set to True. Default=[10, 20, 30, 40, 50, 60]", nargs='+', type=int, default=[10, 20, 30, 40, 50, 60])
     args = parser.parse_args() 
 
-    ### TESTING: only using MuonJet skim for now
-    if args.channel not in  ['MuonJet', 'PhotonJet']:
-        print("Only 'MuonJet' and 'PhotonJet' channels supported for now")
-        exit()
-
     
     ###Define the RDataFrame from the input tree
     inputFile = args.inputFile
@@ -63,26 +58,19 @@ def main():
 
     # bins of nvtx
     if args.plot_nvtx == True:
-        filter_list += ["PV_npvs>{}&&PV_npvs<{}".format(low, high) for (low, high) \
+        filter_list += ["_n_PV>{}&&_n_PV<{}".format(low, high) for (low, high) \
                 in zip(args.nvtx_bins[:-1],args.nvtx_bins[1:])]
         suffix_list += ["_nvtx{}to{}".format(low, high) for (low, high) \
                 in zip(args.nvtx_bins[:-1],args.nvtx_bins[1:])]
 
     ###
 
-    df = ROOT.RDataFrame('Events', inputFile)
+    df = ROOT.RDataFrame('ntuplizer/tree', inputFile)    
     nEvents = df.Count().GetValue()
 
-    #df = ROOT.RDataFrame('ntuplizer/tree', inputFile)    
-    #nEvents = df.Count().GetValue()
-
-    #if nEvents == 0:
-    #    df = ROOT.RDataFrame('jmeanalyzer/tree', inputFile)
-    #    nEvents = df.Count().GetValue()
-
-    #if nEvents == 0:
-    #    df = ROOT.RDataFrame('Events', inputFile)
-    #    nEvents = df.Count().GetValue()
+    if nEvents == 0:
+        df = ROOT.RDataFrame('jmeanalyzer/tree', inputFile)
+        nEvents = df.Count().GetValue()
     
     print('There are {} events'.format(nEvents))
     
@@ -94,6 +82,9 @@ def main():
 
     #Apply MET filters
     df = df.Filter('Flag_HBHENoiseFilter&&Flag_HBHENoiseIsoFilter&&Flag_goodVertices&&Flag_EcalDeadCellTriggerPrimitiveFilter&&Flag_BadPFMuonFilter&&Flag_BadPFMuonDzFilter')
+
+    # binning for run number
+    set_runnb_bins(df)
     
     if args.outputFile == '':
         args.outputFile = 'output_'+args.channel+'.root'
@@ -105,7 +96,7 @@ def main():
         return 
 
     # add nvtx histo
-    nvtx_histo = df.Histo1D(ROOT.RDF.TH1DModel("h_nvtx" , "Number of reco vertices;N_{vtx};Events"  ,    100, 0., 100.), "PV_npvs")
+    nvtx_histo = df.Histo1D(ROOT.RDF.TH1DModel("h_nvtx" , "Number of reco vertices;N_{vtx};Events"  ,    100, 0., 100.), "_n_PV")
     nvtx_histo.GetValue().Write()
         
     if args.channel == 'PhotonJet':
@@ -123,7 +114,6 @@ def main():
         # run for each bin of nvtx:
         for i, df_element in enumerate(df_list):
             df_element, histos_jets = AnalyzeCleanJets(df_element, 200, 100, suffix = suffix_list[i])
-            df_element = PhotonJet_lepton(df_element)
             df_element = PtBalanceSelection(df_element)
             df_element, histos_balance = AnalyzePtBalance(df_element, suffix = suffix_list[i])
             #df_report = df_element.Report()
@@ -186,7 +176,6 @@ def main():
 
         for i, df_element in enumerate(df_list):
             df_element, histos_jets = AnalyzeCleanJets(df_element, 100, 50, suffix = suffix_list[i]) 
-            df_element = MuonJet_lepton(df_element)
             df_element, histos_sum = EtSum(df_element, suffix = suffix_list[i])
             df_element, histos_hf = HFNoiseStudy(df_element, suffix = suffix_list[i])
 
