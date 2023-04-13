@@ -117,7 +117,7 @@ def main():
         # run for each bin of nvtx:
         for i, df_element in enumerate(df_list):
             df_element, histos_jets = AnalyzeCleanJets(df_element, 200, 100, suffix = suffix_list[i])
-            df_element = PhotonJet_lepton(df_element)
+            df_element = lepton_iselectron(df_element)
             df_element = PtBalanceSelection(df_element)
             df_element, histos_balance = AnalyzePtBalance(df_element, suffix = suffix_list[i])
             #df_report = df_element.Report()
@@ -180,7 +180,7 @@ def main():
 
         for i, df_element in enumerate(df_list):
             df_element, histos_jets = AnalyzeCleanJets(df_element, 100, 50, suffix = suffix_list[i]) 
-            df_element = MuonJet_lepton(df_element)
+            df_element = lepton_ismuon(df_element)
             df_element, histos_sum = EtSum(df_element, suffix = suffix_list[i])
             df_element, histos_hf = HFNoiseStudy(df_element, suffix = suffix_list[i])
 
@@ -224,6 +224,7 @@ def main():
 #        df_report.Print()
 
     if args.channel == 'ZToEE':
+        df = lepton_iselectron(df)
         df = ZEE_EleSelection(df)
 
         # make copies of df for each bin of nvtx (+1 copy of the original)
