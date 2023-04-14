@@ -36,7 +36,7 @@ then
         --plotname L1Mu_nvtx
 fi
 
-for range in "EMTF" "BMTF" "OMTF"
+for range in "EMTF" "BMTF" "OMTF" "EMTF1" "EMTF2" "EMTF3"
 do
     case $range in
         "EMTF")
@@ -52,6 +52,21 @@ do
         "OMTF")
             eta_range="eta0p83to1p24"
             eta_label='{0.83 #leq |#eta^{#mu}(reco)| < 1.24}'
+            ;;
+
+        "EMTF1")
+            eta_range="eta1p24to1p6"
+            eta_label='{1.24 #leq |#eta^{#mu}(reco)| < 1.6}'
+            ;;
+
+        "EMTF2")
+            eta_range="eta1p6to2p1"
+            eta_label='{1.6 #leq |#eta^{#mu}(reco)| < 2.1}'
+            ;;
+
+        "EMTF3")
+            eta_range="eta2p1to2p4"
+            eta_label='{2.1 #leq |#eta^{#mu}(reco)| < 2.4}'
             ;;
 
         *)
