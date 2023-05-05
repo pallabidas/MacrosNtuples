@@ -372,19 +372,19 @@ ROOT::VecOps::RVec<int> charge_conversion(ROOT::VecOps::RVec<int>hwCharge){
 
 // Match L1Mu to TrigObj
 
-vector<int> MatchMuonToTrig(ROOT::VecOps::RVec<float>Muon_eta, ROOT::VecOps::RVec<float>Muon_phi, ROOT::VecOps::RVec<float>TrigObj_pt, ROOT::VecOps::RVec<float>TrigObj_eta, ROOT::VecOps::RVec<float>TrigObj_phi, ROOT::VecOps::RVec<int>TrigObj_id){
+vector<int> MatchObjToTrig(ROOT::VecOps::RVec<float>Obj_eta, ROOT::VecOps::RVec<float>Obj_phi, ROOT::VecOps::RVec<float>TrigObj_pt, ROOT::VecOps::RVec<float>TrigObj_eta, ROOT::VecOps::RVec<float>TrigObj_phi, ROOT::VecOps::RVec<int>TrigObj_id){
 
   vector <int> result={};
-  for(unsigned int i = 0; i<Muon_eta.size(); i++){
+  for(unsigned int i = 0; i<Obj_eta.size(); i++){
     //double drmin = 0.4; 
     double drmin = 0.6; 
     int idx = -1;
     for(unsigned int j = 0; j<TrigObj_eta.size(); j++){
       if (TrigObj_id[j] != 13) continue;
 
-      double deta = abs(TrigObj_eta[j]-Muon_eta[i]);
+      double deta = abs(TrigObj_eta[j]-Obj_eta[i]);
       //double dphi = deltaphi_offlinemustation2_l1mu(Muon_charge[i], TrigObj_pt[j], TrigObj_eta[j], TrigObj_phi[j], Muon_phi[i]);
-      double dphi = abs(acos(cos(TrigObj_phi[j]-Muon_phi[i]))); 
+      double dphi = abs(acos(cos(TrigObj_phi[j]-Obj_phi[i]))); 
       double dr = sqrt(deta*deta+dphi*dphi);
       if(dr<=drmin){ 
 	drmin = dr; 
@@ -397,7 +397,7 @@ vector<int> MatchMuonToTrig(ROOT::VecOps::RVec<float>Muon_eta, ROOT::VecOps::RVe
 }
 
 // Recover triger decision from filterbit
-ROOT::VecOps::RVec <Bool_t> passHLT_IsoMu24(ROOT::VecOps::RVec<int>Trig_idx, ROOT::VecOps::RVec<int>filterBits){
+ROOT::VecOps::RVec <Bool_t> trig_is_filterbit1_set(ROOT::VecOps::RVec<int>Trig_idx, ROOT::VecOps::RVec<int>filterBits){
     vector <bool> result = {};
     for( unsigned int i = 0; i <Trig_idx.size(); i++){
         if (Trig_idx[i] == -1) result.push_back(false);

@@ -1,5 +1,6 @@
 import ROOT
 from array import array
+from math import floor, ceil
 
 from bins import *
 
@@ -15,11 +16,24 @@ leptonpt_bins = array('f',[ i for i in range(50) ] + [ 50+2*i for i in range(10)
 jetmetpt_bins = array('f',[ i*5 for i in range(50) ] +  [250+10*i for i in range(25) ]  + [500+20*i for i in range(10) ] + [700, 800, 900, 1000, 1200, 1500, 2000 ])
 '''
 
-from runsBinning import *
-runnb_bins = array('f', runbinning())
+#from runsBinning import *
+#runnb_bins = array('f', runbinning())
 
 
 response_bins = array('f',[0.+float(i)/100. for i in range(200)] )
+
+runnb_bins = None
+
+def set_runnb_bins(df):
+    global runnb_bins
+    if runnb_bins is None:
+        # +1: to get [run, run+1] bin, +0.5 and floor to prevent float rounding errors + high bound
+        # in range is excluded, so feed run, and run+2 to get [run, run+1]
+        runNb_max = ceil(df.Max("run").GetValue() + 1.5)
+        runNb_min = floor(df.Min("run").GetValue())
+        runnb_bins = array('f', [r for r in range(runNb_min, runNb_max)])
+    else:
+        print("runnb_bins are already set")
 
 #String printing stuff for a few events
 stringToPrint = '''
@@ -145,10 +159,11 @@ def SinglePhotonSelection(df):
     df = df.Filter('Sum(photonsptgt20)==1','=1 photon with p_{T}>20 GeV')
 
     # TEMPORARY: bypasses
-    df = df.Define("_phPassTightID", "true")
-    df = df.Define("_phPassIso", "true")
-    
-    df = df.Define('isRefPhoton','_phPassTightID&&_phPassIso&&Photon_pt>115&&abs(Photon_eta)<1.479')
+    #df = df.Define("_phPassTightID", "true")
+    #df = df.Define("_phPassIso", "true")
+    #df = df.Define('isRefPhoton','_phPassTightID&&_phPassIso&&Photon_pt>115&&abs(Photon_eta)<1.479')
+
+    df = df.Define('isRefPhoton','Photon_mvaID_WP80>=3&&Photon_pt>115&&abs(Photon_eta)<1.479')
     df = df.Filter('Sum(isRefPhoton)==1','Photon has p_{T}>115 GeV, passes tight ID and is in EB')
     
     df = df.Define('cleanPh_Pt','Photon_pt[isRefPhoton]')
@@ -191,15 +206,27 @@ def ZEE_EleSelection(df):
     Select Z->ee events passing a single electron trigger. Defines probe pt/eta/phi
     '''
     df = df.Filter('HLT_Ele32_WPTight_Gsf')
-    df = df.Define('_mll', 'mll(Electron_pt, Electron_eta, Electron_phi, Electron_pdgId)')
 
-    # BYPASS
-    df = df.Define('_lpassHLT_Ele32_WPTight_Gsf', 'HLT_Ele32_WPTight_Gsf')
-    df = df.Define('Electron_PassTightId','true') 
+    # Trigged on a Electron (probably redondant)
+    df = df.Filter('''
+    bool trigged_on_e = false;
+    for (unsigned int i = 0; i < TrigObj_id.size(); i++){
+        if(TrigObj_id[i] == 11) trigged_on_e = true;
+    }
+    return trigged_on_e;
+    ''')
 
-    df = df.Define('isTag','_lPt>35&&abs(_lpdgId)==11&&Electron_PassTightId&&_lpassHLT_Ele32_WPTight_Gsf')
+    # TrigObj matching
+    df = df.Define('Electron_trig_idx', 'MatchObjToTrig(Electron_eta, Electron_phi, TrigObj_pt, TrigObj_eta, TrigObj_phi, TrigObj_id)')
+
+    #df = df.Define('Electron_PassTightId','true') # BYPASS
+    df = df.Define('Electron_passHLT_Ele32_WPTight_Gsf', 'trig_is_filterbit1_set(Electron_trig_idx, TrigObj_filterBits)')
+
+    df = df.Define('isTag','_lPt>35&&abs(_lpdgId)==11&&Electron_mvaIso_WP90&&Electron_passHLT_Ele32_WPTight_Gsf==true')
     df = df.Filter('Sum(isTag)>0')
-    df = df.Define('isProbe','_lPt>5&&abs(_lpdgId)==11&&Electron_PassTightId&& (Sum(isTag)>=2|| isTag==0)')
+    df = df.Define('isProbe','_lPt>5&&abs(_lpdgId)==11&&Electron_mvaIso_WP90&&(Sum(isTag)>=2|| isTag==0)')
+
+    df = df.Define('_mll', 'mll(Electron_pt, Electron_eta, Electron_phi, isTag, isProbe)')
     df = df.Filter('_mll>80&&_mll<100')
 
     df = df.Define('probe_Pt','_lPt[isProbe]')
@@ -239,7 +266,7 @@ def ZMuMu_MuSelection(df):
     # with L1Mu_trig_idx -> check filter bits -> L1Mu_passHLT
 
     # TrigObj matching
-    df = df.Define('Muon_trig_idx', 'MatchMuonToTrig(Muon_eta, Muon_phi, TrigObj_pt, TrigObj_eta, TrigObj_phi, TrigObj_id)')
+    df = df.Define('Muon_trig_idx', 'MatchObjToTrig(Muon_eta, Muon_phi, TrigObj_pt, TrigObj_eta, TrigObj_phi, TrigObj_id)')
 
     # Debugging the matching, seems to be ok
 #    df = df.Filter('''
@@ -254,7 +281,7 @@ def ZMuMu_MuSelection(df):
 #    return true;
 #    ''')
 
-    df = df.Define('Muon_passHLT_IsoMu24', 'passHLT_IsoMu24(Muon_trig_idx, TrigObj_filterBits)')
+    df = df.Define('Muon_passHLT_IsoMu24', 'trig_is_filterbit1_set(Muon_trig_idx, TrigObj_filterBits)')
 
     # Debugging the HLT firing, seems to be ok
 #    df = df.Filter('''
@@ -311,7 +338,7 @@ def ZMuMu_MuSelection(df):
     df = df.Define('probe_Phi','Muon_phi[isProbe]')
     
     # debug
-    df = df.Define('probe_Charge', 'Muon_charge[isProbe]')
+    #df = df.Define('probe_Charge', 'Muon_charge[isProbe]')
     
     return df
 
@@ -319,6 +346,11 @@ def makehistosforturnons_inprobeetaranges(df, histos, etavarname, phivarname, pt
     '''Make histos for turnons vs pt (1D histos for numerator and denominator) in ranges of eta
     Also look at response vs run number (2D histo) '''
     for i in range(len(etabins)-1):
+
+        # check that runnb_bins are set
+        if runnb_bins is None:
+            set_runnbbins(df)
+
         str_bineta = "eta{}to{}".format(etabins[i],etabins[i+1]).replace(".","p")
         #Define columns corresponding to pt and response for the selected eta range 
         df_etarange = df.Define('inEtaRange','abs({})>={}'.format(etavarname, etabins[i])+'&&abs({})<{}'.format(etavarname, etabins[i+1]))
@@ -477,6 +509,8 @@ def ZMuMu_Plots(df, suffix = ''):
             pt_binning = coarse_leptonpt_bins
 
         df_mu[i] = makehistosforturnons_inprobeetaranges(df_mu[i], histos, etavarname='probe_Eta', phivarname='probe_Phi', ptvarname='probe_Pt', responsevarname='probe_L1PtoverRecoPt', etabins=muEtaBins, l1varname='probe_L1Pt', l1thresholds=[3, 5,10,15,20,22,26],  prefix=label[i]+"_plots" , binning = pt_binning, l1thresholdforeffvsrunnb = 22, offlinethresholdforeffvsrunnb = 27, suffix = suffix)
+        df_mu[i] = makehistosforturnons_inprobeetaranges(df_mu[i], histos, etavarname='probe_Eta', phivarname='probe_Phi', ptvarname='probe_Pt', responsevarname='probe_L1PtoverRecoPt', etabins=[0., 2.4], l1varname='probe_L1Pt', l1thresholds=[3, 5,10,15,20,22,26],  prefix=label[i]+"_plots_eta_inclusive" , binning = coarse_leptonpt_bins, l1thresholdforeffvsrunnb = 22, offlinethresholdforeffvsrunnb = 27, suffix = suffix)
+        df_mu[i] = makehistosforturnons_inprobeetaranges(df_mu[i], histos, etavarname='probe_Eta', phivarname='probe_Phi', ptvarname='probe_Pt', responsevarname='probe_L1PtoverRecoPt', etabins=[0., 2.4], l1varname='probe_L1Pt', l1thresholds=[3, 5,10,15,20,22,26],  prefix=label[i]+"_plots_eta_inclusive2" , binning = coarse2_leptonpt_bins, l1thresholdforeffvsrunnb = 22, offlinethresholdforeffvsrunnb = 27, suffix = suffix)
         
         df_mu[i] = df_mu[i].Define('probePt30_Eta','probe_Eta[probe_Pt>30]')
         df_mu[i] = df_mu[i].Define('probePt30_Phi','probe_Phi[probe_Pt>30]')
