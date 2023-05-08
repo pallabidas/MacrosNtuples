@@ -372,7 +372,7 @@ ROOT::VecOps::RVec<int> charge_conversion(ROOT::VecOps::RVec<int>hwCharge){
 
 // Match L1Mu to TrigObj
 
-vector<int> MatchObjToTrig(ROOT::VecOps::RVec<float>Obj_eta, ROOT::VecOps::RVec<float>Obj_phi, ROOT::VecOps::RVec<float>TrigObj_pt, ROOT::VecOps::RVec<float>TrigObj_eta, ROOT::VecOps::RVec<float>TrigObj_phi, ROOT::VecOps::RVec<int>TrigObj_id){
+vector<int> MatchObjToTrig(ROOT::VecOps::RVec<float>Obj_eta, ROOT::VecOps::RVec<float>Obj_phi, ROOT::VecOps::RVec<float>TrigObj_pt, ROOT::VecOps::RVec<float>TrigObj_eta, ROOT::VecOps::RVec<float>TrigObj_phi, ROOT::VecOps::RVec<int>TrigObj_id, int Target_id){
 
   vector <int> result={};
   for(unsigned int i = 0; i<Obj_eta.size(); i++){
@@ -380,7 +380,7 @@ vector<int> MatchObjToTrig(ROOT::VecOps::RVec<float>Obj_eta, ROOT::VecOps::RVec<
     double drmin = 0.6; 
     int idx = -1;
     for(unsigned int j = 0; j<TrigObj_eta.size(); j++){
-      if (TrigObj_id[j] != 13) continue;
+      if (TrigObj_id[j] != Target_id) continue;
 
       double deta = abs(TrigObj_eta[j]-Obj_eta[i]);
       //double dphi = deltaphi_offlinemustation2_l1mu(Muon_charge[i], TrigObj_pt[j], TrigObj_eta[j], TrigObj_phi[j], Muon_phi[i]);

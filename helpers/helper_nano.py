@@ -154,18 +154,36 @@ def SinglePhotonSelection(df):
     The event must pass a photon trigger. 
     '''
 #    df = df.Filter('MET_pt<50')
+#    nEvents = df.Count().GetValue()
+#    print("Before HLT_Photon110EB_TightID_TightIso", nEvents)
+
     df = df.Filter('HLT_Photon110EB_TightID_TightIso')
+
+#    nEvents = df.Count().GetValue()
+#    print("After HLT_Photon110EB_TightID_TightIso", nEvents)
+
     df = df.Define('photonsptgt20','Photon_pt>20')
     df = df.Filter('Sum(photonsptgt20)==1','=1 photon with p_{T}>20 GeV')
+
+#    nEvents = df.Count().GetValue()
+#    print("After Sum(photonsptgt20)==1", nEvents)
 
     # TEMPORARY: bypasses
     #df = df.Define("_phPassTightID", "true")
     #df = df.Define("_phPassIso", "true")
     #df = df.Define('isRefPhoton','_phPassTightID&&_phPassIso&&Photon_pt>115&&abs(Photon_eta)<1.479')
 
-    df = df.Define('isRefPhoton','Photon_mvaID_WP80>=3&&Photon_pt>115&&abs(Photon_eta)<1.479')
+    df = df.Define('isRefPhoton','Photon_mvaID_WP80&&Photon_pt>115&&abs(Photon_eta)<1.479')
+
+    # debug:
+#    nEvents = df.Filter('Sum(isRefPhoton)>=1','Photon has p_{T}>115 GeV, passes tight ID and is in EB').Count().GetValue()
+#    print("After Sum(isRefPhoton)>=1", nEvents)
+
     df = df.Filter('Sum(isRefPhoton)==1','Photon has p_{T}>115 GeV, passes tight ID and is in EB')
     
+#    nEvents = df.Count().GetValue()
+#    print("After Sum(isRefPhoton)==1", nEvents)
+
     df = df.Define('cleanPh_Pt','Photon_pt[isRefPhoton]')
     df = df.Define('cleanPh_Eta','Photon_eta[isRefPhoton]')
     df = df.Define('cleanPh_Phi','Photon_phi[isRefPhoton]')
@@ -205,7 +223,12 @@ def ZEE_EleSelection(df):
     '''
     Select Z->ee events passing a single electron trigger. Defines probe pt/eta/phi
     '''
+#    nEvents = df.Count().GetValue()
+#    print("Before HLT_Ele32_WPTight_Gsf", nEvents)
     df = df.Filter('HLT_Ele32_WPTight_Gsf')
+
+#    nEvents = df.Count().GetValue()
+#    print("After HLT_Ele32_WPTight_Gsf", nEvents)
 
     # Trigged on a Electron (probably redondant)
     df = df.Filter('''
@@ -216,18 +239,63 @@ def ZEE_EleSelection(df):
     return trigged_on_e;
     ''')
 
+#    nEvents = df.Count().GetValue()
+#    print("After trig on photon", nEvents)
+
     # TrigObj matching
-    df = df.Define('Electron_trig_idx', 'MatchObjToTrig(Electron_eta, Electron_phi, TrigObj_pt, TrigObj_eta, TrigObj_phi, TrigObj_id)')
+    df = df.Define('Electron_trig_idx', 'MatchObjToTrig(Electron_eta, Electron_phi, TrigObj_pt, TrigObj_eta, TrigObj_phi, TrigObj_id, 11)')
+
+#    debug:
+#    df = df.Filter('''
+#    int max_val = -1;
+#    for (unsigned int i = 0; i < Electron_trig_idx.size(); i++){
+#        max_val = max(max_val, Electron_trig_idx[i]);
+#    }
+#    if(max_val==-1){
+#        return false;
+#    }
+#    else{
+#        return true;
+#    }
+#    ''')
+#    nEvents = df.Count().GetValue()
+#    print("Electron trig matching:", nEvents)
+#    exit()
+
+#    # Debugging the matching
+#    df = df.Filter('''
+#    cout << "TrigObj" << endl;
+#    for (unsigned int i = 0; i < TrigObj_pt.size(); i++){
+#        cout << i << ", " << TrigObj_pt[i] << ", " << TrigObj_eta[i] << ", " << TrigObj_phi[i] << ", " << TrigObj_id[i] << endl;
+#    }
+#    cout << "Electron" << endl;
+#    for (unsigned int i = 0; i < Electron_pt.size(); i++){
+#        cout << i << ", " << Electron_pt[i] << ", " << Electron_eta[i] << ", " << Electron_phi[i] << ", " << Electron_trig_idx[i] << endl;
+#    }
+#    return true;
+#    ''')
+
+#    nEvents = df.Count().GetValue()
+#    print("After Sum(isTag) >0", nEvents)
+#    exit()
+
 
     #df = df.Define('Electron_PassTightId','true') # BYPASS
     df = df.Define('Electron_passHLT_Ele32_WPTight_Gsf', 'trig_is_filterbit1_set(Electron_trig_idx, TrigObj_filterBits)')
 
     df = df.Define('isTag','_lPt>35&&abs(_lpdgId)==11&&Electron_mvaIso_WP90&&Electron_passHLT_Ele32_WPTight_Gsf==true')
     df = df.Filter('Sum(isTag)>0')
+
+#    nEvents = df.Count().GetValue()
+#    print("After Sum(isTag) >0", nEvents)
+
     df = df.Define('isProbe','_lPt>5&&abs(_lpdgId)==11&&Electron_mvaIso_WP90&&(Sum(isTag)>=2|| isTag==0)')
 
     df = df.Define('_mll', 'mll(Electron_pt, Electron_eta, Electron_phi, isTag, isProbe)')
     df = df.Filter('_mll>80&&_mll<100')
+
+#    nEvents = df.Count().GetValue()
+#    print("After 80 < _mll < 100", nEvents)
 
     df = df.Define('probe_Pt','_lPt[isProbe]')
     df = df.Define('probe_Eta','_lEta[isProbe]')
@@ -266,7 +334,7 @@ def ZMuMu_MuSelection(df):
     # with L1Mu_trig_idx -> check filter bits -> L1Mu_passHLT
 
     # TrigObj matching
-    df = df.Define('Muon_trig_idx', 'MatchObjToTrig(Muon_eta, Muon_phi, TrigObj_pt, TrigObj_eta, TrigObj_phi, TrigObj_id)')
+    df = df.Define('Muon_trig_idx', 'MatchObjToTrig(Muon_eta, Muon_phi, TrigObj_pt, TrigObj_eta, TrigObj_phi, TrigObj_id, 13)')
 
     # Debugging the matching, seems to be ok
 #    df = df.Filter('''
