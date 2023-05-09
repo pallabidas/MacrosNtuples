@@ -14,3 +14,4 @@ jetmetpt_bins = array('f',[ i*5 for i in range(50) ] +  [250+10*i for i in range
 leptonpt_bins = array('f',[i * .2 for i in range(15 * 5)] + [ 15 + i * .5 for i in range(5 * 2)] + [20 + i for i in range(30)] + [ 50+2*i for i in range(10) ] + [ 70+3*i for i in range(10) ] + [100+10*i for i in range(10) ] + [200, 250, 300, 400, 500])
 
 coarse_leptonpt_bins = array('f',[ i for i in range(50) ] + [ 50+2*i for i in range(10) ] + [ 70+3*i for i in range(10) ] + [100+10*i for i in range(10) ] + [200, 250, 300, 400, 500])
+coarse2_leptonpt_bins = array('f',[ i for i in range(20) ] + [20, 25, 30, 35, 45, 60, 75, 100, 140, 200, 250, 300, 400, 500])
