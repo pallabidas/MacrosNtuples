@@ -1,6 +1,5 @@
 from datetime import datetime
 import ROOT
-import json
 import os
 import sys
 import argparse
@@ -34,6 +33,7 @@ def main():
                         -ZToMuMu: For L1 muon studies with Z->mumu
                         -ZToEE: For L1 EG studies with Z->ee''', 
                         type=str, default='PhotonJet')
+    parser.add_argument("--config", dest="config", help="Yaml configuration file to read. Default: full config for that channel.", type=str, default='')
     parser.add_argument("--plot_nvtx", dest="plot_nvtx", help="Whether to save additional plots in bins of nvtx. Boolean, default = False", type=bool, default=False)
     parser.add_argument("--nvtx_bins", dest="nvtx_bins", help="Edges of the nvtx bins to use if plotNvtx is set to True. Default=[10, 20, 30, 40, 50, 60]", nargs='+', type=int, default=[10, 20, 30, 40, 50, 60])
     args = parser.parse_args() 
@@ -49,6 +49,22 @@ def main():
             inputFile = '/user/lathomas/Public/L1Studies/ZToMuMu.root'
         elif args.channel == 'ZToEE':
             inputFile = '/user/lathomas/Public/L1Studies/ZToEE.root'
+
+    ### Set default config file
+    config_file = args.config
+    if config_file == '':
+        if args.channel == 'PhotonJet':
+            config_file = 'full_PhotonJet.yaml'
+        elif args.channel == 'MuonJet':
+            config_file = 'full_MuonJet.yaml'
+        elif args.channel == 'ZToMuMu':
+            config_file = 'full_ZToMuMu.yaml'
+        elif args.channel == 'ZToEE':
+            config_file = 'full_ZToEE.yaml'
+
+    # Read config and set config_dict in helper
+    with open(config_file) as s:
+        set_config(s)
 
     ### Create filters and suffix, if needed, to later run on bins of nvtx
 
