@@ -25,6 +25,8 @@ filemujet=all_MuonJet.root
 
 # set some labels
 toplabel="#sqrt{s} = 13.6 TeV, L_{int} = $lumi fb^{-1}"
+#toplabel="$lumi"
+
 extralabel='#splitline{#geq 1 tight #mu (p_{T} > 27 GeV), pass HLT_IsoMu24}{#geq 1 jet (p_{T} > 30 GeV, 0 #leq |#eta| < 5)}'
 
 if [ -z "$nvtx_suffix" ]

@@ -37,7 +37,6 @@ def main():
     parser.add_argument("--h1d", dest="h1d", help="1D histo (for simple distribution, etc)", nargs='+',type=str)
         
     args = parser.parse_args()
-    
     if args.interactive == False:
         ROOT.gROOT.SetBatch(1)
         
