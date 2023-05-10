@@ -1,4 +1,7 @@
+# For 2022 setup:
 #for dir in `ls -d outdir/2022Run?v?`
+# For 2023 setup:
+for dir in "outdir/2023B"
 do
     for skim in "ZToMuMu" "MuonJet" "ZToEE" "PhotonJet"
     do
@@ -7,7 +10,7 @@ do
         echo $subdir $nb_files
         if [ ${#nb_files} -lt 4 ]
         then
-            hadd $dir/all_"$skim".root $dir/outputcondor_$skim/*.root
+            hadd -f $dir/all_"$skim".root $dir/outputcondor_$skim/*.root
         else
             # hadd 1000 files at a time, to prevent the process taking more than 1h and getting killed 
             thousands=${nb_files:0:1}
@@ -25,11 +28,13 @@ do
     done
 done
 
-hadd outdir/2022RunCv1_start/start_ZToMuMu.root outdir/2022RunCv1_start/outputcondor_ZToMuMu/*.root
-hadd outdir/2022RunCv1_start/start_MuonJet.root outdir/2022RunCv1_start/outputcondor_MuonJet/*.root
+# Un-comment these lines for the 2022 setup:
 
-mv outdir/2022RunCv1/all_ZToMuMu.root outdir/2022RunCv1/end_ZToMuMu.root
-mv outdir/2022RunCv1/all_MuonJet.root outdir/2022RunCv1/end_MuonJet.root
+#hadd outdir/2022RunCv1_start/start_ZToMuMu.root outdir/2022RunCv1_start/outputcondor_ZToMuMu/*.root
+#hadd outdir/2022RunCv1_start/start_MuonJet.root outdir/2022RunCv1_start/outputcondor_MuonJet/*.root
 
-hadd outdir/2022RunCv1/all_ZToMuMu.root outdir/2022RunCv1_start/start_ZToMuMu.root outdir/2022RunCv1/end_ZToMuMu.root
-hadd outdir/2022RunCv1/all_MuonJet.root outdir/2022RunCv1_start/start_MuonJet.root outdir/2022RunCv1/end_MuonJet.root
+#mv outdir/2022RunCv1/all_ZToMuMu.root outdir/2022RunCv1/end_ZToMuMu.root
+#mv outdir/2022RunCv1/all_MuonJet.root outdir/2022RunCv1/end_MuonJet.root
+
+#hadd outdir/2022RunCv1/all_ZToMuMu.root outdir/2022RunCv1_start/start_ZToMuMu.root outdir/2022RunCv1/end_ZToMuMu.root
+#hadd outdir/2022RunCv1/all_MuonJet.root outdir/2022RunCv1_start/start_MuonJet.root outdir/2022RunCv1/end_MuonJet.root
