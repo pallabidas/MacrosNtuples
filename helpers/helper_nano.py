@@ -4,22 +4,6 @@ from math import floor, ceil
 
 from bins import *
 
-'''
-
-jetEtaBins = [0., 1.3, 2.5, 3., 3.5, 4., 5.]
-egEtaBins = [0., 1.479, 2.5]
-muEtaBins = [0., 0.83, 1.24, 2.4]
-
-
-ht_bins = array('f', [ i*10 for i in range(50) ] + [ 500+ i*20 for i in range(25) ] + [1000 + i*50 for i in range(10)] +[1500,1600,1700,1800,2000,2500,3000])
-leptonpt_bins = array('f',[ i for i in range(50) ] + [ 50+2*i for i in range(10) ] + [ 70+3*i for i in range(10) ] + [100+10*i for i in range(10) ] + [200, 250, 300, 400, 500])
-jetmetpt_bins = array('f',[ i*5 for i in range(50) ] +  [250+10*i for i in range(25) ]  + [500+20*i for i in range(10) ] + [700, 800, 900, 1000, 1200, 1500, 2000 ])
-'''
-
-#from runsBinning import *
-#runnb_bins = array('f', runbinning())
-
-
 response_bins = array('f',[0.+float(i)/100. for i in range(200)] )
 
 runnb_bins = None
@@ -154,36 +138,14 @@ def SinglePhotonSelection(df):
     The event must pass a photon trigger. 
     '''
 #    df = df.Filter('MET_pt<50')
-#    nEvents = df.Count().GetValue()
-#    print("Before HLT_Photon110EB_TightID_TightIso", nEvents)
-
     df = df.Filter('HLT_Photon110EB_TightID_TightIso')
-
-#    nEvents = df.Count().GetValue()
-#    print("After HLT_Photon110EB_TightID_TightIso", nEvents)
 
     df = df.Define('photonsptgt20','Photon_pt>20')
     df = df.Filter('Sum(photonsptgt20)==1','=1 photon with p_{T}>20 GeV')
 
-#    nEvents = df.Count().GetValue()
-#    print("After Sum(photonsptgt20)==1", nEvents)
-
-    # TEMPORARY: bypasses
-    #df = df.Define("_phPassTightID", "true")
-    #df = df.Define("_phPassIso", "true")
-    #df = df.Define('isRefPhoton','_phPassTightID&&_phPassIso&&Photon_pt>115&&abs(Photon_eta)<1.479')
-
     df = df.Define('isRefPhoton','Photon_mvaID_WP80&&Photon_pt>115&&abs(Photon_eta)<1.479')
-
-    # debug:
-#    nEvents = df.Filter('Sum(isRefPhoton)>=1','Photon has p_{T}>115 GeV, passes tight ID and is in EB').Count().GetValue()
-#    print("After Sum(isRefPhoton)>=1", nEvents)
-
     df = df.Filter('Sum(isRefPhoton)==1','Photon has p_{T}>115 GeV, passes tight ID and is in EB')
     
-#    nEvents = df.Count().GetValue()
-#    print("After Sum(isRefPhoton)==1", nEvents)
-
     df = df.Define('cleanPh_Pt','Photon_pt[isRefPhoton]')
     df = df.Define('cleanPh_Eta','Photon_eta[isRefPhoton]')
     df = df.Define('cleanPh_Phi','Photon_phi[isRefPhoton]')
@@ -193,9 +155,6 @@ def SinglePhotonSelection(df):
     
     return df
     
-    
-    
-    
 def MuonJet_MuonSelection(df):
     '''
     Select events with >= 1 muon with pT>25 GeV.
@@ -203,10 +162,6 @@ def MuonJet_MuonSelection(df):
     '''
     df = df.Filter('HLT_IsoMu24')
 
-    #df = df.Define('goodmuonPt25','_lPt>25&&abs(_lpdgId)==13&&_lPassTightID')
-    #df = df.Filter('Sum(goodmuonPt25)>=1','>=1 muon with p_{T}>25 GeV')
-    #df = df.Define('badmuonPt10','_lPt>10&&abs(_lpdgId)==13&&_lPassTightID==0')
-    #df = df.Filter('Sum(badmuonPt10)==0','No bad quality muon')
     df = df.Define('Muon_PassTightId','Muon_pfIsoId>=3&&Muon_mediumPromptId') 
     df = df.Define('goodmuonPt25','Muon_pt>25&&abs(Muon_pdgId)==13&&Muon_PassTightId')
     df = df.Filter('Sum(goodmuonPt25)>=1','>=1 muon with p_{T}>25 GeV')
@@ -217,18 +172,11 @@ def MuonJet_MuonSelection(df):
 #    df = df.Filter(highEnergyJet, 'No high energy jet')
     return df
     
-    
-
 def ZEE_EleSelection(df):
     '''
     Select Z->ee events passing a single electron trigger. Defines probe pt/eta/phi
     '''
-#    nEvents = df.Count().GetValue()
-#    print("Before HLT_Ele32_WPTight_Gsf", nEvents)
     df = df.Filter('HLT_Ele32_WPTight_Gsf')
-
-#    nEvents = df.Count().GetValue()
-#    print("After HLT_Ele32_WPTight_Gsf", nEvents)
 
     # Trigged on a Electron (probably redondant)
     df = df.Filter('''
@@ -239,70 +187,22 @@ def ZEE_EleSelection(df):
     return trigged_on_e;
     ''')
 
-#    nEvents = df.Count().GetValue()
-#    print("After trig on photon", nEvents)
-
     # TrigObj matching
     df = df.Define('Electron_trig_idx', 'MatchObjToTrig(Electron_eta, Electron_phi, TrigObj_pt, TrigObj_eta, TrigObj_phi, TrigObj_id, 11)')
-
-#    debug:
-#    df = df.Filter('''
-#    int max_val = -1;
-#    for (unsigned int i = 0; i < Electron_trig_idx.size(); i++){
-#        max_val = max(max_val, Electron_trig_idx[i]);
-#    }
-#    if(max_val==-1){
-#        return false;
-#    }
-#    else{
-#        return true;
-#    }
-#    ''')
-#    nEvents = df.Count().GetValue()
-#    print("Electron trig matching:", nEvents)
-#    exit()
-
-#    # Debugging the matching
-#    df = df.Filter('''
-#    cout << "TrigObj" << endl;
-#    for (unsigned int i = 0; i < TrigObj_pt.size(); i++){
-#        cout << i << ", " << TrigObj_pt[i] << ", " << TrigObj_eta[i] << ", " << TrigObj_phi[i] << ", " << TrigObj_id[i] << endl;
-#    }
-#    cout << "Electron" << endl;
-#    for (unsigned int i = 0; i < Electron_pt.size(); i++){
-#        cout << i << ", " << Electron_pt[i] << ", " << Electron_eta[i] << ", " << Electron_phi[i] << ", " << Electron_trig_idx[i] << endl;
-#    }
-#    return true;
-#    ''')
-
-#    nEvents = df.Count().GetValue()
-#    print("After Sum(isTag) >0", nEvents)
-#    exit()
-
-
-    #df = df.Define('Electron_PassTightId','true') # BYPASS
     df = df.Define('Electron_passHLT_Ele32_WPTight_Gsf', 'trig_is_filterbit1_set(Electron_trig_idx, TrigObj_filterBits)')
 
     df = df.Define('isTag','_lPt>35&&abs(_lpdgId)==11&&Electron_mvaIso_WP90&&Electron_passHLT_Ele32_WPTight_Gsf==true')
     df = df.Filter('Sum(isTag)>0')
-
-#    nEvents = df.Count().GetValue()
-#    print("After Sum(isTag) >0", nEvents)
 
     df = df.Define('isProbe','_lPt>5&&abs(_lpdgId)==11&&Electron_mvaIso_WP90&&(Sum(isTag)>=2|| isTag==0)')
 
     df = df.Define('_mll', 'mll(Electron_pt, Electron_eta, Electron_phi, isTag, isProbe)')
     df = df.Filter('_mll>80&&_mll<100')
 
-#    nEvents = df.Count().GetValue()
-#    print("After 80 < _mll < 100", nEvents)
-
     df = df.Define('probe_Pt','_lPt[isProbe]')
     df = df.Define('probe_Eta','_lEta[isProbe]')
     df = df.Define('probe_Phi','_lPhi[isProbe]')
 
-    #df = df.Define('probe_Charge', '_l
-    
     return df
 
 
@@ -322,91 +222,27 @@ def ZMuMu_MuSelection(df):
     ''')
 
     # charge 
-    #df = df.Filter("L1Mu_hwCharge>-1")
     # from debugging, I found that
     # L1Mu_hwCharge = 0 corresponds to Muon_charge = +1
     # L1Mu_hwCharge = 1 corresponds to Muon_charge = -1
     df = df.Define('L1Mu_charge', 'charge_conversion(L1Mu_hwCharge)')
-    #df.Display({"L1Mu_hwCharge", "L1Mu_charge"})
-
-
-    # Match L1Mu to trig obj with id == 13 -> L1Mu_trig_idx
-    # with L1Mu_trig_idx -> check filter bits -> L1Mu_passHLT
 
     # TrigObj matching
     df = df.Define('Muon_trig_idx', 'MatchObjToTrig(Muon_eta, Muon_phi, TrigObj_pt, TrigObj_eta, TrigObj_phi, TrigObj_id, 13)')
-
-    # Debugging the matching, seems to be ok
-#    df = df.Filter('''
-#    cout << "TrigObj" << endl;
-#    for (unsigned int i = 0; i < TrigObj_pt.size(); i++){
-#        cout << i << ", " << TrigObj_pt[i] << ", " << TrigObj_eta[i] << ", " << TrigObj_phi[i] << ", " << TrigObj_id[i] << endl;
-#    }
-#    cout << "Muon" << endl;
-#    for (unsigned int i = 0; i < Muon_pt.size(); i++){
-#        cout << i << ", " << Muon_pt[i] << ", " << Muon_eta[i] << ", " << Muon_phi[i] << ", " << Muon_trig_idx[i] << endl;
-#    }
-#    return true;
-#    ''')
-
     df = df.Define('Muon_passHLT_IsoMu24', 'trig_is_filterbit1_set(Muon_trig_idx, TrigObj_filterBits)')
-
-    # Debugging the HLT firing, seems to be ok
-#    df = df.Filter('''
-#    cout << "pass HLT?" << endl;
-#    for ( unsigned int i = 0; i < Muon_passHLT_IsoMu24.size(); i++) {
-#        cout << i << ", " << Muon_passHLT_IsoMu24[i] << endl;
-#    }
-#    return true;
-#    ''')
-
-#    df = df.Filter('''
-#    //cout << "new event" << endl;
-#    //cout << Muon_pt.size() << ", " << Muon_passHLT_IsoMu24.size() << endl;
-#    cout << (Muon_pt.size() == Muon_passHLT_IsoMu24.size()) << endl;
-#    return true;
-#    ''')
-
-#    nEvents = df.Count().GetValue()
-#    print(nEvents)
-#    exit()
-
     df = df.Define('Muon_PassTightId','Muon_pfIsoId>=3&&Muon_mediumPromptId') 
 
-    # some debugging the types of colums
-    #cols = ["Muon_pt", "Muon_pdgId", "Muon_PassTightId", "Muon_passHLT_IsoMu24", "Muon_tightId"]
-    #for c in cols:
-    #    coltype = df.GetColumnType(c)
-    #    print(c, coltype)
-    #df.Describe().Print()
-    #exit()
-
-    df = df.Define('isTag','Muon_pt>25&&abs(Muon_pdgId)==13&&Muon_PassTightId&&Muon_passHLT_IsoMu24==true')
+    df = df.Define('isTag','Muon_pt>25&&abs(Muon_pdgId)==13&&Muon_PassTightId&&Muon_passHLT_IsoMu24')
     df = df.Filter('Sum(isTag)>0')
-
-    #nEvents = df.Count().GetValue()
-    #print("There are {} events after Sum(isTag)>0".format(nEvents))
 
     df = df.Define('isProbe','Muon_pt>3&&abs(Muon_pdgId)==13&&Muon_PassTightId&& (Sum(isTag)>=2|| isTag==0)')
     df = df.Define('_mll', 'mll(Muon_pt, Muon_eta, Muon_phi, isTag, isProbe)')
 
-    #df.Display("_mll").Print()
-    #df.Filter("_mll>0").Display("_mll").Print()
-
     df = df.Filter('_mll>80&&_mll<100')
-
-
-    #nEvents = df.Filter('_mll>0').Count().GetValue()
-    #print("There are {} events after _mll>0".format(nEvents))
-    #nEvents = df.Count().GetValue()
-    #print("There are {} events after _mll>80&&_mll<100".format(nEvents))
 
     df = df.Define('probe_Pt','Muon_pt[isProbe]')
     df = df.Define('probe_Eta','Muon_eta[isProbe]')
     df = df.Define('probe_Phi','Muon_phi[isProbe]')
-    
-    # debug
-    #df = df.Define('probe_Charge', 'Muon_charge[isProbe]')
     
     return df
 
@@ -455,8 +291,6 @@ def makehistosforturnons_inprobeetaranges(df, histos, etavarname, phivarname, pt
 
 
     return df
-
-    
 
 def ZEE_Plots(df, suffix = ''):
     histos = {}
@@ -523,8 +357,6 @@ def ZEE_Plots(df, suffix = ''):
 
     return df, histos
     
-
-
 def ZMuMu_Plots(df, suffix = ''):
 
     histos = {}
@@ -564,15 +396,6 @@ def ZMuMu_Plots(df, suffix = ''):
 
         df_mu[i] = df_mu[i].Define('probe_L1PtoverRecoPt','probe_L1Pt/probe_Pt')
 
-        # debugging
-        #print(label[i])
-        #df_mu[i] = df_mu[i].Define('probe_L1charge', 'GetVal(probe_idxL1jet, L1Mu_charge)')
-        #df_mu[i] = df_mu[i].Define('probe_L1eta', 'GetVal(probe_idxL1jet, L1Mu_eta)')
-        #df_mu[i] = df_mu[i].Define('probe_L1phi', 'GetVal(probe_idxL1jet, L1Mu_phi)')
-        #df_mu[i] = df_mu[i].Define('probe_L1charge_test', 'GetVal(probe_idxL1jet, L1Mu_charge)')
-        #df_mu[i].Display({"probe_L1charge", "probe_L1charge_test", "probe_Charge"}).Print()
-        #df_mu[i].Display({"probe_L1Pt", "probe_Pt", "probe_L1eta", "probe_Eta", "probe_L1phi", "probe_Phi"}).Print()
-        
         pt_binning = leptonpt_bins
         if suffix != '':
             pt_binning = coarse_leptonpt_bins
@@ -653,14 +476,8 @@ def ZMuMu_Plots(df, suffix = ''):
             histos['L1Mu22_numforPrefiring_etaphi'] = df_mu[i].Filter('Flag_IsUnprefirable').Histo2D(ROOT.RDF.TH2DModel('', '', 100, -5,5, 100, -3.1416, 3.1416), 'probeEta_L1Mu22_inbxmin1', 'probePhi_L1Mu22_inbxmin1')
             '''
 
-
-
     return df, histos
     
-
-
-
-
 def CleanJets(df):
     #List of cleaned jets (noise cleaning + lepton/photon overlap removal)
     df = df.Define('_jetPassID', 'Jet_jetId>=4')
@@ -707,10 +524,6 @@ def EtSum(df, suffix = ''):
     df = df.Define('metnomu_x','MET_pt*cos(MET_phi)+muons_px')
     df = df.Define('metnomu_y','MET_pt*sin(MET_phi)+muons_py')
     df = df.Define('MetNoMu','sqrt(metnomu_x*metnomu_x+metnomu_y*metnomu_y)')
-    #df = df.Define('L1_ETMHF80','L1_ETMHF80')
-    #df = df.Define('L1_ETMHF90','L1_ETMHF90')
-    #df = df.Define('L1_ETMHF100','L1_ETMHF100')
-    #df = df.Define('L1_ETMHF110','L1_ETMHF110')
 
     # Dijet selections
     df = df.Define('hastwocleanjets', 'PassDiJet80_40_Mjj500(cleanJet_Pt, cleanJet_Eta, cleanJet_Phi)')
@@ -855,10 +668,6 @@ def HFNoiseStudy(df, suffix = ''):
 
         histos[p+'MET_pt'+suffix] = df_passvsfailL1[i].Histo1D(ROOT.RDF.TH1DModel(p+'MET_pt'+suffix, '', 100,0,500), 'MET_pt')
 
-
-
-
-
     return df, histos
     
 def PtBalanceSelection(df):
@@ -869,9 +678,6 @@ def PtBalanceSelection(df):
     
     #Back to back condition
     df = df.Filter('abs(acos(cos(ref_Phi-cleanJet_Phi[0])))>2.9','DeltaPhi(ph,jet)>2.9')
-
-    # only one jet with pT > 30 GeV
-    df = df.Filter('Sum(isCleanJet)==1','==1 clean jet with p_{T}>30 GeV')
 
     #Compute Pt balance = pt(jet)/pt(ref) => here ref is a photon
     #Reco first
@@ -891,10 +697,7 @@ def AnalyzePtBalance(df, suffix = ''):
         histos['RecoJetvsRunNb'+str_bineta+suffix] = df_JetsBinnedInEta[str_bineta].Histo2D(ROOT.RDF.TH2DModel('h_PtBalanceVsRunNb_{}'.format(str_bineta)+suffix, 'ptbalance', len(runnb_bins)-1, runnb_bins, len(response_bins)-1, response_bins), 'run','ptbalance')
         histos['L1JetvsRunNb'+str_bineta+suffix] = df_JetsBinnedInEta[str_bineta].Histo2D(ROOT.RDF.TH2DModel('h_L1PtBalanceVsRunNb_{}'.format(str_bineta)+suffix, 'ptbalanceL1', len(runnb_bins)-1, runnb_bins, len(response_bins)-1, response_bins), 'run','ptbalanceL1')
         histos['L1JetvsPU'+str_bineta+suffix] = df_JetsBinnedInEta[str_bineta].Histo2D(ROOT.RDF.TH2DModel('h_L1PtBalanceVsPU_{}'.format(str_bineta)+suffix, 'ptbalanceL1', 100, 0, 100, 100, 0, 2), 'PV_npvs','ptbalanceL1')
+        # only one jet with pT > 30 GeV
+        histos['L1JetvsRunNb_singlejet'+str_bineta+suffix] = df_JetsBinnedInEta[str_bineta].Filter('Sum(isCleanJet)==1','==1 clean jet with p_{T}>30 GeV').Histo2D(ROOT.RDF.TH2DModel('h_L1PtBalanceVsRunNb_singlejet_{}'.format(str_bineta)+suffix, 'ptbalanceL1', len(runnb_bins)-1, runnb_bins, len(response_bins)-1, response_bins), 'run','ptbalanceL1')
 
-        
     return df, histos
-
-
-
-    

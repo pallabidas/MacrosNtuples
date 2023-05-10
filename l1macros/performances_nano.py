@@ -67,17 +67,6 @@ def main():
     df = ROOT.RDataFrame('Events', inputFile)
     nEvents = df.Count().GetValue()
 
-    #df = ROOT.RDataFrame('ntuplizer/tree', inputFile)    
-    #nEvents = df.Count().GetValue()
-
-    #if nEvents == 0:
-    #    df = ROOT.RDataFrame('jmeanalyzer/tree', inputFile)
-    #    nEvents = df.Count().GetValue()
-
-    #if nEvents == 0:
-    #    df = ROOT.RDataFrame('Events', inputFile)
-    #    nEvents = df.Count().GetValue()
-    
     print('There are {} events'.format(nEvents))
     
     #Max events to run on 
@@ -243,11 +232,6 @@ def main():
         for i in all_histos:
             all_histos[i].GetValue().Write()
 
-#        df, histos = ZEE_Plots(df)
-#        
-#        for i in histos:
-#            histos[i].GetValue().Write()
-
     if args.channel == 'ZToMuMu':
         df = ZMuMu_MuSelection(df)
 
@@ -263,12 +247,6 @@ def main():
 
         for i in all_histos:
             all_histos[i].GetValue().Write()
-
-#        df, histos = ZMuMu_Plots(df)
-#
-#        for i in histos:
-#            histos[i].GetValue().Write()
-
 
 if __name__ == '__main__':
     main()
