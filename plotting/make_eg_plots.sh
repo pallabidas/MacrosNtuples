@@ -27,6 +27,7 @@ filezee=all_ZToEE.root
 
 # set some labels
 toplabel="#sqrt{s} = 13.6 TeV, L_{int} = $lumi fb^{-1}"
+#toplabel="$lumi"
 
 # distribution of nvtx
 if [ -z "$nvtx_suffix" ]

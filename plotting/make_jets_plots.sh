@@ -3,6 +3,7 @@
 
 # CL arguments
 dir=$1
+
 lumi=$2
 nvtx_suffix=$3
 
@@ -28,24 +29,57 @@ filegamjet=all_PhotonJet.root
 
 # set some labels
 toplabel="#sqrt{s} = 13.6 TeV, L_{int} = $lumi fb^{-1}"
+#top_eg=$2
+#top_mu=$3
+
 muselection='#geq 1 tight #mu (p_{T} > 25 GeV), pass HLT_IsoMu24'
 photonselection='#geq 1 tight #gamma (p_{T} > 115 GeV, |#eta| < 1.479)'
 
 for skim in "FromEGamma" "FromSingleMuon"
 do
-
     case $skim in 
         "FromSingleMuon")
             selection_label=$muselection
             file=$filemujet
+            #toplabel=$top_mu
             ;;
         "FromEGamma")
             selection_label=$photonselection
             file=$filegamjet
+            #toplabel=$top_eg
             ;;
         *)
             ;;
     esac
+
+    if [ $skim == "FromEGamma" ]
+    then
+        $makeprof \
+            -i $file\
+            --h2d h_L1PtBalanceVsRunNb_eta0p0to1p3$nvtx_suffix h_L1PtBalanceVsRunNb_eta1p3to2p5$nvtx_suffix h_L1PtBalanceVsRunNb_eta2p5to3p0$nvtx_suffix h_L1PtBalanceVsRunNb_eta3p0to3p5$nvtx_suffix h_L1PtBalanceVsRunNb_eta3p5to4p0$nvtx_suffix h_L1PtBalanceVsRunNb_eta4p0to5p0$nvtx_suffix \
+            --xtitle 'run number' \
+            --ytitle '(p_{T}^{L1 jet}/p_{T}^{reco #gamma})' \
+            --extralabel "#splitline{$selection_label, PFMET<50 GeV}{p_{T}^{jet} > 30 GeV, #Delta#phi(#gamma, jet) > 2.9}" \
+            --legend '0 #leq |#eta| < 1.3' '1.3 #leq |#eta| < 2.5' '2.5 #leq |#eta| < 3.0' '3.0 #leq |#eta| < 3.5' '3.5 #leq |#eta| < 4.0' '4.0 #leq |#eta| < 5.0' \
+            --toplabel "$toplabel" \
+            --axisrange 320673 325173 0 1.5\
+            --plotname L1Jet_FromEGamma_PtBalancevsRunNb
+            #--axisrange 355374 363000 0 1.5\
+
+        $makeprof \
+            -i $file\
+            --h2d h_L1PtBalanceVsRunNb_singlejet_eta0p0to1p3$nvtx_suffix h_L1PtBalanceVsRunNb_singlejet_eta1p3to2p5$nvtx_suffix h_L1PtBalanceVsRunNb_singlejet_eta2p5to3p0$nvtx_suffix h_L1PtBalanceVsRunNb_singlejet_eta3p0to3p5$nvtx_suffix h_L1PtBalanceVsRunNb_singlejet_eta3p5to4p0$nvtx_suffix h_L1PtBalanceVsRunNb_singlejet_eta4p0to5p0$nvtx_suffix \
+            --xtitle 'run number' \
+            --ytitle '(p_{T}^{L1 jet}/p_{T}^{reco #gamma})' \
+            --extralabel "#splitline{$selection_label, PFMET<50 GeV}{= 1 clean jet, p_{T}^{jet} > 30 GeV, #Delta#phi(#gamma, jet) > 2.9}" \
+            --legend '0 #leq |#eta| < 1.3' '1.3 #leq |#eta| < 2.5' '2.5 #leq |#eta| < 3.0' '3.0 #leq |#eta| < 3.5' '3.5 #leq |#eta| < 4.0' '4.0 #leq |#eta| < 5.0' \
+            --toplabel "$toplabel" \
+            --axisrange 320673 325173 0 1.5\
+            --plotname L1Jet_FromEGamma_PtBalancevsRunNb_singlejet
+            #--axisrange 355374 363000 0 1.5\
+    fi
+
+    continue
 
     # distribution of nvtx
     if [ -z "$nvtx_suffix" ]
@@ -54,7 +88,7 @@ do
             --h1d h_nvtx \
             --xtitle 'N_{vtx}' \
             --ytitle 'Events' \
-            --toplabel "$mujet_toplabel" \
+            --toplabel "$toplabel" \
             --plotname L1Jet_"$skim"_nvtx
     fi
 
@@ -148,14 +182,14 @@ do
                 --ytitle 'Efficiency' \
                 --legend 'nvtx #in #[]{10, 20}' 'nvtx #in #[]{20, 30}' 'nvtx #in #[]{30, 40}' 'nvtx #in #[]{40, 50}' 'nvtx #in #[]{50, 60}' \
                 --axisranges 30 $pt_max \
-                --extralabel "#splitline{$selection_label, p_{T}^{jet} > 30 GeV}{#splitline{$eta_label}{p_{T}^{L1 jet} #geq 40 GeV}}" \
+                --extralabel "#splitline{$selection_label, p_{T}^{jet} > 30 GeV}{#splitline{$eta_label}{p_{T}^{L1 jet} #geq 40 GeV}}" \
                 --toplabel "$toplabel" \
                 $logx \
                 --plotname L1Jet_"$skim"_TurnOn_"$range"_vsPU
 
         fi
 
-        # same thing, zoom on the 0 - 300 GeV region in pT
+        # same thing, zoom on the 0 - 300 GeV region in pT
         if [ $pt_max -gt 500 ]
         then
             $makeeff -i $file \
@@ -180,7 +214,7 @@ do
                     --ytitle 'Efficiency' \
                     --legend 'nvtx #in #[]{10, 20}' 'nvtx #in #[]{20, 30}' 'nvtx #in #[]{30, 40}' 'nvtx #in #[]{40, 50}' 'nvtx #in #[]{50, 60}' \
                     --axisranges 30 500 \
-                    --extralabel "#splitline{$selection_label, p_{T}^{jet} > 30 GeV}{#splitline{$eta_label}{p_{T}^{L1 jet} #geq 40 GeV}}" \
+                    --extralabel "#splitline{$selection_label, p_{T}^{jet} > 30 GeV}{#splitline{$eta_label}{p_{T}^{L1 jet} #geq 40 GeV}}" \
                     --toplabel "$toplabel" \
                     --plotname L1Jet_"$skim"_TurnOn_"$range"_vsPU_Zoom
             fi
@@ -310,3 +344,14 @@ do
         --axisrange 355374 362760 0.8 1.1 \
         --plotname L1Jet_"$skim"_ResponseVsRunNb_Zoom
 done
+
+#$makeresol \
+#    -i $filegamjet \
+#    --h2d h_ResponseVsPt_big_bins_Jet_plots_eta0p0to1p3 h_ResponseVsPt_big_bins_Jet_plots_eta1p3to2p5 h_ResponseVsPt_big_bins_Jet_plots_eta2p5to3p0 h_ResponseVsPt_big_bins_Jet_plots_eta3p0to3p5 h_ResponseVsPt_big_bins_Jet_plots_eta3p5to4p0 h_ResponseVsPt_big_bins_Jet_plots_eta4p0to5p0 \
+#    --xtitle 'p_{T}^{reco jet} (GeV)' \
+#    --ytitle '(p_{T}^{L1 jet}/p_{T}^{reco jet})' \
+#    --legend '0 #leq |#eta| < 1.3' '1.3 #leq |#eta| < 2.5' '2.5 #leq |#eta| < 3.0' '3.0 #leq |#eta| < 3.5' '3.5 #leq |#eta| < 4.0' '4.0 #leq |#eta| < 5.0' \
+#    --legendpos "top" \
+#    --toplabel "$top_eg" \
+#    --axisrange 0 200 0 1.6 \
+#    --plotname L1Jet_FromEGamma_ResponseVsPt_big_bins

@@ -25,6 +25,7 @@ cd $dir
 filezmumu=all_ZToMuMu.root
 
 toplabel="#sqrt{s} = 13.6 TeV, L_{int} = $lumi fb^{-1}"
+#toplabel="$lumi"
 
 if [ -z "$nvtx_suffix" ]
 then
@@ -36,6 +37,7 @@ then
         --plotname L1Mu_nvtx
 fi
 
+#for range in "EMTF" "BMTF" "OMTF" 
 for range in "EMTF" "BMTF" "OMTF" "EMTF1" "EMTF2" "EMTF3"
 do
     case $range in
@@ -168,6 +170,63 @@ do
     done
 done
 
+# Efficiency vs pT
+# all eta ranges and all qualities
+
+#$makeeff -i $filezmumu \
+#    --den h_Qual12_plots_eta_inclusive_eta0p0to2p4 \
+#    --num h_Qual12_plots_eta_inclusive_eta0p0to2p4_l1thrgeq3 h_Qual12_plots_eta_inclusive_eta0p0to2p4_l1thrgeq5 h_Qual12_plots_eta_inclusive_eta0p0to2p4_l1thrgeq10 h_Qual12_plots_eta_inclusive_eta0p0to2p4_l1thrgeq15 h_Qual12_plots_eta_inclusive_eta0p0to2p4_l1thrgeq20 h_Qual12_plots_eta_inclusive_eta0p0to2p4_l1thrgeq22 h_Qual12_plots_eta_inclusive_eta0p0to2p4_l1thrgeq26 \
+#    --xtitle 'p_{T}^{#mu}(reco) (GeV)' \
+#    --ytitle 'Efficiency' \
+#    --legend 'p_{T}^{L1 #mu} #geq 3 GeV' 'p_{T}^{L1 #mu} #geq 5 GeV' 'p_{T}^{L1 #mu} #geq 10 GeV' 'p_{T}^{L1 #mu} #geq 15 GeV' 'p_{T}^{L1 #mu} #geq 20 GeV' 'p_{T}^{L1 #mu} #geq 22 GeV' 'p_{T}^{L1 #mu} #geq 26 GeV' \
+#    --axisranges 0 500 \
+#    --extralabel "#splitline{Z#rightarrow#mu#mu, Qual #geq 12}{0 #leq |#eta^{#mu}(reco)| < 2.4}" \
+#    --setlogx True \
+#    --toplabel "$toplabel" \
+#    --plotname L1Mu_TurnOnQual12
+
+# same thing, zoom on the 0 - 50 GeV region in pT
+
+#$makeeff -i $filezmumu \
+#    --den h_Qual12_plots_eta_inclusive_eta0p0to2p4 \
+#    --num h_Qual12_plots_eta_inclusive_eta0p0to2p4_l1thrgeq3 h_Qual12_plots_eta_inclusive_eta0p0to2p4_l1thrgeq5 h_Qual12_plots_eta_inclusive_eta0p0to2p4_l1thrgeq10 h_Qual12_plots_eta_inclusive_eta0p0to2p4_l1thrgeq15 h_Qual12_plots_eta_inclusive_eta0p0to2p4_l1thrgeq20 h_Qual12_plots_eta_inclusive_eta0p0to2p4_l1thrgeq22 h_Qual12_plots_eta_inclusive_eta0p0to2p4_l1thrgeq26 \
+#    --xtitle 'p_{T}^{#mu}(reco) (GeV)' \
+#    --ytitle 'Efficiency' \
+#    --legend 'p_{T}^{L1 #mu} #geq 3 GeV' 'p_{T}^{L1 #mu} #geq 5 GeV' 'p_{T}^{L1 #mu} #geq 10 GeV' 'p_{T}^{L1 #mu} #geq 15 GeV' 'p_{T}^{L1 #mu} #geq 20 GeV' 'p_{T}^{L1 #mu} #geq 22 GeV' 'p_{T}^{L1 #mu} #geq 26 GeV' \
+#    --axisranges 0 50 \
+#    --setlogx True \
+#    --extralabel "#splitline{Z#rightarrow#mu#mu, Qual #geq 12}{0 #leq |#eta^{#mu}(reco)| < 2.4}" \
+#    --toplabel "$toplabel" \
+#    --plotname L1Mu_TurnOnQual12_Zoom
+
+# Efficiency vs pT
+# all eta ranges and all qualities
+
+#$makeeff -i $filezmumu \
+#    --den h_Qual12_plots_eta_inclusive2_eta0p0to2p4 \
+#    --num h_Qual12_plots_eta_inclusive2_eta0p0to2p4_l1thrgeq3 h_Qual12_plots_eta_inclusive2_eta0p0to2p4_l1thrgeq5 h_Qual12_plots_eta_inclusive2_eta0p0to2p4_l1thrgeq10 h_Qual12_plots_eta_inclusive2_eta0p0to2p4_l1thrgeq15 h_Qual12_plots_eta_inclusive2_eta0p0to2p4_l1thrgeq20 h_Qual12_plots_eta_inclusive2_eta0p0to2p4_l1thrgeq22 h_Qual12_plots_eta_inclusive2_eta0p0to2p4_l1thrgeq26 \
+#    --xtitle 'p_{T}^{#mu}(reco) (GeV)' \
+#    --ytitle 'Efficiency' \
+#    --legend 'p_{T}^{L1 #mu} #geq 3 GeV' 'p_{T}^{L1 #mu} #geq 5 GeV' 'p_{T}^{L1 #mu} #geq 10 GeV' 'p_{T}^{L1 #mu} #geq 15 GeV' 'p_{T}^{L1 #mu} #geq 20 GeV' 'p_{T}^{L1 #mu} #geq 22 GeV' 'p_{T}^{L1 #mu} #geq 26 GeV' \
+#    --axisranges 0 200 \
+#    --extralabel "#splitline{Z#rightarrow#mu#mu, Qual #geq 12}{0 #leq |#eta^{#mu}(reco)| < 2.4}" \
+#    --toplabel "$toplabel" \
+#    --plotname L1Mu_TurnOnQual12_bigbins
+
+# same thing, zoom on the 0 - 50 GeV region in pT
+
+#$makeeff -i $filezmumu \
+#    --den h_Qual12_plots_eta_inclusive2_eta0p0to2p4 \
+#    --num h_Qual12_plots_eta_inclusive2_eta0p0to2p4_l1thrgeq3 h_Qual12_plots_eta_inclusive2_eta0p0to2p4_l1thrgeq5 h_Qual12_plots_eta_inclusive2_eta0p0to2p4_l1thrgeq10 h_Qual12_plots_eta_inclusive2_eta0p0to2p4_l1thrgeq15 h_Qual12_plots_eta_inclusive2_eta0p0to2p4_l1thrgeq20 h_Qual12_plots_eta_inclusive2_eta0p0to2p4_l1thrgeq22 h_Qual12_plots_eta_inclusive2_eta0p0to2p4_l1thrgeq26 \
+#    --xtitle 'p_{T}^{#mu}(reco) (GeV)' \
+#    --ytitle 'Efficiency' \
+#    --legend 'p_{T}^{L1 #mu} #geq 3 GeV' 'p_{T}^{L1 #mu} #geq 5 GeV' 'p_{T}^{L1 #mu} #geq 10 GeV' 'p_{T}^{L1 #mu} #geq 15 GeV' 'p_{T}^{L1 #mu} #geq 20 GeV' 'p_{T}^{L1 #mu} #geq 22 GeV' 'p_{T}^{L1 #mu} #geq 26 GeV' \
+#    --axisranges 0 50 \
+#    --setlogx True \
+#    --extralabel "#splitline{Z#rightarrow#mu#mu, Qual #geq 12}{0 #leq |#eta^{#mu}(reco)| < 2.4}" \
+#    --toplabel "$toplabel" \
+#    --plotname L1Mu_TurnOnQual12_Zoom
+
 # Efficiency vs Eta Phi
 
 $makeeff -i $filezmumu \
@@ -259,8 +318,9 @@ $makeeff -i $filezmumu \
 
 # Prefiring vs Eta Phi
 
+#    --num L1Mu22_bxmin1_etaphi  \
 $makeeff -i $filezmumu \
-    --num L1Mu22_bxmin1_etaphi  \
+    --num L1Mu22_FirstBunchInTrain_bxmin1_etaphi  \
     --den L1Mu22_bx0_etaphi  \
     --xtitle '#eta^{#mu}(reco)' \
     --ytitle '#phi^{#mu}(reco)' \
@@ -289,7 +349,7 @@ $makeeff -i $filezmumu \
 # Prefiring vs Eta only
 
 $makeeff -i $filezmumu \
-    --num L1Mu22_bxmin1_eta  \
+    --num L1Mu22_FirstBunchInTrain_bxmin1_eta  \
     --den L1Mu22_bx0_eta  \
     --xtitle '#eta^{#mu}(reco)' \
     --ytitle 'bx-1 / (bx0 or bx-1)' \
