@@ -29,8 +29,8 @@ def main():
     args = parser.parse_args()
     inputFile = ROOT.TFile.Open(args.inputFile)
     tree = inputFile.Get('l1EventTree/L1EventTree')
-    tree_Upgrade = inputFile.Get('l1UpgradeTree/L1UpgradeTree')
-    tree_uGT  = inputFile.Get('l1uGTTree/L1uGTTree')
+    tree_Upgrade = inputFile.Get('l1UpgradeEmuTree/L1UpgradeTree')
+    tree_uGT  = inputFile.Get('l1uGTEmuTree/L1uGTTree')
     tree_Reco = inputFile.Get('l1RecoTree/RecoTree')
     tree_RecoJet = inputFile.Get('l1JetRecoTree/JetRecoTree')
     tree_RecoMuon = inputFile.Get('l1MuonRecoTree/Muon2RecoTree')
@@ -66,15 +66,15 @@ def main():
     
     df, histos_jets = AnalyzeCleanJets(df, 100, 50)
     
-    #df, histos_sum = EtSum(df)
+    df, histos_sum = EtSum(df)
     
     df_report = df.Report()
 
     for i in histos_jets:
         histos_jets[i].GetValue().Write()
 
-    #for i in histos_sum:
-    #    histos_sum[i].GetValue().Write()
+    for i in histos_sum:
+        histos_sum[i].GetValue().Write()
 
 
     h.Write()

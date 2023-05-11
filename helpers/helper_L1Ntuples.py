@@ -5,9 +5,9 @@ egEtaBins = [0., 1.479, 2.5]
 muEtaBins = [0., 0.83, 1.24, 2.4]
 
 
-ht_bins = array('f', [ i*10 for i in range(50) ] + [ 500+ i*20 for i in range(25) ] + [1000 + i*50 for i in range(10)] +[1500,1600,1700,1800,2000,2500,3000])
+ht_bins = array('f', [ i*10 for i in range(30) ] + [ 300+ i*20 for i in range(10) ])
 leptonpt_bins = array('f',[ i for i in range(50) ] + [ 50+2*i for i in range(10) ] + [ 70+3*i for i in range(10) ] + [100+10*i for i in range(10) ] + [200, 250, 300, 400, 500])
-jetmetpt_bins = array('f',[ i*5 for i in range(50) ] +  [250+10*i for i in range(25) ]  + [500+20*i for i in range(10) ] + [700, 800, 900, 1000, 1200, 1500, 2000 ])
+jetmetpt_bins = array('f',[ i*2.5 for i in range(40) ] +  [ 100+i*5 for i in range(40) ])
 
 from runsBinning import *
 runnb_bins = array('f', runbinning())
@@ -116,6 +116,7 @@ def MuonJet_MuonSelection(df):
 def CleanJets(df):
     #List of cleaned jets (noise cleaning + lepton/photon overlap removal)
     df = df.Define('isCleanJet','Jet.et>30&&Jet.mef<0.2')
+    #df = df.Define('isCleanJet','Jet.et>30')
     df = df.Define('cleanJet_Pt','Jet.et[isCleanJet]')
     df = df.Define('cleanJet_Eta','Jet.eta[isCleanJet]')
     df = df.Define('cleanJet_Phi','Jet.phi[isCleanJet]')
@@ -135,24 +136,23 @@ def EtSum(df):
 
     df = df.Define('MetNoMu','Sums.pfMetNoMu')
     df = df.Define('L1_ETMHF80','L1uGT.m_algoDecisionInitial[419]')
+    df = df.Define('L1_ETMHF90','L1uGT.m_algoDecisionInitial[420]')
     df = df.Define('L1_ETMHF100','L1uGT.m_algoDecisionInitial[421]')
-    df = df.Define('L1_ETMHF110','L1uGT.m_algoDecisionInitial[422]')
 
     histos['h_MetNoMu_Denominator'] = df.Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_Denominator', '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu') 
     
     dfmetl1 = df.Filter('L1uGT.m_algoDecisionInitial[419]')
     histos['L1_ETMHF80'] = dfmetl1.Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_ETMHF80', '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
+    dfmetl1 = df.Filter('L1uGT.m_algoDecisionInitial[420]')
+    histos['L1_ETMHF80'] = dfmetl1.Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_ETMHF90', '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
     dfmetl1 = df.Filter('L1uGT.m_algoDecisionInitial[421]')
     histos['L1_ETMHF100'] = dfmetl1.Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_ETMHF100', '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
-    dfmetl1 = df.Filter('L1uGT.m_algoDecisionInitial[422]')
-    histos['L1_ETMHF110'] = dfmetl1.Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_ETMHF110', '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
-
 
     histos['h_HT_Denominator'] = df.Filter('Sums.met<50').Histo1D(ROOT.RDF.TH1DModel('h_HT_Denominator', '', len(ht_bins)-1, array('d',ht_bins)), 'HT') 
     histos['L1_HTT200er'] = df.Filter('L1uGT.m_algoDecisionInitial[400]').Filter('Sums.met<50').Histo1D(ROOT.RDF.TH1DModel('h_HT_L1_HTT200er', '', len(ht_bins)-1, array('d',ht_bins)), 'HT')  
     histos['L1_HTT280er'] = df.Filter('L1uGT.m_algoDecisionInitial[402]').Filter('Sums.met<50').Histo1D(ROOT.RDF.TH1DModel('h_HT_L1_HTT280er', '', len(ht_bins)-1, array('d',ht_bins)), 'HT')
     histos['L1_HTT360er'] = df.Filter('L1uGT.m_algoDecisionInitial[404]').Filter('Sums.met<50').Histo1D(ROOT.RDF.TH1DModel('h_HT_L1_HTT360er', '', len(ht_bins)-1, array('d',ht_bins)), 'HT')
-    histos['HLT_PFHT1050'] =  df.Filter('HLT_PFHT1050').Filter('Sums.met<50').Histo1D(ROOT.RDF.TH1DModel('h_HLT_PFHT1050', '', len(ht_bins)-1, array('d',ht_bins)), 'HT')
+    #histos['HLT_PFHT1050'] =  df.Filter('HLT_PFHT1050').Filter('Sums.met<50').Histo1D(ROOT.RDF.TH1DModel('h_HLT_PFHT1050', '', len(ht_bins)-1, array('d',ht_bins)), 'HT')
 
     return df, histos
 
