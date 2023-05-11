@@ -3,15 +3,22 @@ Qualities:
     Qual8:  8
     Qual12: 12
 Regions:
-    BMTF: [0, 0.83]
+    BMTF: [0.0, 0.83]
     OMTF: [0.83, 1.24]
     EMTF: [1.24, 2.4]
-    EMTF1: [1.24, 1.6]
-    EMTF2: [1.6, 2.1]
-    EMTF3: [2.1, 2.4]
-    AllEta: [0, 2.4]
+      #    EMTF1: [1.24, 1.6]
+      #    EMTF2: [1.6, 2.1]
+      #    EMTF3: [2.1, 2.4]
+      #    AllEta: [0.0, 2.4]
 Thresholds: [3, 5, 10, 15, 20, 22, 26]
 TurnOns: true
 Response: true
 Prefiring: true
-EffVsEtaPhi: true
+Efficiency: true
+# for debugging purposses
+#TurnOns: false
+#Efficiency: false
+#Prefiring: false
+#Response: false
+
+# TODO: add nvtx bins, and a threshold to use for turn ons in nvtx comparisons
