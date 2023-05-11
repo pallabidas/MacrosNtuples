@@ -20,7 +20,7 @@ def main():
     parser.add_argument("--histos", dest="histos", help="Name(s) of the histo(s)", nargs='+', type=str, default='')
     parser.add_argument("--den", dest="den", help="Name(s) of the histo denominator(s). There can be 1 or the same number as numerator histos ", nargs='+', type=str, default='')
     parser.add_argument("--num", dest="num", help="Name(s) of the histo numerator(s)", nargs='+', type=str, default='')
-    parser.add_argument("--xtitle", dest="xtitle", help="X axis title", type=str, default='p_{T} (GeV)')
+    parser.add_argument("--xtitle", dest="xtitle", help="X axis title", type=str, default='p_{T}^{Off.} [GeV]')
     parser.add_argument("--ytitle", dest="ytitle", help="Y axis title", type=str, default='Number of entries')
     parser.add_argument("--ztitle", dest="ztitle", help="Z axis title", type=str, default='Number of entries')
     parser.add_argument("--lumi", dest="lumilabel", help="Integrated lumi and sqrt(s)", type=str, default='#sqrt{s} = 13.6 TeV, L_{int} #approx X fb^{-1}')
@@ -86,21 +86,21 @@ def main():
 
     if args.type=='resolvsx':
         h2ds = []
-        newbinsx = [30.+i*2 for i in range(0,10) ] + [50.+i*5 for i in range(0,10) ] + [100., 110., 120., 130., 150., 200., 300.]
+        #newbinsx = [30.+i*2 for i in range(0,10) ] + [50.+i*5 for i in range(0,10) ] + [100., 110., 120., 130., 150., 200., 300.]
         for ctr, inputFile in enumerate(inputFiles):
             for i in range(len(args.h2d)):
-                #hprov=inputFile.Get(args.h2d[i]).Clone()
-                hprov=rebinth2d(inputFile.Get(args.h2d[i]).Clone(), newbinsx)
+                hprov=inputFile.Get(args.h2d[i]).Clone()
+                #hprov=rebinth2d(inputFile.Get(args.h2d[i]).Clone(), newbinsx)
                 h2ds.append(hprov)
                 h2ds[-1].SetName(h2ds[-1].GetName()+"_{}".format(i)+"_{}".format(ctr))
                 print('hname: ',h2ds[-1].GetName())
 
         hresponse, hresol = compute_ResolutionvsX(h2ds)
-        drawplots(hresponse, legendlabels = args.legendlabels, xtitle=args.xtitle, ytitle='#mu'+args.ytitle, ztitle=args.ztitle, lumilabel=args.lumilabel, extralabel=args.extralabel, setlogx=args.setlogx, setlogy=args.setlogy, plotname='mu_'+args.plotname, axisranges=args.axisranges, saveplot = args.saveplot, interactive=args.interactive, suffix_files = args.suffix_files)
+        drawplots(hresponse, legendlabels = args.legendlabels, xtitle=args.xtitle, ytitle='#mu (p_{T}^{L1} / p_{T}^{Off.})', ztitle=args.ztitle, lumilabel=args.lumilabel, extralabel=args.extralabel, setlogx=args.setlogx, setlogy=args.setlogy, plotname='mu_'+args.plotname, axisranges=args.axisranges, saveplot = args.saveplot, interactive=args.interactive, suffix_files = args.suffix_files)
         axisranges = args.axisranges
         axisranges[2] = 0
         axisranges[3] = 0.5
-        drawplots(hresol, legendlabels = args.legendlabels, xtitle=args.xtitle, ytitle='#sigma_{scale corr.}'+args.ytitle, ztitle=args.ztitle, lumilabel=args.lumilabel, extralabel=args.extralabel, setlogx=args.setlogx, setlogy=args.setlogy, plotname='resol_'+args.plotname, axisranges=axisranges, saveplot = args.saveplot, interactive=args.interactive)
+        drawplots(hresol, legendlabels = args.legendlabels, xtitle=args.xtitle, ytitle='#sigma_{scale corr.} (p_{T}^{L1} / p_{T}^{Off.})', ztitle=args.ztitle, lumilabel=args.lumilabel, extralabel=args.extralabel, setlogx=args.setlogx, setlogy=args.setlogy, plotname='resol_'+args.plotname, axisranges=axisranges, saveplot = args.saveplot, interactive=args.interactive)
 
         
         
@@ -287,7 +287,7 @@ def drawplots(objs, legendlabels, xtitle='', ytitle='', ztitle='', lumilabel='',
             
     label_cms = ROOT.TLatex()
     label_cms.SetTextSize(0.05)
-    label_cms.DrawLatexNDC(0.15, 0.92, "#bf{CMS} #it{Internal}")
+    label_cms.DrawLatexNDC(0.15, 0.92, "#bf{CMS} #it{Preliminary}")
     label_lumi = ROOT.TLatex()
     label_lumi.SetTextSize(0.04)
     label_lumi.SetTextAlign(31)

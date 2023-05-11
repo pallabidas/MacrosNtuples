@@ -8,6 +8,8 @@ muEtaBins = [0., 0.83, 1.24, 2.4]
 ht_bins = array('f', [ i*10 for i in range(30) ] + [ 300+ i*20 for i in range(10) ])
 leptonpt_bins = array('f',[ i for i in range(50) ] + [ 50+2*i for i in range(10) ] + [ 70+3*i for i in range(10) ] + [100+10*i for i in range(10) ] + [200, 250, 300, 400, 500])
 jetmetpt_bins = array('f',[ i*2.5 for i in range(40) ] +  [ 100+i*5 for i in range(40) ])
+reso_pt_bins = array('f',[ i*5 for i in range(10) ] +  [ 50+i*10 for i in range(5) ] + [ 100+i*20 for i in range(5) ] + [ 200+i*50 for i in range(2) ] + [300, 400])
+reso_bins = array('f',[ i*0.01 for i in range(200) ])
 
 from runsBinning import *
 runnb_bins = array('f', runbinning())
@@ -276,7 +278,8 @@ def makehistosforturnons_inprobeetaranges(df, histos, etavarname, phivarname, pt
 
         #Response vs pt and vs runnb (2d)
         histos[prefix+str_bineta] = df_etarange.Histo1D(ROOT.RDF.TH1DModel('h_{}_{}'.format(prefix, str_bineta), '', len(binning)-1, binning), 'denominator_pt')
-        histos[prefix+str_bineta+'_ResponseVsPt'] = df_etarange.Histo2D(ROOT.RDF.TH2DModel('h_ResponseVsPt_{}_{}'.format(prefix, str_bineta), '', 200, 0, 200, 100, 0, 2), 'denominator_pt', 'response')
+        #histos[prefix+str_bineta+'_ResponseVsPt'] = df_etarange.Histo2D(ROOT.RDF.TH2DModel('h_ResponseVsPt_{}_{}'.format(prefix, str_bineta), '', 400, 0, 400, 100, 0, 2), 'denominator_pt', 'response')
+        histos[prefix+str_bineta+'_ResponseVsPt'] = df_etarange.Histo2D(ROOT.RDF.TH2DModel('h_ResponseVsPt_{}_{}'.format(prefix, str_bineta), '', len(reso_pt_bins)-1, reso_pt_bins, len(reso_bins)-1, reso_bins), 'denominator_pt', 'response')
         histos[prefix+str_bineta+'_ResponseVsRunNb'] = df_etarange.Histo2D(ROOT.RDF.TH2DModel('h_ResponseVsRunNb_{}_{}'.format(prefix, str_bineta), '', len(runnb_bins)-1, runnb_bins, len(response_bins)-1, response_bins), 'runnb', 'response')
 
         if i ==1 and prefix == 'EGNonIso_plots':
