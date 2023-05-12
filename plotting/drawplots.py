@@ -4,7 +4,7 @@ import sys
 import argparse
 import ctypes
 
-colors = [ROOT.kBlack, ROOT.kRed, ROOT.kBlue, ROOT.kOrange, ROOT.kMagenta, ROOT.kGreen+2, ROOT.kGray+1, ROOT.kCyan+2, ROOT.kYellow+2, ROOT.kOrange+2]
+colors = [ROOT.kBlack, ROOT.kRed, ROOT.kBlue, ROOT.kOrange, ROOT.kMagenta, ROOT.kGreen+2, ROOT.kGray+1, ROOT.kCyan+2, ROOT.kYellow+2, ROOT.kOrange+2, ROOT.kCyan]
 #dirname = 'plotsL1Run3'
 
 
@@ -90,6 +90,7 @@ def makeprof(inputFiles_list = [], h2d=[], legendlabels=[], xtitle='p_{T} (GeV)'
 
     h2ds = []
     for i in h2d:
+        print(i)
         h2ds.append(inputFiles[0].Get(i+nvtx_suffix).Clone())
     profiles = compute_profilex(h2ds)
     drawplots(profiles, legendlabels = legendlabels, xtitle=xtitle, ytitle=ytitle, ztitle=ztitle, extralabel=extralabel, setlogx=setlogx, plotname=plotname, axisranges=axisranges, saveplot = saveplot, interactive=interactive, top_label = top_label, legend_pos = legend_pos, nvtx_suffix = nvtx_suffix, dirname = dirname)
