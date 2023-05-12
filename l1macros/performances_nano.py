@@ -1,6 +1,5 @@
 from datetime import datetime
 import ROOT
-import json
 import os
 import sys
 import argparse
@@ -13,7 +12,8 @@ ROOT.gInterpreter.Declare('#include "../helpers/Helper_InvariantMass.h"')
 #Importing stuff from other python files
 sys.path.insert(0, '../helpers')
 
-from helper_nano import * 
+#from helper_nano import * 
+import helper_nano as h
 
 
 def main():
@@ -34,8 +34,9 @@ def main():
                         -ZToMuMu: For L1 muon studies with Z->mumu
                         -ZToEE: For L1 EG studies with Z->ee''', 
                         type=str, default='PhotonJet')
-    parser.add_argument("--plot_nvtx", dest="plot_nvtx", help="Whether to save additional plots in bins of nvtx. Boolean, default = False", type=bool, default=False)
-    parser.add_argument("--nvtx_bins", dest="nvtx_bins", help="Edges of the nvtx bins to use if plotNvtx is set to True. Default=[10, 20, 30, 40, 50, 60]", nargs='+', type=int, default=[10, 20, 30, 40, 50, 60])
+    parser.add_argument("--config", dest="config", help="Yaml configuration file to read. Default: full config for that channel.", type=str, default='')
+    #parser.add_argument("--plot_nvtx", dest="plot_nvtx", help="Whether to save additional plots in bins of nvtx. Boolean, default = False", type=bool, default=False)
+    #parser.add_argument("--nvtx_bins", dest="nvtx_bins", help="Edges of the nvtx bins to use if plotNvtx is set to True. Default=[10, 20, 30, 40, 50, 60]", nargs='+', type=int, default=[10, 20, 30, 40, 50, 60])
     args = parser.parse_args() 
 
     ###Define the RDataFrame from the input tree
@@ -50,34 +51,40 @@ def main():
         elif args.channel == 'ZToEE':
             inputFile = '/user/lathomas/Public/L1Studies/ZToEE.root'
 
+    ### Set default config file
+    config_file = args.config
+    if config_file == '':
+        if args.channel == 'PhotonJet':
+            config_file = '../config_cards/full_PhotonJet.yaml'
+        elif args.channel == 'MuonJet':
+            config_file = '../config_cards/full_MuonJet.yaml'
+        elif args.channel == 'ZToMuMu':
+            config_file = '../config_cards/full_ZToMuMu.yaml'
+        elif args.channel == 'ZToEE':
+            config_file = '../config_cards/full_ZToEE.yaml'
+
+    # Read config and set config_dict in helper
+    with open(config_file) as s:
+        h.set_config(s)
+
     ### Create filters and suffix, if needed, to later run on bins of nvtx
 
     filter_list = ["true"]
     suffix_list = [""]
 
     # bins of nvtx
-    if args.plot_nvtx == True:
-        filter_list += ["PV_npvs>{}&&PV_npvs<{}".format(low, high) for (low, high) \
-                in zip(args.nvtx_bins[:-1],args.nvtx_bins[1:])]
+    #if args.plot_nvtx == True:
+    if h.config['PU_plots']['make_histos']:
+        filter_list += ["PV_npvs>={}&&PV_npvs<{}".format(low, high) for (low, high) \
+                in zip(h.config['PU_plots']['nvtx_bins'][:-1],h.config['PU_plots']['nvtx_bins'][1:])]
         suffix_list += ["_nvtx{}to{}".format(low, high) for (low, high) \
-                in zip(args.nvtx_bins[:-1],args.nvtx_bins[1:])]
+                in zip(h.config['PU_plots']['nvtx_bins'][:-1],h.config['PU_plots']['nvtx_bins'][1:])]
 
     ###
 
     df = ROOT.RDataFrame('Events', inputFile)
     nEvents = df.Count().GetValue()
 
-    #df = ROOT.RDataFrame('ntuplizer/tree', inputFile)    
-    #nEvents = df.Count().GetValue()
-
-    #if nEvents == 0:
-    #    df = ROOT.RDataFrame('jmeanalyzer/tree', inputFile)
-    #    nEvents = df.Count().GetValue()
-
-    #if nEvents == 0:
-    #    df = ROOT.RDataFrame('Events', inputFile)
-    #    nEvents = df.Count().GetValue()
-    
     print('There are {} events'.format(nEvents))
     
     #Max events to run on 
@@ -90,7 +97,7 @@ def main():
     df = df.Filter('Flag_HBHENoiseFilter&&Flag_HBHENoiseIsoFilter&&Flag_goodVertices&&Flag_EcalDeadCellTriggerPrimitiveFilter&&Flag_BadPFMuonFilter&&Flag_BadPFMuonDzFilter')
 
     # binning for run number
-    set_runnb_bins(df)
+    h.set_runnb_bins(df)
     
     if args.outputFile == '':
         args.outputFile = 'output_'+args.channel+'.root'
@@ -106,9 +113,9 @@ def main():
     nvtx_histo.GetValue().Write()
         
     if args.channel == 'PhotonJet':
-        df = SinglePhotonSelection(df) 
+        df = h.SinglePhotonSelection(df) 
         
-        df = CleanJets(df)
+        df = h.CleanJets(df)
         
         # make copies of df for each bin of nvtx (+1 copy of the original)
         df_list = [df.Filter(nvtx_cut) for nvtx_cut in filter_list]
@@ -119,12 +126,12 @@ def main():
 
         # run for each bin of nvtx:
         for i, df_element in enumerate(df_list):
-            df_element, histos_jets = AnalyzeCleanJets(df_element, 200, 100, suffix = suffix_list[i])
-            df_element = lepton_iselectron(df_element)
-            df_element = PtBalanceSelection(df_element)
-            df_element, histos_balance = AnalyzePtBalance(df_element, suffix = suffix_list[i])
+            df_element, histos_jets = h.AnalyzeCleanJets(df_element, 200, 100, suffix = suffix_list[i])
+            df_element = h.lepton_iselectron(df_element)
+            df_element = h.PtBalanceSelection(df_element)
+            df_element, histos_balance = h.AnalyzePtBalance(df_element, suffix = suffix_list[i])
             #df_report = df_element.Report()
-            df_element, histos_hf = HFNoiseStudy(df_element, suffix = suffix_list[i])
+            df_element, histos_hf = h.HFNoiseStudy(df_element, suffix = suffix_list[i])
 
             for key, val in histos_jets.items():
                 all_histos_jets[key] = val
@@ -170,9 +177,9 @@ def main():
         
         
     if args.channel == 'MuonJet':
-        df = MuonJet_MuonSelection(df) 
+        df = h.MuonJet_MuonSelection(df) 
         
-        df = CleanJets(df)
+        df = h.CleanJets(df)
         
         # make copies of df for each bin of nvtx (+1 copy of the original)
         df_list = [df.Filter(nvtx_cut) for nvtx_cut in filter_list]
@@ -182,10 +189,10 @@ def main():
         all_histos_hf = {}
 
         for i, df_element in enumerate(df_list):
-            df_element, histos_jets = AnalyzeCleanJets(df_element, 100, 50, suffix = suffix_list[i]) 
-            df_element = lepton_ismuon(df_element)
-            df_element, histos_sum = EtSum(df_element, suffix = suffix_list[i])
-            df_element, histos_hf = HFNoiseStudy(df_element, suffix = suffix_list[i])
+            df_element, histos_jets = h.AnalyzeCleanJets(df_element, 100, 50, suffix = suffix_list[i]) 
+            df_element = h.lepton_ismuon(df_element)
+            df_element, histos_sum = h.EtSum(df_element, suffix = suffix_list[i])
+            df_element, histos_hf = h.HFNoiseStudy(df_element, suffix = suffix_list[i])
 
             for key, val in histos_jets.items():
                 all_histos_jets[key] = val
@@ -227,15 +234,15 @@ def main():
 #        df_report.Print()
 
     if args.channel == 'ZToEE':
-        df = lepton_iselectron(df)
-        df = ZEE_EleSelection(df)
+        df = h.lepton_iselectron(df)
+        df = h.ZEE_EleSelection(df)
 
         # make copies of df for each bin of nvtx (+1 copy of the original)
         df_list = [df.Filter(nvtx_cut) for nvtx_cut in filter_list]
         all_histos = {}
 
         for i, df_element in enumerate(df_list):
-            df_element, histos = ZEE_Plots(df_element, suffix = suffix_list[i])
+            df_element, histos = h.ZEE_Plots(df_element, suffix = suffix_list[i])
 
             for key, val in histos.items():
                 all_histos[key] = val
@@ -243,32 +250,21 @@ def main():
         for i in all_histos:
             all_histos[i].GetValue().Write()
 
-#        df, histos = ZEE_Plots(df)
-#        
-#        for i in histos:
-#            histos[i].GetValue().Write()
-
     if args.channel == 'ZToMuMu':
-        df = ZMuMu_MuSelection(df)
+        df = h.ZMuMu_MuSelection(df)
 
         # make copies of df for each bin of nvtx (+1 copy of the original)
         df_list = [df.Filter(nvtx_cut) for nvtx_cut in filter_list]
         all_histos = {}
 
         for i, df_element in enumerate(df_list):
-            df_element, histos = ZMuMu_Plots(df_element, suffix = suffix_list[i])
+            df_element, histos = h.ZMuMu_Plots(df_element, suffix = suffix_list[i])
 
             for key, val in histos.items():
                 all_histos[key] = val
 
         for i in all_histos:
             all_histos[i].GetValue().Write()
-
-#        df, histos = ZMuMu_Plots(df)
-#
-#        for i in histos:
-#            histos[i].GetValue().Write()
-
 
 if __name__ == '__main__':
     main()

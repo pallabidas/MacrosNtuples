@@ -4,8 +4,8 @@ import sys
 import argparse
 import ctypes
 
-colors = [ROOT.kBlack, ROOT.kRed, ROOT.kBlue, ROOT.kOrange, ROOT.kMagenta, ROOT.kGreen+2, ROOT.kGray+1, ROOT.kCyan+2, ROOT.kYellow+2, ROOT.kOrange+2]
-dirname = 'plotsL1Run3'
+colors = [ROOT.kBlack, ROOT.kRed, ROOT.kBlue, ROOT.kOrange, ROOT.kMagenta, ROOT.kGreen+2, ROOT.kGray+1, ROOT.kCyan+2, ROOT.kYellow+2, ROOT.kOrange+2, ROOT.kCyan]
+#dirname = 'plotsL1Run3'
 
 
 def main():
@@ -35,70 +35,103 @@ def main():
     parser.add_argument("--legendpos", dest="legend_pos", help="Position of the legend. String, accepted values: top, bottom. Default: bottom", type=str, default="bottom")
     parser.add_argument("--nvtx_suffix", dest="nvtx_suffix", help="Suffix to append to dirname and histogram names, to make plots in bins of nvtx. Default: None", type=str, default="")
     parser.add_argument("--h1d", dest="h1d", help="1D histo (for simple distribution, etc)", nargs='+',type=str)
+    parser.add_argument("--dirname", dest="dirname", help="Directory to store the plots in", type=str, default='plotsL1Run3')
         
     args = parser.parse_args()
-    
-    if args.interactive == False:
-        ROOT.gROOT.SetBatch(1)
         
+    if args.type=='efficiency':
+        makeeff(inputFiles_list = args.inputFiles, den = args.den, num = args.num, addnumtoden = args.addnumtoden, legendlabels = args.legendlabels, xtitle=args.xtitle, ytitle=args.ytitle, ztitle=args.ztitle, extralabel=args.extralabel, setlogx=args.setlogx, plotname=args.plotname, axisranges=args.axisranges, saveplot = args.saveplot, interactive=args.interactive, suffix_files = args.suffix_files, top_label = args.top_label, legend_pos = args.legend_pos, nvtx_suffix = args.nvtx_suffix, dirname = args.dirname)
+            
+    if args.type=='profilex_fromh2':
+        makeprof(inputFiles_list = args.inputFiles, h2d = args.h2d, legendlabels = args.legendlabels, xtitle=args.xtitle, ytitle=args.ytitle, ztitle=args.ztitle, extralabel=args.extralabel, setlogx=args.setlogx, plotname=args.plotname, axisranges=args.axisranges, saveplot = args.saveplot, interactive=args.interactive, top_label = args.top_label, legend_pos = args.legend_pos, nvtx_suffix = args.nvtx_suffix, dirname = args.dirname)
+
+    if args.type=='resolvsx':
+        makeresol(inputFiles_list = args.inputFiles, h2d = args.h2d, legendlabels = args.legendlabels, xtitle=args.xtitle, ytitle='#sigma_{scale corr.}'+args.ytitle, ztitle=args.ztitle, extralabel=args.extralabel, setlogx=args.setlogx, plotname=args.plotname, axisranges=args.axisranges, saveplot = args.saveplot, interactive=args.interactive, top_label = args.top_label, legend_pos = args.legend_pos, nvtx_suffix = args.nvtx_suffix, dirname = args.dirname)
+
+    if args.type=='distribution':
+        makedist(inputFiles_list = args.inputFiles, h1d = args.h1d, legendlabels = args.legendlabels, xtitle=args.xtitle, ytitle=args.ytitle, ztitle=args.ztitle, extralabel=args.extralabel, setlogx=args.setlogx, plotname=args.plotname, axisranges=args.axisranges, saveplot = args.saveplot, interactive=args.interactive, top_label = args.top_label, legend_pos = args.legend_pos, nvtx_suffix = args.nvtx_suffix, dirname = args.dirname)
+
+def makeeff(inputFiles_list = [], den=[], num=[], addnumtoden=False, legendlabels=[], xtitle='p_{T} (GeV)', ytitle='Number of entries', ztitle='Number of entries', extralabel='', setlogx=False, plotname='plot', axisranges=[], saveplot=False, interactive=False, suffix_files='', top_label='', legend_pos='bottom', nvtx_suffix='', dirname = 'plotsL1Run3'):
+
+    if interactive == False:
+        ROOT.gROOT.SetBatch(1)
+
     inputFiles = []
-    for i in args.inputFiles:
+    for i in inputFiles_list:
+        inputFiles.append(ROOT.TFile(i,"read"))
+
+    h_dens = [] 
+    h_nums = []
+
+    for inputFile in inputFiles:
+        print(inputFile.GetName())
+        if len(den) !=1 and len(den)!=len(num):
+            print("Numerator has {} histos while denominator has {}. Exiting.".format(len(h_nums),len(h_dens)))
+            return 
+        for i in range(len(num)):
+            h_nums.append(inputFile.Get(num[i]+nvtx_suffix).Clone())
+            if len(den)==1:
+                h_dens.append(inputFile.Get(den[0]+nvtx_suffix).Clone())
+            else:
+                h_dens.append(inputFile.Get(den[i]+nvtx_suffix).Clone())
+            h_nums[i].SetName(h_nums[i].GetName()+"_{}".format(i))
+            h_dens[i].SetName(h_dens[i].GetName()+"_{}".format(i))
+    effs = compute_eff(h_dens, h_nums, addnumtoden)
+    drawplots(effs, legendlabels = legendlabels, xtitle=xtitle, ytitle=ytitle, ztitle=ztitle, extralabel=extralabel, setlogx=setlogx, plotname=plotname, axisranges=axisranges, saveplot = saveplot, interactive=interactive, suffix_files = suffix_files, top_label = top_label, legend_pos = legend_pos, nvtx_suffix = nvtx_suffix, dirname = dirname)
+
+def makeprof(inputFiles_list = [], h2d=[], legendlabels=[], xtitle='p_{T} (GeV)', ytitle='Number of entries', ztitle='Number of entries', extralabel='', setlogx=False, plotname='plot', axisranges=[], saveplot=False, interactive=False, suffix_files='', top_label='', legend_pos='bottom', nvtx_suffix='', dirname = 'plotsL1Run3'):
+
+    if interactive == False:
+        ROOT.gROOT.SetBatch(1)
+
+    inputFiles = []
+    for i in inputFiles_list:
+        inputFiles.append(ROOT.TFile(i,"read"))
+
+    h2ds = []
+    for i in h2d:
+        print(i)
+        h2ds.append(inputFiles[0].Get(i+nvtx_suffix).Clone())
+    profiles = compute_profilex(h2ds)
+    drawplots(profiles, legendlabels = legendlabels, xtitle=xtitle, ytitle=ytitle, ztitle=ztitle, extralabel=extralabel, setlogx=setlogx, plotname=plotname, axisranges=axisranges, saveplot = saveplot, interactive=interactive, top_label = top_label, legend_pos = legend_pos, nvtx_suffix = nvtx_suffix, dirname = dirname)
+
+def makeresol(inputFiles_list = [], h2d=[], legendlabels=[], xtitle='p_{T} (GeV)', ytitle='Number of entries', ztitle='Number of entries', extralabel='', setlogx=False, plotname='plot', axisranges=[], saveplot=False, interactive=False, suffix_files='', top_label='', legend_pos='bottom', nvtx_suffix='', dirname = 'plotsL1Run3'):
+
+    if interactive == False:
+        ROOT.gROOT.SetBatch(1)
+
+    inputFiles = []
+    for i in inputFiles_list:
+        inputFiles.append(ROOT.TFile(i,"read"))
+
+    h2ds = []
+    for inputFile in inputFiles:
+        for i in range(len(h2d)):
+            h2ds.append(inputFile.Get(h2d[i]+nvtx_suffix).Clone())
+            h2ds[i].SetName(h2ds[i].GetName()+"_{}".format(i))
+    hresponse, hresol = compute_ResolutionvsX(h2ds)
+    drawplots(hresponse, legendlabels = legendlabels, xtitle=xtitle, ytitle='#mu'+ytitle, ztitle=ztitle, extralabel=extralabel, setlogx=setlogx, plotname='mu_'+plotname, axisranges=axisranges, saveplot = saveplot, interactive=interactive, suffix_files = suffix_files, top_label = top_label, legend_pos = legend_pos, nvtx_suffix = nvtx_suffix, dirname = dirname)
+    axisranges[2] = 0
+    axisranges[3] = 0.6
+    drawplots(hresol, legendlabels = legendlabels, xtitle=xtitle, ytitle='#sigma_{scale corr.}'+ytitle, ztitle=ztitle, extralabel=extralabel, setlogx=setlogx, plotname='resol_'+plotname, axisranges=axisranges, saveplot = saveplot, interactive=interactive, top_label = top_label, legend_pos = legend_pos, nvtx_suffix = nvtx_suffix, dirname = dirname)
+
+def makedist(inputFiles_list = [], h1d=[], legendlabels=[], xtitle='p_{T} (GeV)', ytitle='Number of entries', ztitle='Number of entries', extralabel='', setlogx=False, plotname='plot', axisranges=[], saveplot=False, interactive=False, suffix_files='', top_label='', legend_pos='bottom', nvtx_suffix='', dirname = 'plotsL1Run3'):
+
+    if interactive == False:
+        ROOT.gROOT.SetBatch(1)
+
+    inputFiles = []
+    for i in inputFiles_list:
         inputFiles.append(ROOT.TFile(i,"read"))
 
 
-    
-    if args.type=='efficiency':
-        h_dens = [] 
-        h_nums = []
-        for inputFile in inputFiles:
-            print(inputFile.GetName())
-            if len(args.den) !=1 and len(args.den)!=len(args.num):
-                print("Numerator has {} histos while denominator has {}. Exiting.".format(len(h_nums),len(h_dens)))
-                return 
-            for i in range(len(args.num)):
-                #h_nums.append(inputFile.Get(args.num[i]).Clone())
-                h_nums.append(inputFile.Get(args.num[i]+args.nvtx_suffix).Clone())
-                if len(args.den)==1:
-                    #h_dens.append(inputFile.Get(args.den[0]).Clone())
-                    h_dens.append(inputFile.Get(args.den[0]+args.nvtx_suffix).Clone())
-                else:
-                    #h_dens.append(inputFile.Get(args.den[i]).Clone())
-                    h_dens.append(inputFile.Get(args.den[i]+args.nvtx_suffix).Clone())
-                h_nums[i].SetName(h_nums[i].GetName()+"_{}".format(i))
-                h_dens[i].SetName(h_dens[i].GetName()+"_{}".format(i))
-        effs = compute_eff(h_dens, h_nums, args.addnumtoden)
-        drawplots(effs, legendlabels = args.legendlabels, xtitle=args.xtitle, ytitle=args.ytitle, ztitle=args.ztitle, extralabel=args.extralabel, setlogx=args.setlogx, plotname=args.plotname, axisranges=args.axisranges, saveplot = args.saveplot, interactive=args.interactive, suffix_files = args.suffix_files, top_label = args.top_label, legend_pos = args.legend_pos, nvtx_suffix = args.nvtx_suffix)
-            
-    if args.type=='profilex_fromh2':
-        h2ds = []
-        for i in args.h2d:
-            #h2ds.append(inputFiles[0].Get(i).Clone())
-            h2ds.append(inputFiles[0].Get(i+args.nvtx_suffix).Clone())
-        profiles = compute_profilex(h2ds)
-        drawplots(profiles, legendlabels = args.legendlabels, xtitle=args.xtitle, ytitle=args.ytitle, ztitle=args.ztitle, extralabel=args.extralabel, setlogx=args.setlogx, plotname=args.plotname, axisranges=args.axisranges, saveplot = args.saveplot, interactive=args.interactive, top_label = args.top_label, legend_pos = args.legend_pos, nvtx_suffix = args.nvtx_suffix)
+    h1ds = []
+    for inputFile in inputFiles:
+        for i in range(len(h1d)):
+            h1ds.append(inputFile.Get(h1d[i]+nvtx_suffix).Clone())
+            h1ds[i].SetName(h1ds[i].GetName()+"_{}".format(i))
+    drawplots(h1ds, legendlabels = legendlabels, xtitle=xtitle, ytitle=ytitle, ztitle=ztitle, extralabel=extralabel, setlogx=setlogx, plotname=plotname, axisranges=axisranges, saveplot = saveplot, interactive=interactive, top_label = top_label, legend_pos = legend_pos, nvtx_suffix = nvtx_suffix, dirname = dirname)
 
-    if args.type=='resolvsx':
-        h2ds = []
-        for inputFile in inputFiles:
-            for i in range(len(args.h2d)):
-                #h2ds.append(inputFile.Get(args.h2d[i]).Clone())
-                h2ds.append(inputFile.Get(args.h2d[i]+args.nvtx_suffix).Clone())
-                h2ds[i].SetName(h2ds[i].GetName()+"_{}".format(i))
-        hresponse, hresol = compute_ResolutionvsX(h2ds)
-        drawplots(hresponse, legendlabels = args.legendlabels, xtitle=args.xtitle, ytitle='#mu'+args.ytitle, ztitle=args.ztitle, extralabel=args.extralabel, setlogx=args.setlogx, plotname='mu_'+args.plotname, axisranges=args.axisranges, saveplot = args.saveplot, interactive=args.interactive, suffix_files = args.suffix_files, top_label = args.top_label, legend_pos = args.legend_pos, nvtx_suffix = args.nvtx_suffix)
-        axisranges = args.axisranges
-        axisranges[2] = 0
-        axisranges[3] = 0.6
-        drawplots(hresol, legendlabels = args.legendlabels, xtitle=args.xtitle, ytitle='#sigma_{scale corr.}'+args.ytitle, ztitle=args.ztitle, extralabel=args.extralabel, setlogx=args.setlogx, plotname='resol_'+args.plotname, axisranges=axisranges, saveplot = args.saveplot, interactive=args.interactive, top_label = args.top_label, legend_pos = args.legend_pos, nvtx_suffix = args.nvtx_suffix)
-
-    if args.type=='distribution':
-        h1ds = []
-        for inputFile in inputFiles:
-            for i in range(len(args.h1d)):
-                #h1ds.append(inputFile.Get(args.h1d[i]).Clone())
-                h1ds.append(inputFile.Get(args.h1d[i]+args.nvtx_suffix).Clone())
-                h1ds[i].SetName(h1ds[i].GetName()+"_{}".format(i))
-        drawplots(h1ds, legendlabels = args.legendlabels, xtitle=args.xtitle, ytitle=args.ytitle, ztitle=args.ztitle, extralabel=args.extralabel, setlogx=args.setlogx, plotname=args.plotname, axisranges=args.axisranges, saveplot = args.saveplot, interactive=args.interactive, top_label = args.top_label, legend_pos = args.legend_pos, nvtx_suffix = args.nvtx_suffix)
 
 def canvas(width=700, height=600, lmargin_frac=0.15, rmargin_frac=0.15):
     c = ROOT.TCanvas("c_eff", "c_eff", width, height)
@@ -109,7 +142,7 @@ def canvas(width=700, height=600, lmargin_frac=0.15, rmargin_frac=0.15):
     return c
 
 
-def drawplots(objs, legendlabels, xtitle='', ytitle='', ztitle='',  extralabel='', setlogx=False, plotname='plot', axisranges=[], saveplot=False, interactive=False, suffix_files = [], top_label='', legend_pos = "bottom", nvtx_suffix = ""):
+def drawplots(objs, legendlabels, xtitle='', ytitle='', ztitle='',  extralabel='', setlogx=False, plotname='plot', axisranges=[], saveplot=False, interactive=False, suffix_files = [], top_label='', legend_pos = "bottom", nvtx_suffix = "", dirname = 'plotsL1Run3'):
     ROOT.gStyle.SetOptStat(0)
     ROOT.gStyle.SetTextFont(42)
 
