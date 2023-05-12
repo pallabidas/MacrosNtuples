@@ -94,7 +94,7 @@ def main():
                     xtitle = 'p_{T}^{e}(reco) (GeV)',
                     ytitle = 'Efficiency',
                     legendlabels = ['p_{{T}}^{{L1 e}} #geq {} GeV'.format(thr) for thr in config['Thresholds']],
-                    axisranges = [0, 50],
+                    axisranges = [5, 50],
                     extralabel = "#splitline{{Z#rightarrowee, {}}}{}".format(label(iso), eta_label),
                     setlogx = True,
                     top_label = toplabel,
@@ -172,7 +172,7 @@ def main():
             extralabel = '#splitline{Z#rightarrowee}{15 #leq p_{T}^{e}(L1) < 26, L1 EG Non Iso}',
             top_label = toplabel,
             plotname = 'L1EG_PostfiringVsEta',
-            axisranges = [-2.5, 2.5, 0, 1.1],
+            axisranges = [-2.5, 2.5, 0, 0.1],
             addnumtoden = True,
             )
 
@@ -189,7 +189,7 @@ def main():
             extralabel = '#splitline{Z#rightarrowee}{15 #leq p_{T}^{e}(L1) < 26, L1 EG Non Iso}',
             top_label = toplabel,
             plotname = 'L1EG_PrefiringVsEta',
-            axisranges = [-2.5, 2.5, 0, 1.1],
+            axisranges = [-2.5, 2.5, 0, 0.1],
             addnumtoden = True,
             )
 
@@ -225,7 +225,7 @@ def main():
             extralabel = '#splitline{Z#rightarrowee}{Non Iso.}',
             legendlabels = eta_labels,
             top_label = toplabel,
-            plotname = 'L1EG_ResponseVsPt',
+            plotname = 'L1EG_ResponseVsRunNb',
             axisranges = [355374, 362760, 0, 2],
             )
 

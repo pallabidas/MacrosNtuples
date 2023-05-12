@@ -77,7 +77,7 @@ def main():
                     xtitle = 'p_{T}^{#mu}(reco) (GeV)',
                     ytitle = 'Efficiency',
                     legendlabels = ['p_{{T}}^{{L1 #mu}} #geq {} GeV'.format(thr) for thr in config['Thresholds']],
-                    axisranges = [0, 500],
+                    axisranges = [2, 500],
                     extralabel = "#splitline{{Z#rightarrow#mu#mu, {}}}{}".format(label(qual), eta_label),
                     setlogx = True,
                     top_label = toplabel,
@@ -94,7 +94,7 @@ def main():
                     xtitle = 'p_{T}^{#mu}(reco) (GeV)',
                     ytitle = 'Efficiency',
                     legendlabels = ['p_{{T}}^{{L1 #mu}} #geq {} GeV'.format(thr) for thr in config['Thresholds']],
-                    axisranges = [0, 50],
+                    axisranges = [2, 50],
                     extralabel = "#splitline{{Z#rightarrow#mu#mu, {}}}{}".format(label(qual), eta_label),
                     setlogx = True,
                     top_label = toplabel,
@@ -296,7 +296,7 @@ def main():
             extralabel = '#splitline{Z#rightarrow#mu#mu}{All qual.}',
             legendlabels = eta_labels,
             top_label = toplabel,
-            plotname = 'L1Mu_ResponseVsPt',
+            plotname = 'L1Mu_ResponseVsRunNb',
             axisranges = [355374, 362760, 0, 2],
             )
 

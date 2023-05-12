@@ -110,7 +110,7 @@ def makeresol(inputFiles_list = [], h2d=[], legendlabels=[], xtitle='p_{T} (GeV)
             h2ds.append(inputFile.Get(h2d[i]+nvtx_suffix).Clone())
             h2ds[i].SetName(h2ds[i].GetName()+"_{}".format(i))
     hresponse, hresol = compute_ResolutionvsX(h2ds)
-    drawplots(hresponse, legendlabels = legendlabels, xtitle=xtitle, ytitle='#mu'+ytitle, ztitle=ztitle, extralabel=extralabel, setlogx=setlogx, plotname='mu_'+plotname, axisranges=axisranges, saveplot = saveplot, interactive=interactive, suffix_files = suffix_files, top_label = top_label, legend_pos = legend_pos, nvtx_suffix = nvtx_suffix)
+    drawplots(hresponse, legendlabels = legendlabels, xtitle=xtitle, ytitle='#mu'+ytitle, ztitle=ztitle, extralabel=extralabel, setlogx=setlogx, plotname='mu_'+plotname, axisranges=axisranges, saveplot = saveplot, interactive=interactive, suffix_files = suffix_files, top_label = top_label, legend_pos = legend_pos, nvtx_suffix = nvtx_suffix, dirname = dirname)
     axisranges[2] = 0
     axisranges[3] = 0.6
     drawplots(hresol, legendlabels = legendlabels, xtitle=xtitle, ytitle='#sigma_{scale corr.}'+ytitle, ztitle=ztitle, extralabel=extralabel, setlogx=setlogx, plotname='resol_'+plotname, axisranges=axisranges, saveplot = saveplot, interactive=interactive, top_label = top_label, legend_pos = legend_pos, nvtx_suffix = nvtx_suffix, dirname = dirname)
