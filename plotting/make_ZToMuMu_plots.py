@@ -282,7 +282,7 @@ def main():
             legendlabels = eta_labels,
             top_label = toplabel,
             plotname = 'L1Mu_ResponseVsPt',
-            axisranges = [0, 100, 0, 16], 
+            axisranges = [0, 100, 0, 1.6], 
             )
 
         # Resolution Vs RunNb
