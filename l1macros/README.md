@@ -15,21 +15,33 @@ For example ```performances_L1NTuples.py``` is a simplified version of ```perfor
 For 2023 data, as L1 objects were added to NANO, new scripts were added to run directly on NANO inputs.
 
 ## L1T performances:  ```performances.py``` 
+
 The code produces and stores various histograms such as numerators and denominators for efficiency, 2D histograms of pt(L1)/pt(reco) vs variable(s) of interest for response/resolution, etc. At the moment, four channels/analyses are considered: 
+
 - ```ZToMuMu``` : Tag and Probe with pairs of muons from a Z decay. Used for L1Mu performance studies. 
 - ```ZToEE``` : Tag and Probe with pairs of electrons from a Z decay. Used for L1EG performance studies. 
 - ```MuonJet``` : Muon+jet selection using the (Single)Muon dataset. For L1 jet/MET performance studies.
 - ```PhotonJet``` : Photon+jet selection using the EGamma dataset. For L1 jet performance studies. This channel is complementary with ```MuonJet``` as it allows to collec more statistits for high pt jets. 
 
-For the 2022 setup, the code can be run using the following command: 
+### 2022 setup
+
+The code can be run using the following command: 
 
 ``` python3 performances.py -i INPUTFILE -o OUTPUTFILE -c CHANNEL --max_events MAX_EVENTS```
 
-Similarily for 2023:
- 
-``` python3 performances_nano.py -i INPUTFILE -o OUTPUTFILE -c CHANNEL --max_events MAX_EVENTS```
+### 2023 setup
 
-### Submission to condor
+The code can be run using the following command: 
+ 
+``` python3 performances_nano.py -i INPUTFILE -o OUTPUTFILE -c CHANNEL --max_events MAX_EVENTS --config CONFIG_CARD```
+
+The script for the 2023 setup takes one extra argument, a configuration card in YAML,
+that can be used to modify the histograms produced, or to only produce some of them.
+If the `--config` argument is not passed, the default card for that channel is used.
+The default card are stored in `MacrosNtuples/config_cards/`. 
+These contain comments on how to use them.
+
+### Submission to condor
 
 `performances.py` and `performances_nano.py` can also be run on condor.
 
@@ -49,7 +61,7 @@ in `condorsubmission/`, you can also find the `submit_all.sh` script, that will
 submit jobs for all of 2022, and all skims,
 and `submit_nano.sh` that will submit all jobs for 2023.
 
-### Plotting the results
+### Plotting the results
 
 The code for the last step, computing and plotting efficiencies... etc., is available in the plotting folder: 
 

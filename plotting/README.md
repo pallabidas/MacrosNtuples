@@ -64,6 +64,8 @@ This will save to files, `myplot.png` and `myplot.pdf`.
 
 ## Drawing all the plots for one kind of object
 
+### 2022 setup
+
 This is done using one of the for script, `make_mu_plots.sh`, `make_eg_plots.sh`, `make_jets_plots.sh` or `make_etsum_plots.sh`.
 These are for Muons, EGamma, Jets and MET respectively.
 
@@ -86,7 +88,7 @@ To generate histograms in bins of nvtx, see `--plot_nvtx` and `--nvtx_bins` argu
 If `nvtx_suffix` is passed, then the corresponding directory to save the plots should be `dirname/plotL1Run3_nvtxXXtoYY`
 (where `_nvtxXXtoYY` is the argument that was passed).
 
-### Example usage
+#### Example usage
 To draw all plots for muons, for a directory `MyData` containing the input file `MyData/all_zmumu.root` 
 and directory `MyData/plotsL1Run3` to store the plot, corresponding to `X` inverse femtobarns of inverse luminosity, run:
 ```
@@ -99,8 +101,57 @@ and run:
 ./make_mu_plots.sh MyData X _nvtx30to40
 ```
 
+### 2023 setup
+
+The bash script from 2022 should be somewhat compatible with histograms generated from NANOAOD 
+using `performances_nano.py`, but some figures might be broken.
+
+The recommanded scripts for the 2023 setup are the `make_ZToMuMu_plots.py` `make_ZToEE_plots.py` `make_MuonJet_plots.py` `make_PhotonJet_plots.py` python scripts. 
+
+Each script draws all the plots for the corresponding channel.
+All the scripts  take the same following inputs:
+
+   - `--dir` The directory to read the inputs files from and draw the plots to.
+   - `--config` The YAML configuration file to read from. The default ones are the templates `../config_cards/full_<Channel>.yaml`
+   - `--lumi` The integrated luminosity to display in the top right corner of the plot.
+
+`make_<Channel>_plots.py` will look in the input directory for an input file called `all_<Channel>.root`,
+and will try to save the plots in a subdirectory called `plotsL1Run3` inside the input directory.
+You need to create this subdirectory before running the scripts.
+
+Furthermore, the scripts will only draw a plot if the field for the corresponding
+kind is set in the configuration file. For instance, by setting `TurnOns: false`
+in the configuration file, the script will not produce any of the turn on plots.
+The scripts also rely on the values of the different fields in the configuration files
+to look for histograms in the input file.
+
+**You should make sure the configuration file used for producing the plots
+is compatible with the one given to `perfomances_nano.py` to fill the histograms**
+
+Otherwise, the script might look for histogram names that are not present
+in the input file.
+The default cards contain comments on how to use them.
+
+#### Example usage
+
+To draw all plots for muons, for a directory `MyData` containing the input file `MyData/all_ZToMuMu.root`,
+produced with the configuration card `my_ZToMuMu_config.yaml`,
+and a directory `MyData/plotsL1Run3` to store the plot, corresponding to `X` inverse femtobarns of inverse luminosity, run:
+```
+python3 make_ZToMuMu_plots.py --dir MyData --config my_ZToMuMu_config.yaml --lumi "X fb^{-1}"
+```
+Making plots in bins of nvtx is not supported yet.
+
 ## Drawing all the plots for all objects
+
+### 2022 setup
 
 The script `draw_all.sh` loops on a (hard-coded) list of directories and calls the for `make_"OBJ"_plots.sh` scripts 
 on each of them, with all possible `nvtx_suffix`. It takes no arguments, and can be run by simply calling `./draw_all.sh`
 (provided that all needed directories and input files exist).
+
+### 2022 setup
+
+The script `draw_nano.sh` works in a similar way to `draw_all.sh`. 
+It internaly calls the `make_<Channel>_plots.py` script, and runs on a (hard-coded) loop.
+You can run it by simply calling `./draw_nano.sh`.
