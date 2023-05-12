@@ -11,7 +11,7 @@ def main():
         formatter_class=argparse.RawTextHelpFormatter)
     
     parser.add_argument("-d", "--dir", dest="dir", help="The directory to read the inputs files from and draw the plots to", type=str, default='./')
-    parser.add_argument("-c", "--config", dest="config", help="The YAML config to read from", type=str, default='../l1macros/full_ZToMuMu.yaml')
+    parser.add_argument("-c", "--config", dest="config", help="The YAML config to read from", type=str, default='../config_cards/full_ZToEE.yaml')
     parser.add_argument("-l", "--lumi", dest="lumi", help="The integrated luminosity to display in the top right corner of the plot", type=str, default='')
     parser.add_argument("--plot_nvtx", dest="plot_nvtx", help="Whether or not to draw the plots in bins of nvtx. Default: False", type=bool, default=False)
 

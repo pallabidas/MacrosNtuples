@@ -11,14 +11,14 @@ def main():
         formatter_class=argparse.RawTextHelpFormatter)
     
     parser.add_argument("-d", "--dir", dest="dir", help="The directory to read the inputs files from and draw the plots to", type=str, default='./')
-    parser.add_argument("-c", "--config", dest="config", help="The YAML config to read from", type=str, default='../l1macros/full_ZToMuMu.yaml')
+    parser.add_argument("-c", "--config", dest="config", help="The YAML config to read from", type=str, default='../config_cards/full_ZToMuMu.yaml')
     parser.add_argument("-l", "--lumi", dest="lumi", help="The integrated luminosity to display in the top right corner of the plot", type=str, default='')
     parser.add_argument("--plot_nvtx", dest="plot_nvtx", help="Whether or not to draw the plots in bins of nvtx. Default: False", type=bool, default=False)
 
     args = parser.parse_args()
     config = yaml.safe_load(open(args.config, 'r'))
 
-    filezmumu = args.dir + "/all_ZToMuMu.root"
+    inputfile = args.dir + "/all_ZToMuMu.root"
     if args.lumi != '':
         toplabel="#sqrt{s} = 13.6 TeV, L_{int} = " + args.lumi #+ " fb^{-1}"
     else:
@@ -26,7 +26,7 @@ def main():
 
     # NVTX distribution:
 #    drawplots.makedist(
-#            inputFiles_list = [filezmumu],
+#            inputFiles_list = [inputfile],
 #            saveplot = True,
 #            h1d = ['h_nvtx'],
 #            xtitle = 'N_{vtx}',
@@ -50,7 +50,7 @@ def main():
 
             # Efficiency vs Run Number
             drawplots.makeeff(
-                inputFiles_list = [filezmumu],
+                inputFiles_list = [inputfile],
                 saveplot = True,
                 dirname = args.dir + '/plotsL1Run3',
                 den = ['h_PlateauEffVsRunNb_Denominator_AllQual_plots_{}'.format(eta_range)],
@@ -69,7 +69,7 @@ def main():
                 # Efficiency vs pT
                 # all eta ranges and all qualities
                 drawplots.makeeff(
-                    inputFiles_list = [filezmumu],
+                    inputFiles_list = [inputfile],
                     saveplot = True,
                     dirname = args.dir + '/plotsL1Run3',
                     den = ['h_{}_plots_{}'.format(qual, eta_range)],
@@ -86,7 +86,7 @@ def main():
 
                 # same thing, zoom on the 0 - 50 GeV region in pT
                 drawplots.makeeff(
-                    inputFiles_list = [filezmumu],
+                    inputFiles_list = [inputfile],
                     saveplot = True,
                     dirname = args.dir + '/plotsL1Run3',
                     den = ['h_{}_plots_{}'.format(qual, eta_range)],
@@ -105,7 +105,7 @@ def main():
 
     if config['Efficiency']:
         drawplots.makeeff(
-            inputFiles_list = [filezmumu],
+            inputFiles_list = [inputfile],
             saveplot = True,
             dirname = args.dir + '/plotsL1Run3',
             num = ['h_Mu22_EtaPhi_Numerator'],
@@ -124,7 +124,7 @@ def main():
 
         # Postfiring vs Eta Phi
         drawplots.makeeff(
-            inputFiles_list = [filezmumu],
+            inputFiles_list = [inputfile],
             saveplot = True,
             dirname = args.dir + '/plotsL1Run3',
             num = ['L1Mu10to21_bxplus1_etaphi'],
@@ -142,7 +142,7 @@ def main():
 
         # Prefiring vs Eta Phi
         drawplots.makeeff(
-            inputFiles_list = [filezmumu],
+            inputFiles_list = [inputfile],
             saveplot = True,
             dirname = args.dir + '/plotsL1Run3',
             num = ['L1Mu10to21_bxmin1_etaphi'],
@@ -160,7 +160,7 @@ def main():
        
         # Postfiring vs Eta
         drawplots.makeeff(
-            inputFiles_list = [filezmumu],
+            inputFiles_list = [inputfile],
             saveplot = True,
             dirname = args.dir + '/plotsL1Run3',
             num = ['L1Mu10to21_bxplus1_eta'],
@@ -177,7 +177,7 @@ def main():
 
         # Prefiring vs Eta
         drawplots.makeeff(
-            inputFiles_list = [filezmumu],
+            inputFiles_list = [inputfile],
             saveplot = True,
             dirname = args.dir + '/plotsL1Run3',
             num = ['L1Mu10to21_bxmin1_eta'],
@@ -195,7 +195,7 @@ def main():
         # Same thing, for Mu 22
         # Postfiring vs Eta Phi
         drawplots.makeeff(
-            inputFiles_list = [filezmumu],
+            inputFiles_list = [inputfile],
             saveplot = True,
             dirname = args.dir + '/plotsL1Run3',
             num = ['L1Mu22_bxplus1_etaphi'],
@@ -213,7 +213,7 @@ def main():
 
         # Prefiring vs Eta Phi
         drawplots.makeeff(
-            inputFiles_list = [filezmumu],
+            inputFiles_list = [inputfile],
             saveplot = True,
             dirname = args.dir + '/plotsL1Run3',
             num = ['L1Mu22_FirstBunchInTrain_bxmin1_etaphi'],
@@ -231,7 +231,7 @@ def main():
        
         # Postfiring vs Eta
         drawplots.makeeff(
-            inputFiles_list = [filezmumu],
+            inputFiles_list = [inputfile],
             saveplot = True,
             dirname = args.dir + '/plotsL1Run3',
             num = ['L1Mu22_bxplus1_eta'],
@@ -248,7 +248,7 @@ def main():
 
         # Prefiring vs Eta
         drawplots.makeeff(
-            inputFiles_list = [filezmumu],
+            inputFiles_list = [inputfile],
             saveplot = True,
             dirname = args.dir + '/plotsL1Run3',
             num = ['L1Mu22_FirstBunchInTrain_bxmin1_eta'],
@@ -272,7 +272,7 @@ def main():
 
         # Resolution Vs Pt
         drawplots.makeresol(
-            inputFiles_list = [filezmumu],
+            inputFiles_list = [inputfile],
             saveplot = True,
             dirname = args.dir + '/plotsL1Run3',
             h2d = ['h_ResponseVsPt_AllQual_plots_{}'.format(eta_range) for eta_range in eta_ranges],
@@ -287,7 +287,7 @@ def main():
 
         # Resolution Vs RunNb
         drawplots.makeresol(
-            inputFiles_list = [filezmumu],
+            inputFiles_list = [inputfile],
             saveplot = True,
             dirname = args.dir + '/plotsL1Run3',
             h2d = ['h_ResponseVsRunNb_AllQual_plots_{}'.format(eta_range) for eta_range in eta_ranges],
