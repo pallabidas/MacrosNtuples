@@ -82,7 +82,7 @@ The `lumi_value` is the value of the integrated luminosity to be added in the la
 The `nvtx_suffix` can be passed if you want to make the plots for a certain bin of nvtx.
 It is of the form `_nvtxXXtoYY` where `XX` and `YY` are the minimum and maximum nvtx values respectively. 
 Make sure the correponding histograms exist in your input file.
-To generate histograms in bins of nvtx, see `--plot_nvtx` and `--nvtx_bins` arguments in `MacrosNtuples/l1macros/performances.py`.
+To generate histograms in bins of nvtx, see `--plot_nvtx` and `--nvtx_bins` arguments in `MacrosNtuples/l1macros/performances.py` or `MacrosNtuples/l1macros/performances_nano.py`.
 If `nvtx_suffix` is passed, then the corresponding directory to save the plots should be `dirname/plotL1Run3_nvtxXXtoYY`
 (where `_nvtxXXtoYY` is the argument that was passed).
 

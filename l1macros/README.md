@@ -4,16 +4,15 @@
 
 This folder contains several scripts: 
 
-- ```performances.py```: for L1T performances studies of the various objects (efficiency, response, resolution, pre/postfiring). 
+- ```performances.py, performances_nano.py```: for L1T performances studies of the various objects (efficiency, response, resolution, pre/postfiring). 
 
 - ```rate.py```: for L1 menu rate estimate vs PU, using HLTPhysics or ZeroBias (use the latter unless you know what you do!). The script allows you to define your customized menu. 
 
-Currently these take as inputs customized IIHE-CMS ntuples (https://github.com/iihe-cms-sw/GenericTreeProducerMINIAOD) but can fairly easily be adapted to run on L1 ntuples or custom NANO containing L1 objects/decisions. 
+For 2022 data, the inputs are customized IIHE-CMS ntuples (https://github.com/iihe-cms-sw/GenericTreeProducerMINIAOD) but can fairly easily be adapted to run on L1 ntuples or custom NANO containing L1 objects/decisions. 
 
 For example ```performances_L1NTuples.py``` is a simplified version of ```performances.py```, adapted to run on L1Ntuples.  
 
-
-
+For 2023 data, as L1 objects were added to NANO, new scripts were added to run directly on NANO inputs.
 
 ## L1T performances:  ```performances.py``` 
 The code produces and stores various histograms such as numerators and denominators for efficiency, 2D histograms of pt(L1)/pt(reco) vs variable(s) of interest for response/resolution, etc. At the moment, four channels/analyses are considered: 
@@ -22,21 +21,33 @@ The code produces and stores various histograms such as numerators and denominat
 - ```MuonJet``` : Muon+jet selection using the (Single)Muon dataset. For L1 jet/MET performance studies.
 - ```PhotonJet``` : Photon+jet selection using the EGamma dataset. For L1 jet performance studies. This channel is complementary with ```MuonJet``` as it allows to collec more statistits for high pt jets. 
 
-The code can be run using the following command: 
+For the 2022 setup, the code can be run using the following command: 
 
 ``` python3 performances.py -i INPUTFILE -o OUTPUTFILE -c CHANNEL --max_events MAX_EVENTS```
+
+Similarily for 2023:
  
+``` python3 performances_nano.py -i INPUTFILE -o OUTPUTFILE -c CHANNEL --max_events MAX_EVENTS```
+
 ### Submission to condor
 
-`performances.py` can also be run on condor:
+`performances.py` and `performances_nano.py` can also be run on condor.
 
+For the 2022 setup: 
 ```
 cd condorsubmission/
 sh SubmitToCondor.sh OUTPUTDIR CHANNEL 'list of files'
 ```
 
+For the 2023 setup: 
+```
+cd condorsubmission/
+sh SubmitToCondor_nano.sh OUTPUTDIR CHANNEL 'list of files'
+```
+
 in `condorsubmission/`, you can also find the `submit_all.sh` script, that will 
-submit jobs for all of 2022, and all skims.
+submit jobs for all of 2022, and all skims,
+and `submit_nano.sh` that will submit all jobs for 2023.
 
 ### Plotting the results
 
@@ -60,6 +71,8 @@ h_Jet_plots_eta0p0to1p3_l1thrgeq200p0\
 ```
 
 You can find more explanations in `MacrosNtuples/plotting/README.md`.
+
+This step is the same for both the 2022 and 2023 setups
  
 
 ## Rate studies  ```rate.py``` 
