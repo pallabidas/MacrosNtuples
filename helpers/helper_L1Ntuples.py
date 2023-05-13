@@ -117,11 +117,11 @@ def MuonJet_MuonSelection(df):
 
 def CleanJets(df):
     #List of cleaned jets (noise cleaning + lepton/photon overlap removal)
-    df = df.Define('isCleanJet','Jet.et>30&&Jet.mef<0.2')
+    df = df.Define('isCleanJet','Jet.puppi_etCorr > 30')
     #df = df.Define('isCleanJet','Jet.et>30')
-    df = df.Define('cleanJet_Pt','Jet.et[isCleanJet]')
-    df = df.Define('cleanJet_Eta','Jet.eta[isCleanJet]')
-    df = df.Define('cleanJet_Phi','Jet.phi[isCleanJet]')
+    df = df.Define('cleanJet_Pt','Jet.puppi_etCorr[isCleanJet]')
+    df = df.Define('cleanJet_Eta','Jet.puppi_eta[isCleanJet]')
+    df = df.Define('cleanJet_Phi','Jet.puppi_phi[isCleanJet]')
     
     df = df.Filter('Sum(isCleanJet)>=1','>=1 clean jet with p_{T}>30 GeV')
 
@@ -132,11 +132,12 @@ def CleanJets(df):
 def EtSum(df):
     histos = {}
     #HT=scalar pt sum of all jets with pt>30 and |eta|<2.5 
-    df = df.Define('iscentraljet','cleanJet_Pt>30&&abs(cleanJet_Eta)<2.5')
+    df = df.Define('iscentraljet','cleanJet_Pt>30 && abs(cleanJet_Eta)<2.5')
     #df = df.Filter('Sum(iscentraljet)>0')
-    df = df.Define('HT','Sum(cleanJet_Pt[cleanJet_Pt>30&&abs(cleanJet_Eta)<2.5])')
+    #df = df.Define('HT','Sum(cleanJet_Pt[cleanJet_Pt>30&&abs(cleanJet_Eta)<2.5])')
+    df = df.Define('HT','Sums.puppi_Ht')
 
-    df = df.Define('MetNoMu','Sums.pfMetNoMu')
+    df = df.Define('MetNoMu','Sums.puppi_metNoMu')
     df = df.Define('L1_ETMHF80','L1uGT.m_algoDecisionInitial[419]')
     df = df.Define('L1_ETMHF90','L1uGT.m_algoDecisionInitial[420]')
     df = df.Define('L1_ETMHF100','L1uGT.m_algoDecisionInitial[421]')
@@ -146,7 +147,7 @@ def EtSum(df):
     dfmetl1 = df.Filter('L1uGT.m_algoDecisionInitial[419]')
     histos['L1_ETMHF80'] = dfmetl1.Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_ETMHF80', '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
     dfmetl1 = df.Filter('L1uGT.m_algoDecisionInitial[420]')
-    histos['L1_ETMHF80'] = dfmetl1.Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_ETMHF90', '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
+    histos['L1_ETMHF90'] = dfmetl1.Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_ETMHF90', '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
     dfmetl1 = df.Filter('L1uGT.m_algoDecisionInitial[421]')
     histos['L1_ETMHF100'] = dfmetl1.Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_ETMHF100', '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
 

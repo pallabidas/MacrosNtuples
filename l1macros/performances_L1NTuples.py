@@ -51,7 +51,7 @@ def main():
     
     max_events = min(nEvents, args.max_events) if args.max_events >=0 else nEvents
     df = df.Range(0, max_events)
-    df = df.Filter('if(tdfentry_ %100000 == 0) {cout << "Event is  " << tdfentry_ << endl;cout << Event.nPV<<endl;  } return true;')
+    df = df.Filter('if(tdfentry_ %100000 == 0) {cout << "Event is  " << tdfentry_ << endl;cout << Event.event<<endl;  } return true;')
 
     out = ROOT.TFile(args.outputFile, "recreate")
     
