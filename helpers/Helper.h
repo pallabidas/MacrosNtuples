@@ -347,7 +347,8 @@ float mll(ROOT::VecOps::RVec<float>l_pt, ROOT::VecOps::RVec<float>l_eta, ROOT::V
   for(unsigned int i = 0; i < l_pt.size(); i++){
       if(l_pt.size() < 2) continue;
       if(l_isProbe[i] == false) continue;
-      for(unsigned int j = 0; j < i; j++){
+      for(unsigned int j = 0; j < l_pt.size(); j++){
+          if(i == j) continue;
           if(l_isTag[j] == false) continue;
 
           TLorentzVector lep1;
