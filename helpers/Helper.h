@@ -373,13 +373,16 @@ ROOT::VecOps::RVec<int> charge_conversion(ROOT::VecOps::RVec<int>hwCharge){
 
 // Match L1Mu to TrigObj
 
-vector<int> MatchObjToTrig(ROOT::VecOps::RVec<float>Obj_eta, ROOT::VecOps::RVec<float>Obj_phi, ROOT::VecOps::RVec<float>TrigObj_pt, ROOT::VecOps::RVec<float>TrigObj_eta, ROOT::VecOps::RVec<float>TrigObj_phi, ROOT::VecOps::RVec<int>TrigObj_id, int Target_id){
+vector<int> MatchObjToTrig(ROOT::VecOps::RVec<float>Obj_eta, ROOT::VecOps::RVec<float>Obj_phi, ROOT::VecOps::RVec<float>TrigObj_pt, ROOT::VecOps::RVec<float>TrigObj_eta, ROOT::VecOps::RVec<float>TrigObj_phi, ROOT::VecOps::RVec<int>TrigObj_id, int Target_id, ROOT::VecOps::RVec<int>filterBits){
 
   vector <int> result={};
   for(unsigned int i = 0; i<Obj_eta.size(); i++){
     //double drmin = 0.4; 
     double drmin = 0.6; 
     int idx = -1;
+    //vector<int> idx = {};
+    //vector<double> dr_vec = {};
+
     for(unsigned int j = 0; j<TrigObj_eta.size(); j++){
       if (TrigObj_id[j] != Target_id) continue;
 
@@ -388,10 +391,14 @@ vector<int> MatchObjToTrig(ROOT::VecOps::RVec<float>Obj_eta, ROOT::VecOps::RVec<
       double dphi = abs(acos(cos(TrigObj_phi[j]-Obj_phi[i]))); 
       double dr = sqrt(deta*deta+dphi*dphi);
       if(dr<=drmin){ 
-	drmin = dr; 
-	idx = j;
+          if((filterBits[j]>>1&1) == 1){
+             drmin = dr; 
+             idx = j;
+          }
       }
     }
+
+    
     result.push_back(idx);
   }
   return result;
