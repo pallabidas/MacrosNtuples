@@ -370,10 +370,14 @@ def compute_ResolutionvsX(h2d):
             f_gaus = ROOT.TF1("f_gaus","gaus")
             proj.Fit(f_gaus,"Q")
             if f_gaus.GetParameter(1) >0 and f_gaus.GetParError(2)/f_gaus.GetParameter(1)<10.03:
-                h_responsevsX.SetBinContent(i,f_gaus.GetParameter(1))
-                h_responsevsX.SetBinError(i,f_gaus.GetParError(1))
-                h_resolvsX.SetBinContent(i,f_gaus.GetParameter(2)/f_gaus.GetParameter(1))
-                h_resolvsX.SetBinError(i,f_gaus.GetParError(2)/f_gaus.GetParameter(1))
+                #h_responsevsX.SetBinContent(i,f_gaus.GetParameter(1))
+                #h_responsevsX.SetBinError(i,f_gaus.GetParError(1))
+                #h_resolvsX.SetBinContent(i,f_gaus.GetParameter(2)/f_gaus.GetParameter(1))
+                #h_resolvsX.SetBinError(i,f_gaus.GetParError(2)/f_gaus.GetParameter(1))
+                h_responsevsX.SetBinContent(i,proj.GetMean())
+                h_responsevsX.SetBinContent(i,proj.GetMeanError())
+                h_resolvsX.SetBinContent(i,proj.GetRMS()/proj.GetMean())
+                h_resolvsX.SetBinContent(i,proj.GetRMSError()/proj.GetMean())
             else:
                 h_responsevsX.SetBinContent(i,0)
                 h_responsevsX.SetBinError(i,0)

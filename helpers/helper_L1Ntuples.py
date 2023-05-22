@@ -13,8 +13,8 @@ reso_bins = array('f',[ i*0.01 for i in range(200) ])
 
 from runsBinning import *
 runnb_bins = array('f', runbinning())
-print(type(runnb_bins))
-print(runnb_bins)
+#print(type(runnb_bins))
+#print(runnb_bins)
 response_bins = array('f',[0.+float(i)/100. for i in range(200)] )
 
 #String printing stuff for a few events
@@ -117,13 +117,18 @@ def MuonJet_MuonSelection(df):
 
 def CleanJets(df):
     #List of cleaned jets (noise cleaning + lepton/photon overlap removal)
-    df = df.Define('isCleanJet','Jet.puppi_etCorr > 30')
-    #df = df.Define('isCleanJet','Jet.et>30')
-    df = df.Define('cleanJet_Pt','Jet.puppi_etCorr[isCleanJet]')
-    df = df.Define('cleanJet_Eta','Jet.puppi_eta[isCleanJet]')
-    df = df.Define('cleanJet_Phi','Jet.puppi_phi[isCleanJet]')
+    df = df.Define('cleanIdx','IsMuonCleaned(Jet.puppi_eta, Jet.puppi_phi, Muon.eta, Muon.phi)')
+    df = df.Define('minPtJets','Jet.puppi_etCorr > 30')
+    df = df.Define('isCleanJet','Jet.puppi_etCorr > 5')
+    #df = df.Define('isCleanJet','GetVal(cleanIdx, Jet.puppi_etCorr)')
+    #df = df.Define('cleanJet_Pt','Jet.puppi_etCorr[isCleanJet]')
+    #df = df.Define('cleanJet_Eta','Jet.puppi_eta[isCleanJet]')
+    #df = df.Define('cleanJet_Phi','Jet.puppi_phi[isCleanJet]')
+    df = df.Define('cleanJet_Pt','GetVal(cleanIdx, Jet.puppi_etCorr[isCleanJet])')
+    df = df.Define('cleanJet_Eta','GetVal(cleanIdx, Jet.puppi_eta[isCleanJet])')
+    df = df.Define('cleanJet_Phi','GetVal(cleanIdx, Jet.puppi_phi[isCleanJet])')
     
-    df = df.Filter('Sum(isCleanJet)>=1','>=1 clean jet with p_{T}>30 GeV')
+    df = df.Filter('Sum(minPtJets)>=1','>=1 clean jet with p_{T} > 30 GeV')
 
     return df
 
@@ -162,7 +167,8 @@ def EtSum(df):
 def AnalyzeCleanJets(df, JetRecoPtCut, L1JetPtCut):    
     histos = {}
     #Find L1 jets matched to the offline jet
-    df = df.Define('cleanJet_idxL1jet','FindL1ObjIdx(L1Upgrade.jetEta, L1Upgrade.jetPhi, cleanJet_Eta, cleanJet_Phi)')
+    df = df.Define('cleanJet_idxL1jet', 'FindL1ObjIdx_setBx(L1Upgrade.jetEta, L1Upgrade.jetPhi, L1Upgrade.jetBx, cleanJet_Eta, cleanJet_Phi, 0)')
+    #df = df.Define('cleanJet_idxL1jet','FindL1ObjIdx(L1Upgrade.jetEta, L1Upgrade.jetPhi, cleanJet_Eta, cleanJet_Phi)')
     df = df.Define('cleanJet_L1Pt','GetVal(cleanJet_idxL1jet,L1Upgrade.jetEt)')
     df = df.Define('cleanJet_L1Bx','GetVal(cleanJet_idxL1jet,L1Upgrade.jetBx)')
     df = df.Define('cleanJet_L1PtoverRecoPt','cleanJet_L1Pt/cleanJet_Pt')

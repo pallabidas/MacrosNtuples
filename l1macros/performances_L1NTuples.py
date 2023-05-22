@@ -57,8 +57,8 @@ def main():
     
     #df = df.Filter("L1uGT.m_algoDecisionFinal[460]","zb") #bit 459 for L1_ZeroBias (standard ZB), bit 460 for L1_ZeroBias_copy (for Ephemeral ZB)
     df = df.Filter("L1uGT.m_algoDecisionInitial[460]","zb")
+    df = df.Filter('bool trigger = false; for(int i=0; i < Event.hlt.size(); i++){ string string_search ("HLT_IsoMu24_v"); bool found = Event.hlt[i].Contains(string_search); if(found) trigger = true; } return trigger;', "IsoMu24 trigger")
     h = df.Histo1D(ROOT.RDF.TH1DModel('h_evtbx', '', 4000, 0, 4000), 'Event.bx')
-
 
     
     df = MuonJet_MuonSelection(df)
