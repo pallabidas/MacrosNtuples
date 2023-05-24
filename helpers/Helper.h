@@ -26,11 +26,10 @@ double deltaphi_offlinemustation2_l1mu(int charge, double mupt, double mueta, do
     return dphi;
 }  
 
-vector<int> FindL1ObjIdx(ROOT::VecOps::RVec<float>L1Obj_eta, ROOT::VecOps::RVec<float>L1Obj_phi, ROOT::VecOps::RVec<float>recoObj_Eta, ROOT::VecOps::RVec<float>recoObj_Phi, ROOT::VecOps::RVec<int>L1Obj_CutVar={}, int CutVar=-1){
+vector<int> FindL1JetIdx(ROOT::VecOps::RVec<float>L1Obj_eta, ROOT::VecOps::RVec<float>L1Obj_phi, ROOT::VecOps::RVec<float>recoObj_Eta, ROOT::VecOps::RVec<float>recoObj_Phi, ROOT::VecOps::RVec<int>L1Obj_CutVar={}, int CutVar=-1){
   vector <int> result={};
   for(unsigned int i = 0; i<recoObj_Eta.size(); i++){
-    //double drmin = 0.4; 
-    double drmin = 0.6; 
+    double drmin = 0.4; 
     int idx = -1;
     for(unsigned int j = 0; j<L1Obj_eta.size(); j++){
 
@@ -50,12 +49,63 @@ vector<int> FindL1ObjIdx(ROOT::VecOps::RVec<float>L1Obj_eta, ROOT::VecOps::RVec<
   return result;
 }
 
-vector<int> FindL1MuIdx(ROOT::VecOps::RVec<float>L1Obj_eta, ROOT::VecOps::RVec<float>L1Obj_phi, ROOT::VecOps::RVec<float>recoObj_Eta, ROOT::VecOps::RVec<float>recoObj_Phi, 
+vector<int> FindL1MuIdx(ROOT::VecOps::RVec<float>L1Obj_eta, ROOT::VecOps::RVec<float>L1Obj_phi, ROOT::VecOps::RVec<float>recoObj_Eta, ROOT::VecOps::RVec<float>recoObj_Phi, ROOT::VecOps::RVec<int>L1Obj_CutVar={}, int CutVar=-1){
+  vector <int> result={};
+  for(unsigned int i = 0; i<recoObj_Eta.size(); i++){
+    double drmin = 0.2; 
+    int idx = -1;
+    for(unsigned int j = 0; j<L1Obj_eta.size(); j++){
+
+      if(L1Obj_CutVar.size()==L1Obj_eta.size()){
+	if(L1Obj_CutVar[j]<CutVar)continue;
+      }
+      double deta = abs(recoObj_Eta[i]-L1Obj_eta[j]);
+      double dphi = abs(acos(cos(recoObj_Phi[i]-L1Obj_phi[j]))); 
+      double dr = sqrt(deta*deta+dphi*dphi);
+      if(dr<=drmin){ 
+	drmin = dr; 
+	idx = j;
+      }
+    }
+    result.push_back(idx);
+  }
+  return result;
+}
+
+vector<int> FindL1EGIdx(ROOT::VecOps::RVec<float>L1Obj_eta, ROOT::VecOps::RVec<float>L1Obj_phi, ROOT::VecOps::RVec<float>recoObj_Eta, ROOT::VecOps::RVec<float>recoObj_Phi, ROOT::VecOps::RVec<float>recoObj_Pt, ROOT::VecOps::RVec<int>L1Obj_CutVar={}, int CutVar=-1){
+  vector <int> result={};
+  for(unsigned int i = 0; i<recoObj_Eta.size(); i++){
+    double drmin = 0.3; 
+    if(recoObj_Pt[i] > 10.){
+        drmin = 0.2;
+    }
+    int idx = -1;
+    for(unsigned int j = 0; j<L1Obj_eta.size(); j++){
+
+      if(L1Obj_CutVar.size()==L1Obj_eta.size()){
+	if(L1Obj_CutVar[j]<CutVar)continue;
+      }
+      double deta = abs(recoObj_Eta[i]-L1Obj_eta[j]);
+      double dphi = abs(acos(cos(recoObj_Phi[i]-L1Obj_phi[j]))); 
+      double dr = sqrt(deta*deta+dphi*dphi);
+      if(dr<=drmin){ 
+	drmin = dr; 
+	idx = j;
+      }
+    }
+    result.push_back(idx);
+  }
+  return result;
+}
+
+/*
+vector<int> FindL1EGIdx(ROOT::VecOps::RVec<float>L1Obj_eta, ROOT::VecOps::RVec<float>L1Obj_phi, ROOT::VecOps::RVec<float>recoObj_Eta, ROOT::VecOps::RVec<float>recoObj_Phi, 
         ROOT::VecOps::RVec<float>recoObj_Pt, ROOT::VecOps::RVec<int>charge, ROOT::VecOps::RVec<int>L1Obj_CutVar={}, int CutVar=-1){
   vector <int> result={};
   for(unsigned int i = 0; i<recoObj_Eta.size(); i++){
     //double drmin = 0.4; 
-    double drmin = 0.6; 
+    //double drmin = 0.6; 
+    double drmin = 0.2;
     int idx = -1;
     for(unsigned int j = 0; j<L1Obj_eta.size(); j++){
 
@@ -77,9 +127,92 @@ vector<int> FindL1MuIdx(ROOT::VecOps::RVec<float>L1Obj_eta, ROOT::VecOps::RVec<f
   }
   return result;
 }
+*/
 
 // Match objects only in a given bunch crossing
-vector<int> FindL1MuIdx_setBx(ROOT::VecOps::RVec<float>L1Obj_eta, ROOT::VecOps::RVec<float>L1Obj_phi, ROOT::VecOps::RVec<float>L1Obj_bx, ROOT::VecOps::RVec<float>recoObj_Eta, ROOT::VecOps::RVec<float>recoObj_Phi, 
+
+vector<int> FindL1JetIdx_setBx(ROOT::VecOps::RVec<float>L1Obj_eta, ROOT::VecOps::RVec<float>L1Obj_phi, ROOT::VecOps::RVec<float>L1Obj_bx, ROOT::VecOps::RVec<float>recoObj_Eta, ROOT::VecOps::RVec<float>recoObj_Phi, int bx, ROOT::VecOps::RVec<int>L1Obj_CutVar={}, int CutVar=-1){
+  vector <int> result={};
+  for(unsigned int i = 0; i<recoObj_Eta.size(); i++){
+    double drmin = 0.4; 
+    int idx = -1;
+    for(unsigned int j = 0; j<L1Obj_eta.size(); j++){
+
+      if(L1Obj_CutVar.size()==L1Obj_eta.size()){
+	if(L1Obj_CutVar[j]<CutVar)continue;
+      }
+      if(L1Obj_bx[j] != bx){
+          continue;
+      }
+      double deta = abs(recoObj_Eta[i]-L1Obj_eta[j]);
+      double dphi = abs(acos(cos(recoObj_Phi[i]-L1Obj_phi[j]))); 
+      double dr = sqrt(deta*deta+dphi*dphi);
+      if(dr<=drmin){ 
+	drmin = dr; 
+	idx = j;
+      }
+    }
+    result.push_back(idx);
+  }
+  return result;
+}
+
+vector<int> FindL1MuIdx_setBx(ROOT::VecOps::RVec<float>L1Obj_eta, ROOT::VecOps::RVec<float>L1Obj_phi, ROOT::VecOps::RVec<float>L1Obj_bx, ROOT::VecOps::RVec<float>recoObj_Eta, ROOT::VecOps::RVec<float>recoObj_Phi, int bx, ROOT::VecOps::RVec<int>L1Obj_CutVar={}, int CutVar=-1){
+  vector <int> result={};
+  for(unsigned int i = 0; i<recoObj_Eta.size(); i++){
+    double drmin = 0.2; 
+    int idx = -1;
+    for(unsigned int j = 0; j<L1Obj_eta.size(); j++){
+
+      if(L1Obj_CutVar.size()==L1Obj_eta.size()){
+	if(L1Obj_CutVar[j]<CutVar)continue;
+      }
+      if(L1Obj_bx[j] != bx){
+          continue;
+      }
+      double deta = abs(recoObj_Eta[i]-L1Obj_eta[j]);
+      double dphi = abs(acos(cos(recoObj_Phi[i]-L1Obj_phi[j]))); 
+      double dr = sqrt(deta*deta+dphi*dphi);
+      if(dr<=drmin){ 
+	drmin = dr; 
+	idx = j;
+      }
+    }
+    result.push_back(idx);
+  }
+  return result;
+}
+
+vector<int> FindL1EGIdx_setBx(ROOT::VecOps::RVec<float>L1Obj_eta, ROOT::VecOps::RVec<float>L1Obj_phi, ROOT::VecOps::RVec<float>L1Obj_bx, ROOT::VecOps::RVec<float>recoObj_Eta, ROOT::VecOps::RVec<float>recoObj_Phi, ROOT::VecOps::RVec<float>recoObj_Pt, int bx, ROOT::VecOps::RVec<int>L1Obj_CutVar={}, int CutVar=-1){
+  vector <int> result={};
+  for(unsigned int i = 0; i<recoObj_Eta.size(); i++){
+    double drmin = 0.3; 
+    if(recoObj_Pt[i] > 10.){
+        drmin = 0.2;
+    }
+    int idx = -1;
+    for(unsigned int j = 0; j<L1Obj_eta.size(); j++){
+
+      if(L1Obj_CutVar.size()==L1Obj_eta.size()){
+	if(L1Obj_CutVar[j]<CutVar)continue;
+      }
+      if(L1Obj_bx[j] != bx){
+          continue;
+      }
+      double deta = abs(recoObj_Eta[i]-L1Obj_eta[j]);
+      double dphi = abs(acos(cos(recoObj_Phi[i]-L1Obj_phi[j]))); 
+      double dr = sqrt(deta*deta+dphi*dphi);
+      if(dr<=drmin){ 
+	drmin = dr; 
+	idx = j;
+      }
+    }
+    result.push_back(idx);
+  }
+  return result;
+}
+/*
+vector<int> FindL1LepIdx_setBx(ROOT::VecOps::RVec<float>L1Obj_eta, ROOT::VecOps::RVec<float>L1Obj_phi, ROOT::VecOps::RVec<float>L1Obj_bx, ROOT::VecOps::RVec<float>recoObj_Eta, ROOT::VecOps::RVec<float>recoObj_Phi, 
         ROOT::VecOps::RVec<float>recoObj_Pt, ROOT::VecOps::RVec<int>charge, int bx, ROOT::VecOps::RVec<int>L1Obj_CutVar={}, int CutVar=-1){
   vector <int> result={};
   for(unsigned int i = 0; i<recoObj_Eta.size(); i++){
@@ -107,33 +240,8 @@ vector<int> FindL1MuIdx_setBx(ROOT::VecOps::RVec<float>L1Obj_eta, ROOT::VecOps::
   }
   return result;
 }
+*/
 
-vector<int> FindL1ObjIdx_setBx(ROOT::VecOps::RVec<float>L1Obj_eta, ROOT::VecOps::RVec<float>L1Obj_phi, ROOT::VecOps::RVec<float>L1Obj_bx, ROOT::VecOps::RVec<float>recoObj_Eta, ROOT::VecOps::RVec<float>recoObj_Phi, int bx, ROOT::VecOps::RVec<int>L1Obj_CutVar={}, int CutVar=-1){
-  vector <int> result={};
-  for(unsigned int i = 0; i<recoObj_Eta.size(); i++){
-    //double drmin = 0.4; 
-    double drmin = 0.6; 
-    int idx = -1;
-    for(unsigned int j = 0; j<L1Obj_eta.size(); j++){
-
-      if(L1Obj_CutVar.size()==L1Obj_eta.size()){
-	if(L1Obj_CutVar[j]<CutVar)continue;
-      }
-      if(L1Obj_bx[j] != bx){
-          continue;
-      }
-      double deta = abs(recoObj_Eta[i]-L1Obj_eta[j]);
-      double dphi = abs(acos(cos(recoObj_Phi[i]-L1Obj_phi[j]))); 
-      double dr = sqrt(deta*deta+dphi*dphi);
-      if(dr<=drmin){ 
-	drmin = dr; 
-	idx = j;
-      }
-    }
-    result.push_back(idx);
-  }
-  return result;
-}
 
 ROOT::VecOps::RVec<float> GetVal(ROOT::VecOps::RVec<int>idxL1Obj, ROOT::VecOps::RVec<float>L1Obj_val){
   ROOT::VecOps::RVec<float> result ={}; 
@@ -296,52 +404,6 @@ bool L1SeedPtLeadDoubleJetMassMin(ROOT::VecOps::RVec<float>pt, ROOT::VecOps::RVe
     return false;
   }
 
-/* 
-float mll(ROOT::VecOps::RVec<float>l_pt, ROOT::VecOps::RVec<float>l_eta, ROOT::VecOps::RVec<float>l_phi, ROOT::VecOps::RVec<int>l_pdgId){
-  
-//  how it was done in miniaod:
-//  Float_t mll(0),ptll(0),pzll(0),yll(0),phill(0),dphill(0),costhCSll(0);
-//  for(unsigned int i = 0; i < _lPt.size(); i++){
-//    if(_lPt.size() !=2) continue;
-//    if(_lPt[i]<3) continue;
-//      if(!_lPassVetoID[i])  continue;
-//      if(fabs(_lpdgId[i]) !=11 && fabs(_lpdgId[i])!=13 ) continue;
-//      for(unsigned int j = 0; j < i; j++){
-//        if(_lPt[j]<3) continue;
-//        if(!_lPassVetoID[j])  continue;
-//        if(fabs(_lpdgId[j]) !=11 && fabs(_lpdgId[j])!=13 ) continue;
-//        //if( _lpdgId[i] != -_lpdgId[j]  ) continue;
-//        CalcDileptonInfo(i,j, mll,ptll,pzll,yll,phill,dphill,costhCSll);
-//      _mll= mll; _ptll=ptll; _pzll=pzll; _yll=yll; _phill=phill; _dphill=dphill; _costhCSll=costhCSll;
-//      if(fabs(_lpdgId[j]) ==11 && fabs(_lpdgId[j])  ==11) _nElesll =2 ;
-//      else if(fabs(_lpdgId[j]) ==13 && fabs(_lpdgId[j])  ==13) _nElesll =0 ;
-//      else _nElesll = 1;
-//      }
-//  }
-  
-  //float mll = 0.;
-  float mll = -1.;
-  for(unsigned int i = 0; i < l_pt.size(); i++){
-      if(l_pt.size() != 2) continue;
-      if(l_pt[i] < 3) continue;
-      // bypass  lPassVetoID
-      if(fabs(l_pdgId[i]) != 11 && fabs(l_pdgId[i] != 13 )) continue;
-      for(unsigned int j = 0; j < i; j++){
-          if(l_pt[j] < 3) continue;
-          if(fabs(l_pdgId[j]) != 11 && fabs(l_pdgId[j] != 13 )) continue;
-
-          TLorentzVector lep1;
-          TLorentzVector lep2;
-          lep1.SetPtEtaPhiE(l_pt[i], l_eta[i], l_phi[i], l_pt[i] * cosh(l_eta[i]));
-          lep2.SetPtEtaPhiE(l_pt[j], l_eta[j], l_phi[j], l_pt[j] * cosh(l_eta[j]));
-
-          mll = (lep1+lep2).Mag();
-      }
-  }
-  return mll;
-}
-*/
-
 float mll(ROOT::VecOps::RVec<float>l_pt, ROOT::VecOps::RVec<float>l_eta, ROOT::VecOps::RVec<float>l_phi, ROOT::VecOps::RVec<bool>l_isTag, ROOT::VecOps::RVec<bool>l_isProbe){
   float mll = -1.;
   for(unsigned int i = 0; i < l_pt.size(); i++){
@@ -356,7 +418,9 @@ float mll(ROOT::VecOps::RVec<float>l_pt, ROOT::VecOps::RVec<float>l_eta, ROOT::V
           lep1.SetPtEtaPhiE(l_pt[i], l_eta[i], l_phi[i], l_pt[i] * cosh(l_eta[i]));
           lep2.SetPtEtaPhiE(l_pt[j], l_eta[j], l_phi[j], l_pt[j] * cosh(l_eta[j]));
 
-          mll = (lep1+lep2).Mag();
+          if(lep1.DeltaR(lep2) > 0.4){
+            mll = (lep1+lep2).Mag();
+          }
       }
   }
   return mll;
