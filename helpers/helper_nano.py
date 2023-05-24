@@ -197,7 +197,7 @@ def ZEE_EleSelection(df):
     ''')
 
     # TrigObj matching
-    df = df.Define('Electron_trig_idx', 'MatchObjToTrig(Electron_eta, Electron_phi, TrigObj_pt, TrigObj_eta, TrigObj_phi, TrigObj_id, 11)')
+    df = df.Define('Electron_trig_idx', 'MatchObjToTrig(Electron_eta, Electron_phi, TrigObj_pt, TrigObj_eta, TrigObj_phi, TrigObj_id, 11, TrigObj_filterBits)')
     df = df.Define('Electron_passHLT_Ele32_WPTight_Gsf', 'trig_is_filterbit1_set(Electron_trig_idx, TrigObj_filterBits)')
 
     df = df.Define('isTag','_lPt>35&&abs(_lpdgId)==11&&Electron_mvaIso_WP90&&Electron_passHLT_Ele32_WPTight_Gsf==true')
@@ -237,7 +237,7 @@ def ZMuMu_MuSelection(df):
     df = df.Define('L1Mu_charge', 'charge_conversion(L1Mu_hwCharge)')
 
     # TrigObj matching
-    df = df.Define('Muon_trig_idx', 'MatchObjToTrig(Muon_eta, Muon_phi, TrigObj_pt, TrigObj_eta, TrigObj_phi, TrigObj_id, 13)')
+    df = df.Define('Muon_trig_idx', 'MatchObjToTrig(Muon_eta, Muon_phi, TrigObj_pt, TrigObj_eta, TrigObj_phi, TrigObj_id, 13, TrigObj_filterBits)')
     df = df.Define('Muon_passHLT_IsoMu24', 'trig_is_filterbit1_set(Muon_trig_idx, TrigObj_filterBits)')
     df = df.Define('Muon_PassTightId','Muon_pfIsoId>=3&&Muon_mediumPromptId') 
 
@@ -308,41 +308,22 @@ def makehistosforturnons_inprobeetaranges(df, histos, etavarname, phivarname, pt
 def ZEE_Plots(df, suffix = ''):
     histos = {}
     
-    #label = ['EGNonIso','EGLooseIso', 'EGTightIso']
-    #df_eg = [None, None, None]
     df_eg = [None] * len(config['Isos'])
 
-    #for i in range(3): 
     for i, iso in enumerate(config['Isos']):
         
-#        if i ==0:
-#            df_eg[i] = df.Define('probe_idxL1jet','FindL1ObjIdx(L1EG_eta, L1EG_phi, probe_Eta, probe_Phi)')
-#            df_eg[i] = df_eg[i].Define('probe_idxL1jet_Bx0','FindL1ObjIdx_setBx(L1EG_eta, L1EG_phi, L1EG_bx, probe_Eta, probe_Phi, 0)')
-#            df_eg[i] = df_eg[i].Define('probe_idxL1jet_Bxmin1','FindL1ObjIdx_setBx(L1EG_eta, L1EG_phi, L1EG_bx, probe_Eta, probe_Phi, -1)')
-#            df_eg[i] = df_eg[i].Define('probe_idxL1jet_Bxplus1','FindL1ObjIdx_setBx(L1EG_eta, L1EG_phi, L1EG_bx, probe_Eta, probe_Phi, 1)')
-#        if i ==1:
-#            df_eg[i] = df.Define('probe_idxL1jet','FindL1ObjIdx(L1EG_eta, L1EG_phi, probe_Eta, probe_Phi, L1EG_hwIso, 2)')
-#            df_eg[i] = df_eg[i].Define('probe_idxL1jet_Bx0','FindL1ObjIdx_setBx(L1EG_eta, L1EG_phi, L1EG_bx, probe_Eta, probe_Phi, 0, L1EG_hwIso, 2)')
-#            df_eg[i] = df_eg[i].Define('probe_idxL1jet_Bxmin1','FindL1ObjIdx_setBx(L1EG_eta, L1EG_phi, L1EG_bx, probe_Eta, probe_Phi, -1, L1EG_hwIso, 2)')
-#            df_eg[i] = df_eg[i].Define('probe_idxL1jet_Bxplus1','FindL1ObjIdx_setBx(L1EG_eta, L1EG_phi, L1EG_bx, probe_Eta, probe_Phi, 1, L1EG_hwIso, 2)')
-#        if i ==2:
-#            df_eg[i] = df.Define('probe_idxL1jet','FindL1ObjIdx(L1EG_eta, L1EG_phi, probe_Eta, probe_Phi, L1EG_hwIso, 3)')
-#            df_eg[i] = df_eg[i].Define('probe_idxL1jet_Bx0','FindL1ObjIdx_setBx(L1EG_eta, L1EG_phi, L1EG_bx, probe_Eta, probe_Phi, 0, L1EG_hwIso, 3)')
-#            df_eg[i] = df_eg[i].Define('probe_idxL1jet_Bxmin1','FindL1ObjIdx_setBx(L1EG_eta, L1EG_phi, L1EG_bx, probe_Eta, probe_Phi, -1, L1EG_hwIso, 3)')
-#            df_eg[i] = df_eg[i].Define('probe_idxL1jet_Bxplus1','FindL1ObjIdx_setBx(L1EG_eta, L1EG_phi, L1EG_bx, probe_Eta, probe_Phi, 1, L1EG_hwIso, 3)')
+        df_eg[i] = df.Define('probe_idxL1EG','FindL1EGIdx(L1EG_eta, L1EG_phi, probe_Eta, probe_Phi, probe_Pt, L1EG_hwIso, {})'.format(config['Isos'][iso]))
+        df_eg[i] = df_eg[i].Define('probe_idxL1EG_Bx0','FindL1EGIdx_setBx(L1EG_eta, L1EG_phi, L1EG_bx, probe_Eta, probe_Phi, probe_Pt, 0, L1EG_hwIso, {})'.format(config['Isos'][iso]))
+        df_eg[i] = df_eg[i].Define('probe_idxL1EG_Bxmin1','FindL1EGIdx_setBx(L1EG_eta, L1EG_phi, L1EG_bx, probe_Eta, probe_Phi, probe_Pt, -1, L1EG_hwIso, {})'.format(config['Isos'][iso]))
+        df_eg[i] = df_eg[i].Define('probe_idxL1EG_Bxplus1','FindL1EGIdx_setBx(L1EG_eta, L1EG_phi, L1EG_bx, probe_Eta, probe_Phi, probe_Pt, 1, L1EG_hwIso, {})'.format(config['Isos'][iso]))
 
-        df_eg[i] = df.Define('probe_idxL1jet','FindL1ObjIdx(L1EG_eta, L1EG_phi, probe_Eta, probe_Phi, L1EG_hwIso, {})'.format(config['Isos'][iso]))
-        df_eg[i] = df_eg[i].Define('probe_idxL1jet_Bx0','FindL1ObjIdx_setBx(L1EG_eta, L1EG_phi, L1EG_bx, probe_Eta, probe_Phi, 0, L1EG_hwIso, {})'.format(config['Isos'][iso]))
-        df_eg[i] = df_eg[i].Define('probe_idxL1jet_Bxmin1','FindL1ObjIdx_setBx(L1EG_eta, L1EG_phi, L1EG_bx, probe_Eta, probe_Phi, -1, L1EG_hwIso, {})'.format(config['Isos'][iso]))
-        df_eg[i] = df_eg[i].Define('probe_idxL1jet_Bxplus1','FindL1ObjIdx_setBx(L1EG_eta, L1EG_phi, L1EG_bx, probe_Eta, probe_Phi, 1, L1EG_hwIso, {})'.format(config['Isos'][iso]))
-
-        df_eg[i] = df_eg[i].Define('probe_L1Pt','GetVal(probe_idxL1jet, L1EG_pt)')
-        df_eg[i] = df_eg[i].Define('probe_L1Bx','GetVal(probe_idxL1jet, L1EG_bx)')
+        df_eg[i] = df_eg[i].Define('probe_L1Pt','GetVal(probe_idxL1EG, L1EG_pt)')
+        df_eg[i] = df_eg[i].Define('probe_L1Bx','GetVal(probe_idxL1EG, L1EG_bx)')
         df_eg[i] = df_eg[i].Define('probe_L1PtoverRecoPt','probe_L1Pt/probe_Pt')
 
-        df_eg[i] = df_eg[i].Define('probe_L1Pt_Bx0', 'GetVal(probe_idxL1jet_Bx0, L1EG_pt)')
-        df_eg[i] = df_eg[i].Define('probe_L1Pt_Bxmin1', 'GetVal(probe_idxL1jet_Bxmin1, L1EG_pt)')
-        df_eg[i] = df_eg[i].Define('probe_L1Pt_Bxplus1', 'GetVal(probe_idxL1jet_Bxplus1, L1EG_pt)')
+        df_eg[i] = df_eg[i].Define('probe_L1Pt_Bx0', 'GetVal(probe_idxL1EG_Bx0, L1EG_pt)')
+        df_eg[i] = df_eg[i].Define('probe_L1Pt_Bxmin1', 'GetVal(probe_idxL1EG_Bxmin1, L1EG_pt)')
+        df_eg[i] = df_eg[i].Define('probe_L1Pt_Bxplus1', 'GetVal(probe_idxL1EG_Bxplus1, L1EG_pt)')
 
         pt_binning = leptonpt_bins
         if suffix != '':
@@ -386,23 +367,23 @@ def ZMuMu_Plots(df, suffix = ''):
 
     for i, qual in enumerate(config["Qualities"]):
 
-        df_mu[i] = df.Define('probe_idxL1jet','FindL1MuIdx(L1Mu_eta, L1Mu_phi, probe_Eta, probe_Phi, probe_Pt, L1Mu_charge, L1Mu_hwQual, {})'.format(config["Qualities"][qual]))
-        df_mu[i] = df_mu[i].Define('probe_idxL1jet_Bx0','FindL1MuIdx_setBx(L1Mu_eta, L1Mu_phi, L1Mu_bx, probe_Eta, probe_Phi, probe_Pt, L1Mu_charge, 0, L1Mu_hwQual, {})'.format(config["Qualities"][qual]))
-        df_mu[i] = df_mu[i].Define('probe_idxL1jet_Bxmin1','FindL1MuIdx_setBx(L1Mu_eta, L1Mu_phi, L1Mu_bx, probe_Eta, probe_Phi, probe_Pt, L1Mu_charge, -1, L1Mu_hwQual, {})'.format(config["Qualities"][qual]))
-        df_mu[i] = df_mu[i].Define('probe_idxL1jet_Bxplus1','FindL1MuIdx_setBx(L1Mu_eta, L1Mu_phi, L1Mu_bx, probe_Eta, probe_Phi, probe_Pt, L1Mu_charge, 1, L1Mu_hwQual, {})'.format(config["Qualities"][qual]))
+        df_mu[i] = df.Define('probe_idxL1Mu','FindL1MuIdx(L1Mu_eta, L1Mu_phi, probe_Eta, probe_Phi, L1Mu_hwQual, {})'.format(config["Qualities"][qual]))
+        df_mu[i] = df_mu[i].Define('probe_idxL1Mu_Bx0','FindL1MuIdx_setBx(L1Mu_eta, L1Mu_phi, L1Mu_bx, probe_Eta, probe_Phi, 0, L1Mu_hwQual, {})'.format(config["Qualities"][qual]))
+        df_mu[i] = df_mu[i].Define('probe_idxL1Mu_Bxmin1','FindL1MuIdx_setBx(L1Mu_eta, L1Mu_phi, L1Mu_bx, probe_Eta, probe_Phi, -1, L1Mu_hwQual, {})'.format(config["Qualities"][qual]))
+        df_mu[i] = df_mu[i].Define('probe_idxL1Mu_Bxplus1','FindL1MuIdx_setBx(L1Mu_eta, L1Mu_phi, L1Mu_bx, probe_Eta, probe_Phi, 1, L1Mu_hwQual, {})'.format(config["Qualities"][qual]))
             
-        df_mu[i] = df_mu[i].Define('probe_L1Pt','GetVal(probe_idxL1jet, L1Mu_pt)')
-        df_mu[i] = df_mu[i].Define('probe_L1Bx','GetVal(probe_idxL1jet, L1Mu_bx)')
-        df_mu[i] = df_mu[i].Define('probe_L1Qual','GetVal(probe_idxL1jet, L1Mu_hwQual)')
+        df_mu[i] = df_mu[i].Define('probe_L1Pt','GetVal(probe_idxL1Mu, L1Mu_pt)')
+        df_mu[i] = df_mu[i].Define('probe_L1Bx','GetVal(probe_idxL1Mu, L1Mu_bx)')
+        df_mu[i] = df_mu[i].Define('probe_L1Qual','GetVal(probe_idxL1Mu, L1Mu_hwQual)')
 
-        df_mu[i] = df_mu[i].Define('probe_L1Pt_Bx0', 'GetVal(probe_idxL1jet_Bx0, L1Mu_pt)')
-        df_mu[i] = df_mu[i].Define('probe_L1Qual_Bx0', 'GetVal(probe_idxL1jet_Bx0, L1Mu_hwQual)')
+        df_mu[i] = df_mu[i].Define('probe_L1Pt_Bx0', 'GetVal(probe_idxL1Mu_Bx0, L1Mu_pt)')
+        df_mu[i] = df_mu[i].Define('probe_L1Qual_Bx0', 'GetVal(probe_idxL1Mu_Bx0, L1Mu_hwQual)')
 
-        df_mu[i] = df_mu[i].Define('probe_L1Pt_Bxmin1', 'GetVal(probe_idxL1jet_Bxmin1, L1Mu_pt)')
-        df_mu[i] = df_mu[i].Define('probe_L1Qual_Bxmin1', 'GetVal(probe_idxL1jet_Bxmin1, L1Mu_hwQual)')
+        df_mu[i] = df_mu[i].Define('probe_L1Pt_Bxmin1', 'GetVal(probe_idxL1Mu_Bxmin1, L1Mu_pt)')
+        df_mu[i] = df_mu[i].Define('probe_L1Qual_Bxmin1', 'GetVal(probe_idxL1Mu_Bxmin1, L1Mu_hwQual)')
 
-        df_mu[i] = df_mu[i].Define('probe_L1Pt_Bxplus1', 'GetVal(probe_idxL1jet_Bxplus1, L1Mu_pt)')
-        df_mu[i] = df_mu[i].Define('probe_L1Qual_Bxplus1', 'GetVal(probe_idxL1jet_Bxplus1, L1Mu_hwQual)')
+        df_mu[i] = df_mu[i].Define('probe_L1Pt_Bxplus1', 'GetVal(probe_idxL1Mu_Bxplus1, L1Mu_pt)')
+        df_mu[i] = df_mu[i].Define('probe_L1Qual_Bxplus1', 'GetVal(probe_idxL1Mu_Bxplus1, L1Mu_hwQual)')
 
         df_mu[i] = df_mu[i].Define('probe_L1PtoverRecoPt','probe_L1Pt/probe_Pt')
 
@@ -440,6 +421,14 @@ def ZMuMu_Plots(df, suffix = ''):
             df_mu[i] = df_mu[i].Define('probeL1Mu22Bxplus1_Eta', 'probe_Eta[probe_Pt>20&&probe_L1Pt_Bxplus1>22&&probe_L1Qual>=12]')
             df_mu[i] = df_mu[i].Define('probeL1Mu22Bxplus1_Phi', 'probe_Phi[probe_Pt>20&&probe_L1Pt_Bxplus1>22&&probe_L1Qual>=12]')
                         
+            # Muon with L1 pt >= 10 GeV, reco pT >= 10 GeV
+            df_mu[i] = df_mu[i].Define('probeL1Mu10Bxmin1_Eta', 'probe_Eta[probe_Pt>=10&&probe_L1Pt_Bxmin1>=10&&probe_L1Qual>=12]')
+            df_mu[i] = df_mu[i].Define('probeL1Mu10Bxmin1_Phi', 'probe_Phi[probe_Pt>=10&&probe_L1Pt_Bxmin1>=10&&probe_L1Qual>=12]')
+            df_mu[i] = df_mu[i].Define('probeL1Mu10Bx0_Eta', 'probe_Eta[probe_Pt>=10&&probe_L1Pt_Bx0>=10&&probe_L1Qual>=12]')
+            df_mu[i] = df_mu[i].Define('probeL1Mu10Bx0_Phi', 'probe_Phi[probe_Pt>=10&&probe_L1Pt_Bx0>=10&&probe_L1Qual>=12]')
+            df_mu[i] = df_mu[i].Define('probeL1Mu10Bxplus1_Eta', 'probe_Eta[probe_Pt>=10&&probe_L1Pt_Bxplus1>=10&&probe_L1Qual>=12]')
+            df_mu[i] = df_mu[i].Define('probeL1Mu10Bxplus1_Phi', 'probe_Phi[probe_Pt>=10&&probe_L1Pt_Bxplus1>=10&&probe_L1Qual>=12]')
+                        
             histos['L1Mu10to21_bxmin1_etaphi'+suffix] = df_mu[i].Histo2D(ROOT.RDF.TH2DModel('L1Mu10to21_bxmin1_etaphi'+suffix, '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1Mu10to21Bxmin1_Eta', 'probeL1Mu10to21Bxmin1_Phi')
             histos['L1Mu10to21_bx0_etaphi'+suffix] = df_mu[i].Histo2D(ROOT.RDF.TH2DModel('L1Mu10to21_bx0_etaphi'+suffix, '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1Mu10to21Bx0_Eta', 'probeL1Mu10to21Bx0_Phi')
             histos['L1Mu10to21_bxplus1_etaphi'+suffix] = df_mu[i].Histo2D(ROOT.RDF.TH2DModel('L1Mu10to21_bxplus1_etaphi'+suffix, '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1Mu10to21Bxplus1_Eta', 'probeL1Mu10to21Bxplus1_Phi')
@@ -473,12 +462,37 @@ def ZMuMu_Plots(df, suffix = ''):
 
             histos['L1Mu22_FirstBunchInTrain_bxmin1_eta'+suffix] = df_mu[i].Filter("run>=361468").Filter("L1_FirstBunchInTrain").Histo1D(ROOT.RDF.TH1DModel('L1Mu22_FirstBunchInTrain_bxmin1_eta'+suffix, '', 100, -5, 5), 'probeL1Mu22Bxmin1_Eta') 
 
+            #
+
+            histos['L1Mu22_OR_bx0_etaphi'+suffix] = df_mu[i].Filter("L1_UnprefireableEvent||((run>=361468)&L1_FirstBunchInTrain)").Histo2D(ROOT.RDF.TH2DModel('L1Mu22_OR_bx0_etaphi'+suffix, '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1Mu22Bx0_Eta', 'probeL1Mu22Bx0_Phi')
+            histos['L1Mu22_OR_bx0_eta'+suffix] = df_mu[i].Filter("L1_UnprefireableEvent||((run>=361468)&L1_FirstBunchInTrain)").Histo1D(ROOT.RDF.TH1DModel('L1Mu22_OR_bx0_eta'+suffix, '', 100, -5, 5), 'probeL1Mu22Bx0_Eta') 
+
+            histos['L1Mu22_OR_bxmin1_etaphi'+suffix] = df_mu[i].Filter("L1_UnprefireableEvent||((run>=361468)&L1_FirstBunchInTrain)").Histo2D(ROOT.RDF.TH2DModel('L1Mu22_OR_bxmin1_etaphi'+suffix, '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1Mu22Bxmin1_Eta', 'probeL1Mu22Bxmin1_Phi')
+            histos['L1Mu22_OR_bxmin1_eta'+suffix] = df_mu[i].Filter("L1_UnprefireableEvent||((run>=361468)&L1_FirstBunchInTrain)").Histo1D(ROOT.RDF.TH1DModel('L1Mu22_OR_bxmin1_eta'+suffix, '', 100, -5, 5), 'probeL1Mu22Bxmin1_Eta') 
+
+            ###
+
+            histos['L1Mu10_bxplus1_etaphi'+suffix] = df_mu[i].Histo2D(ROOT.RDF.TH2DModel('L1Mu10_bxplus1_etaphi'+suffix, '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1Mu10Bxplus1_Eta', 'probeL1Mu10Bxplus1_Phi')
+            histos['L1Mu10_bx0_etaphi'+suffix] = df_mu[i].Histo2D(ROOT.RDF.TH2DModel('L1Mu10_bx0_etaphi'+suffix, '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1Mu10Bx0_Eta', 'probeL1Mu10Bx0_Phi')
+
+            histos['L1Mu10_bxplus1_eta'+suffix] = df_mu[i].Histo1D(ROOT.RDF.TH1DModel('L1Mu10_bxplus1_eta'+suffix, '', 100, -5, 5), 'probeL1Mu10Bxplus1_Eta')
+            histos['L1Mu10_bx0_eta'+suffix] = df_mu[i].Histo1D(ROOT.RDF.TH1DModel('L1Mu10_bx0_eta'+suffix, '', 100, -5, 5), 'probeL1Mu10Bx0_Eta') 
+
+            #
+
+            histos['L1Mu10_OR_bx0_etaphi'+suffix] = df_mu[i].Filter("L1_UnprefireableEvent||((run>=361468)&L1_FirstBunchInTrain)").Histo2D(ROOT.RDF.TH2DModel('L1Mu10_OR_bx0_etaphi'+suffix, '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1Mu10Bx0_Eta', 'probeL1Mu10Bx0_Phi')
+            histos['L1Mu10_OR_bx0_eta'+suffix] = df_mu[i].Filter("L1_UnprefireableEvent||((run>=361468)&L1_FirstBunchInTrain)").Histo1D(ROOT.RDF.TH1DModel('L1Mu10_OR_bx0_eta'+suffix, '', 100, -5, 5), 'probeL1Mu10Bx0_Eta') 
+
+            histos['L1Mu10_OR_bxmin1_etaphi'+suffix] = df_mu[i].Filter("L1_UnprefireableEvent||((run>=361468)&L1_FirstBunchInTrain)").Histo2D(ROOT.RDF.TH2DModel('L1Mu10_OR_bxmin1_etaphi'+suffix, '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1Mu10Bxmin1_Eta', 'probeL1Mu10Bxmin1_Phi')
+            histos['L1Mu10_OR_bxmin1_eta'+suffix] = df_mu[i].Filter("L1_UnprefireableEvent||((run>=361468)&L1_FirstBunchInTrain)").Histo1D(ROOT.RDF.TH1DModel('L1Mu10_OR_bxmin1_eta'+suffix, '', 100, -5, 5), 'probeL1Mu10Bxmin1_Eta') 
+
+
             '''
             #L1 prefiring measurement with unprefirable events
             
             #First find if there's a L1 mu in bx -1 and store its index
-            df_mu[i] = df_mu[i].Define('probe_idxL1jet_inbxmin1','FindL1ObjBxMin1Idx(L1Mu_eta, L1Mu_phi, probe_Eta, probe_Phi, L1Mu_hwQual, 12)')
-            df_mu[i] = df_mu[i].Define('probe_L1Pt_inbxmin1','GetVal(probe_idxL1jet, L1Mu_pt)')
+            df_mu[i] = df_mu[i].Define('probe_idxL1Mu_inbxmin1','FindL1MuBxMin1Idx(L1Mu_eta, L1Mu_phi, probe_Eta, probe_Phi, L1Mu_hwQual, 12)')
+            df_mu[i] = df_mu[i].Define('probe_L1Pt_inbxmin1','GetVal(probe_idxL1Mu, L1Mu_pt)')
             df_mu[i] = df_mu[i].Define('probeEta_L1Mu22_inbxmin1','probe_Eta[probe_Pt>30&&probe_L1Pt_inbxmin1>22]')
             df_mu[i] = df_mu[i].Define('probePhi_L1Mu22_inbxmin1','probe_Phi[probe_Pt>30&&probe_L1Pt_inbxmin1>22]')
 
@@ -592,9 +606,9 @@ def EtSum(df, suffix = ''):
 def AnalyzeCleanJets(df, JetRecoPtCut, L1JetPtCut, suffix = ''):    
     histos = {}
     #Find L1 jets matched to the offline jet
-    #df = df.Define('cleanJet_idxL1jet','FindL1ObjIdx(L1Jet_eta, L1Jet_phi, cleanJet_Eta, cleanJet_Phi)')
+    #df = df.Define('cleanJet_idxL1jet','FindL1JetIdx(L1Jet_eta, L1Jet_phi, cleanJet_Eta, cleanJet_Phi)')
     # only take jets in bx 0
-    df = df.Define('cleanJet_idxL1jet', 'FindL1ObjIdx_setBx(L1Jet_eta, L1Jet_phi, L1Jet_bx, cleanJet_Eta, cleanJet_Phi, 0)')
+    df = df.Define('cleanJet_idxL1jet', 'FindL1JetIdx_setBx(L1Jet_eta, L1Jet_phi, L1Jet_bx, cleanJet_Eta, cleanJet_Phi, 0)')
     df = df.Define('cleanJet_L1Pt','GetVal(cleanJet_idxL1jet,L1Jet_pt)')
     df = df.Define('cleanJet_L1Bx','GetVal(cleanJet_idxL1jet,L1Jet_bx)')
     df = df.Define('cleanJet_L1PtoverRecoPt','cleanJet_L1Pt/cleanJet_Pt')
