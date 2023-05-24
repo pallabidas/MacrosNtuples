@@ -18,6 +18,11 @@ filemujet_B=$PWD/$dir_B/all_MuonJet.root
 filegamjet_A=$PWD/$dir_A/all_PhotonJet.root
 filegamjet_B=$PWD/$dir_B/all_PhotonJet.root
 
+if [ dir_A == '2022RunGv1' ]
+then
+    filemujet_A=$PWD/others/2022RunGv1_PUPPI/all_MuonJet.root
+fi
+
 # set some labels
 muselection='#geq 1 tight #mu (p_{T} > 25 GeV), pass HLT_IsoMu24'
 photonselection='#geq 1 tight #gamma (p_{T} > 115 GeV, |#eta| < 1.479)'
