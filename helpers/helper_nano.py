@@ -367,10 +367,15 @@ def ZMuMu_Plots(df, suffix = ''):
 
     for i, qual in enumerate(config["Qualities"]):
 
-        df_mu[i] = df.Define('probe_idxL1Mu','FindL1MuIdx(L1Mu_eta, L1Mu_phi, probe_Eta, probe_Phi, L1Mu_hwQual, {})'.format(config["Qualities"][qual]))
-        df_mu[i] = df_mu[i].Define('probe_idxL1Mu_Bx0','FindL1MuIdx_setBx(L1Mu_eta, L1Mu_phi, L1Mu_bx, probe_Eta, probe_Phi, 0, L1Mu_hwQual, {})'.format(config["Qualities"][qual]))
-        df_mu[i] = df_mu[i].Define('probe_idxL1Mu_Bxmin1','FindL1MuIdx_setBx(L1Mu_eta, L1Mu_phi, L1Mu_bx, probe_Eta, probe_Phi, -1, L1Mu_hwQual, {})'.format(config["Qualities"][qual]))
-        df_mu[i] = df_mu[i].Define('probe_idxL1Mu_Bxplus1','FindL1MuIdx_setBx(L1Mu_eta, L1Mu_phi, L1Mu_bx, probe_Eta, probe_Phi, 1, L1Mu_hwQual, {})'.format(config["Qualities"][qual]))
+        #df_mu[i] = df.Define('probe_idxL1Mu','FindL1MuIdx(L1Mu_etaAtVtx, L1Mu_phiAtVtx, probe_Eta, probe_Phi, L1Mu_hwQual, {})'.format(config["Qualities"][qual]))
+        #df_mu[i] = df_mu[i].Define('probe_idxL1Mu_Bx0','FindL1MuIdx_setBx(L1Mu_etaAtVtx, L1Mu_phiAtVtx, L1Mu_bx, probe_Eta, probe_Phi, 0, L1Mu_hwQual, {})'.format(config["Qualities"][qual]))
+        #df_mu[i] = df_mu[i].Define('probe_idxL1Mu_Bxmin1','FindL1MuIdx_setBx(L1Mu_etaAtVtx, L1Mu_phiAtVtx, L1Mu_bx, probe_Eta, probe_Phi, -1, L1Mu_hwQual, {})'.format(config["Qualities"][qual]))
+        #df_mu[i] = df_mu[i].Define('probe_idxL1Mu_Bxplus1','FindL1MuIdx_setBx(L1Mu_etaAtVtx, L1Mu_phiAtVtx, L1Mu_bx, probe_Eta, probe_Phi, 1, L1Mu_hwQual, {})'.format(config["Qualities"][qual]))
+
+        df_mu[i] = df.Define('probe_idxL1Mu','FindL1MuIdx(L1Mu_eta, L1Mu_phi, probe_Eta, probe_Phi, probe_Pt, L1Mu_charge, L1Mu_hwQual, {})'.format(config["Qualities"][qual]))
+        df_mu[i] = df_mu[i].Define('probe_idxL1Mu_Bx0','FindL1MuIdx_setBx(L1Mu_eta, L1Mu_phi, L1Mu_bx, probe_Eta, probe_Phi, probe_Pt, L1Mu_charge, 0, L1Mu_hwQual, {})'.format(config["Qualities"][qual]))
+        df_mu[i] = df_mu[i].Define('probe_idxL1Mu_Bxmin1','FindL1MuIdx_setBx(L1Mu_eta, L1Mu_phi, L1Mu_bx, probe_Eta, probe_Phi, probe_Pt, L1Mu_charge, -1, L1Mu_hwQual, {})'.format(config["Qualities"][qual]))
+        df_mu[i] = df_mu[i].Define('probe_idxL1Mu_Bxplus1','FindL1MuIdx_setBx(L1Mu_eta, L1Mu_phi, L1Mu_bx, probe_Eta, probe_Phi, probe_Pt, L1Mu_charge, 1, L1Mu_hwQual, {})'.format(config["Qualities"][qual]))
             
         df_mu[i] = df_mu[i].Define('probe_L1Pt','GetVal(probe_idxL1Mu, L1Mu_pt)')
         df_mu[i] = df_mu[i].Define('probe_L1Bx','GetVal(probe_idxL1Mu, L1Mu_bx)')
