@@ -131,6 +131,45 @@ def main():
                                 plotname = 'L1EG{}_TurnOn{}_{}_vsPU'.format(thr, iso, r) ,
                                 )
 
+            if config['TurnOns']:
+
+                # Efficiency vs pT
+                # Comparison between isos
+                for thr in [15, 30]:
+                    drawplots.makeeff(
+                        inputFiles_list = [input_file],
+                        saveplot = True,
+                        dirname = args.dir + '/plotsL1Run3',
+                        nvtx_suffix = s,
+                        den = ['h_{}_plots_{}'.format(iso, eta_range) for iso in config['Isos']],
+                        num = ['h_{}_plots_{}_l1thrgeq{}'.format(iso, eta_range, thr) for iso in config['Isos']],
+                        xtitle = 'p_{T}^{#mu}(reco) (GeV)',
+                        ytitle = 'Efficiency',
+                        legendlabels = [iso for iso in config['Isos']],
+                        #axisranges = [3, 1000],
+                        extralabel = "#splitline{{Z#rightarrow#mu#mu, All qual.}}{{p_{{T}}^{{L1 #mu}} #geq {} GeV, {}}}".format(thr, eta_label[1:-1]),
+                        setlogx = True,
+                        top_label = toplabel,
+                        plotname = 'L1EG{}_TurnOn_{}_IsoComparison'.format(thr, r) ,
+                        )
+
+                    drawplots.makeeff(
+                        inputFiles_list = [input_file],
+                        saveplot = True,
+                        dirname = args.dir + '/plotsL1Run3',
+                        nvtx_suffix = s,
+                        den = ['h_{}_plots_{}'.format(iso, eta_range) for iso in config['Isos']],
+                        num = ['h_{}_plots_{}_l1thrgeq{}'.format(iso, eta_range, thr) for iso in config['Isos']],
+                        xtitle = 'p_{T}^{#mu}(reco) (GeV)',
+                        ytitle = 'Efficiency',
+                        legendlabels = [iso for iso in config['Isos']],
+                        axisranges = [5, 50],
+                        extralabel = "#splitline{{Z#rightarrow#mu#mu, All qual.}}{{p_{{T}}^{{L1 #mu}} #geq {} GeV, {}}}".format(thr, eta_label[1:-1]),
+                        #setlogx = True,
+                        top_label = toplabel,
+                        plotname = 'L1EG{}_TurnOn_{}_IsoComparison_Zoom'.format(thr, r) ,
+                        )
+
         if config['Efficiency']:
             # Efficiency vs Eta Phi
             drawplots.makeeff(
@@ -183,7 +222,7 @@ def main():
                 ytitle = '#phi^{e}(reco)',
                 ztitle = 'bx-1 / (bx0 or bx-1)',
                 legendlabels = [''],
-                extralabel = '#splitline{Z#rightarrowee}{15 #leq p_{T}^{e}(L1) < 26, L1 EG Non Iso}',
+                extralabel = '#splitline{Z#rightarrowee, all events}{15 #leq p_{T}^{e}(L1) < 26, L1 EG Non Iso}',
                 top_label = toplabel,
                 plotname = 'L1EG_PrefiringVsEtaPhi',
                 axisranges = [-2.5, 2.5, -3.1416, 3.1416, 0, 1.1],
@@ -219,9 +258,85 @@ def main():
                 xtitle = '#eta^{e}(reco)',
                 ytitle = 'bx-1 / (bx0 or bx-1)',
                 legendlabels = [''],
-                extralabel = '#splitline{Z#rightarrowee}{15 #leq p_{T}^{e}(L1) < 26, L1 EG Non Iso}',
+                extralabel = '#splitline{Z#rightarrowee, all events}{15 #leq p_{T}^{e}(L1) < 26, L1 EG Non Iso}',
                 top_label = toplabel,
                 plotname = 'L1EG_PrefiringVsEta',
+                axisranges = [-2.5, 2.5, 0, 0.1],
+                addnumtoden = True,
+                )
+
+            # for unprefirable EG30:
+
+            # Postfiring vs Eta Phi
+            drawplots.makeeff(
+                inputFiles_list = [input_file],
+                saveplot = True,
+                dirname = args.dir + '/plotsL1Run3',
+                nvtx_suffix = s,
+                num = ['L1EG30_bxplus1_etaphi'],
+                den = ['L1EG30_bx0_etaphi'],
+                xtitle = '#eta^{e}(reco)',
+                ytitle = '#phi^{e}(reco)',
+                ztitle = 'bx+1 / (bx0 or bx+1)',
+                legendlabels = [''],
+                extralabel = '#splitline{Z#rightarrowee}{15 #leq p_{T}^{e}(L1) < 26, L1 EG Non Iso}',
+                top_label = toplabel,
+                plotname = 'L1EG30_PostfiringVsEtaPhi',
+                axisranges = [-2.5, 2.5, -3.1416, 3.1416, 0, 1.1],
+                addnumtoden = True,
+                )
+
+            # Prefiring vs Eta Phi
+            drawplots.makeeff(
+                inputFiles_list = [input_file],
+                saveplot = True,
+                dirname = args.dir + '/plotsL1Run3',
+                nvtx_suffix = s,
+                num = ['L1EG30_OR_bxmin1_etaphi'],
+                den = ['L1EG30_OR_bx0_etaphi'],
+                xtitle = '#eta^{e}(reco)',
+                ytitle = '#phi^{e}(reco)',
+                ztitle = 'bx-1 / (bx0 or bx-1)',
+                legendlabels = [''],
+                extralabel = '#splitline{Z#rightarrowee, unprefireable events}{15 #leq p_{T}^{e}(L1) < 26, L1 EG Non Iso}',
+                top_label = toplabel,
+                plotname = 'L1EG30_PrefiringVsEtaPhi',
+                axisranges = [-2.5, 2.5, -3.1416, 3.1416, 0, 1.1],
+                addnumtoden = True,
+                )
+        
+            # Postfiring vs Eta 
+            drawplots.makeeff(
+                inputFiles_list = [input_file],
+                saveplot = True,
+                dirname = args.dir + '/plotsL1Run3',
+                nvtx_suffix = s,
+                num = ['L1EG30_bxplus1_eta'],
+                den = ['L1EG30_bx0_eta'],
+                xtitle = '#eta^{e}(reco)',
+                ytitle = 'bx+1 / (bx0 or bx+1)',
+                legendlabels = [''],
+                extralabel = '#splitline{Z#rightarrowee}{15 #leq p_{T}^{e}(L1) < 26, L1 EG Non Iso}',
+                top_label = toplabel,
+                plotname = 'L1EG30_PostfiringVsEta',
+                axisranges = [-2.5, 2.5, 0, 0.1],
+                addnumtoden = True,
+                )
+
+            # Prefiring vs Eta 
+            drawplots.makeeff(
+                inputFiles_list = [input_file],
+                saveplot = True,
+                dirname = args.dir + '/plotsL1Run3',
+                nvtx_suffix = s,
+                num = ['L1EG30_OR_bxmin1_eta'],
+                den = ['L1EG30_OR_bx0_eta'],
+                xtitle = '#eta^{e}(reco)',
+                ytitle = 'bx-1 / (bx0 or bx-1)',
+                legendlabels = [''],
+                extralabel = '#splitline{Z#rightarrowee, unprefireable events}{15 #leq p_{T}^{e}(L1) < 26, L1 EG Non Iso}',
+                top_label = toplabel,
+                plotname = 'L1EG30_PrefiringVsEta',
                 axisranges = [-2.5, 2.5, 0, 0.1],
                 addnumtoden = True,
                 )
