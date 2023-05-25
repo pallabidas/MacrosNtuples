@@ -342,13 +342,25 @@ def ZEE_Plots(df, suffix = ''):
         
         #if i ==0:
         if iso == 'EGNonIso' and config['Prefiring']:
-            df_eg[i] = df_eg[i].Define('probeL1EG15to26Bxmin1_Eta', 'probe_Eta[probe_Pt>12&&probe_Pt<23&&probe_L1Pt_Bxmin1>15&&probe_L1Pt_Bxmin1<=26&&probe_L1Bx==-1]')
-            df_eg[i] = df_eg[i].Define('probeL1EG15to26Bxmin1_Phi', 'probe_Phi[probe_Pt>12&&probe_Pt<23&&probe_L1Pt_Bxmin1>15&&probe_L1Pt_Bxmin1<=26&&probe_L1Bx==-1]')
-            df_eg[i] = df_eg[i].Define('probeL1EG15to26Bx0_Eta', 'probe_Eta[probe_Pt>12&&probe_Pt<23&&probe_L1Pt_Bx0>15&&probe_L1Pt_Bx0<=26&&probe_L1Bx==0]')
-            df_eg[i] = df_eg[i].Define('probeL1EG15to26Bx0_Phi', 'probe_Phi[probe_Pt>12&&probe_Pt<23&&probe_L1Pt_Bx0>15&&probe_L1Pt_Bx0<=26&&probe_L1Bx==0]')
-            df_eg[i] = df_eg[i].Define('probeL1EG15to26Bxplus1_Eta', 'probe_Eta[probe_Pt>12&&probe_Pt<23&&probe_L1Pt_Bxplus1>15&&probe_L1Pt_Bxplus1<=26&&probe_L1Bx==1]')
-            df_eg[i] = df_eg[i].Define('probeL1EG15to26Bxplus1_Phi', 'probe_Phi[probe_Pt>12&&probe_Pt<23&&probe_L1Pt_Bxplus1>15&&probe_L1Pt_Bxplus1<=26&&probe_L1Bx==1]')
+            filter_15to26 = 'probe_Pt>12&&probe_Pt<23&&probe_L1Pt>15&&probe_L1Pt<=26'
+            df_eg[i] = df_eg[i].Define('probeL1EG15to26Bxmin1_Eta', 'probe_Eta[{}&&probe_L1Pt_Bxmin1>15&&probe_L1Pt_Bxmin1<=26]'.format(filter_15to26))
+            df_eg[i] = df_eg[i].Define('probeL1EG15to26Bxmin1_Phi', 'probe_Phi[{}&&probe_L1Pt_Bxmin1>15&&probe_L1Pt_Bxmin1<=26]'.format(filter_15to26))
+            df_eg[i] = df_eg[i].Define('probeL1EG15to26Bx0_Eta', 'probe_Eta[{}&&probe_L1Pt_Bx0>15&&probe_L1Pt_Bx0<=26]'.format(filter_15to26))
+            df_eg[i] = df_eg[i].Define('probeL1EG15to26Bx0_Phi', 'probe_Phi[{}&&probe_L1Pt_Bx0>15&&probe_L1Pt_Bx0<=26]'.format(filter_15to26))
+            df_eg[i] = df_eg[i].Define('probeL1EG15to26Bxplus1_Eta', 'probe_Eta[{}&&probe_L1Pt_Bxplus1>15&&probe_L1Pt_Bxplus1<=26]'.format(filter_15to26))
+            df_eg[i] = df_eg[i].Define('probeL1EG15to26Bxplus1_Phi', 'probe_Phi[{}&&probe_L1Pt_Bxplus1>15&&probe_L1Pt_Bxplus1<=26]'.format(filter_15to26))
             
+            ###
+
+            filter_30 = 'probe_Pt>25&&probe_L1Pt>30'
+            df_eg[i] = df_eg[i].Define('probeL1EG30Bxmin1_Eta', 'probe_Eta[{}&&probe_L1Pt_Bxmin1>30]'.format(filter_30))
+            df_eg[i] = df_eg[i].Define('probeL1EG30Bxmin1_Phi', 'probe_Phi[{}&&probe_L1Pt_Bxmin1>30]'.format(filter_30))
+            df_eg[i] = df_eg[i].Define('probeL1EG30Bx0_Eta', 'probe_Eta[{}&&probe_L1Pt_Bx0>30]'.format(filter_30))
+            df_eg[i] = df_eg[i].Define('probeL1EG30Bx0_Phi', 'probe_Phi[{}&&probe_L1Pt_Bx0>30]'.format(filter_30))
+            df_eg[i] = df_eg[i].Define('probeL1EG30Bxplus1_Eta', 'probe_Eta[{}&&probe_L1Pt_Bxplus1>30]'.format(filter_30))
+            df_eg[i] = df_eg[i].Define('probeL1EG30Bxplus1_Phi', 'probe_Phi[{}&&probe_L1Pt_Bxplus1>30]'.format(filter_30))
+            
+            ###
             
             histos['L1EG15to26_bxmin1_etaphi'+suffix] = df_eg[i].Histo2D(ROOT.RDF.TH2DModel('L1EG15to26_bxmin1_etaphi'+suffix, '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1EG15to26Bxmin1_Eta', 'probeL1EG15to26Bxmin1_Phi')
             histos['L1EG15to26_bx0_etaphi'+suffix] = df_eg[i].Histo2D(ROOT.RDF.TH2DModel('L1EG15to26_bx0_etaphi'+suffix, '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1EG15to26Bx0_Eta', 'probeL1EG15to26Bx0_Phi')
@@ -357,6 +369,24 @@ def ZEE_Plots(df, suffix = ''):
             histos['L1EG15to26_bxmin1_eta'+suffix] = df_eg[i].Histo1D(ROOT.RDF.TH1DModel('L1EG15to26_bxmin1_eta'+suffix, '', 100, -5, 5), 'probeL1EG15to26Bxmin1_Eta')
             histos['L1EG15to26_bx0_eta'+suffix] = df_eg[i].Histo1D(ROOT.RDF.TH1DModel('L1EG15to26_bx0_eta'+suffix, '', 100, -5, 5), 'probeL1EG15to26Bx0_Eta')
             histos['L1EG15to26_bxplus1_eta'+suffix] = df_eg[i].Histo1D(ROOT.RDF.TH1DModel('L1EG15to26_bxplus1_eta'+suffix, '', 100, -5, 5), 'probeL1EG15to26Bxplus1_Eta')
+
+            ###
+
+            histos['L1EG30_bxmin1_etaphi'+suffix] = df_eg[i].Histo2D(ROOT.RDF.TH2DModel('L1EG30_bxmin1_etaphi'+suffix, '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1EG30Bxmin1_Eta', 'probeL1EG30Bxmin1_Phi')
+            histos['L1EG30_bx0_etaphi'+suffix] = df_eg[i].Histo2D(ROOT.RDF.TH2DModel('L1EG30_bx0_etaphi'+suffix, '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1EG30Bx0_Eta', 'probeL1EG30Bx0_Phi')
+            histos['L1EG30_bxplus1_etaphi'+suffix] = df_eg[i].Histo2D(ROOT.RDF.TH2DModel('L1EG30_bxplus1_etaphi'+suffix, '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1EG30Bxplus1_Eta', 'probeL1EG30Bxplus1_Phi')
+
+            histos['L1EG30_bxmin1_eta'+suffix] = df_eg[i].Histo1D(ROOT.RDF.TH1DModel('L1EG30_bxmin1_eta'+suffix, '', 100, -5, 5), 'probeL1EG30Bxmin1_Eta')
+            histos['L1EG30_bx0_eta'+suffix] = df_eg[i].Histo1D(ROOT.RDF.TH1DModel('L1EG30_bx0_eta'+suffix, '', 100, -5, 5), 'probeL1EG30Bx0_Eta')
+            histos['L1EG30_bxplus1_eta'+suffix] = df_eg[i].Histo1D(ROOT.RDF.TH1DModel('L1EG30_bxplus1_eta'+suffix, '', 100, -5, 5), 'probeL1EG30Bxplus1_Eta')
+
+            #
+
+            histos['L1EG30_OR_bxmin1_etaphi'+suffix] = df_eg[i].Filter("L1_UnprefireableEvent||((run>=361468)&L1_FirstBunchInTrain)").Histo2D(ROOT.RDF.TH2DModel('L1EG30_OR_bxmin1_etaphi'+suffix, '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1EG30Bxmin1_Eta', 'probeL1EG30Bxmin1_Phi')
+            histos['L1EG30_OR_bx0_etaphi'+suffix] = df_eg[i].Filter("L1_UnprefireableEvent||((run>=361468)&L1_FirstBunchInTrain)").Histo2D(ROOT.RDF.TH2DModel('L1EG30_OR_bx0_etaphi'+suffix, '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1EG30Bx0_Eta', 'probeL1EG30Bx0_Phi')
+
+            histos['L1EG30_OR_bxmin1_eta'+suffix] = df_eg[i].Filter("L1_UnprefireableEvent||((run>=361468)&L1_FirstBunchInTrain)").Histo1D(ROOT.RDF.TH1DModel('L1EG30_OR_bxmin1_eta'+suffix, '', 100, -5, 5), 'probeL1EG30Bxmin1_Eta')
+            histos['L1EG30_OR_bx0_eta'+suffix] = df_eg[i].Filter("L1_UnprefireableEvent||((run>=361468)&L1_FirstBunchInTrain)").Histo1D(ROOT.RDF.TH1DModel('L1EG30_OR_bx0_eta'+suffix, '', 100, -5, 5), 'probeL1EG30Bx0_Eta')
 
     return df, histos
     
