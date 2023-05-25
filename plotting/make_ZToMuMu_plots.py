@@ -68,7 +68,7 @@ def main():
 
             for qual in config['Qualities']:
                 if config['TurnOns']:
-                    
+
                     # Efficiency vs pT
                     # all eta ranges and all qualities
                     drawplots.makeeff(
@@ -81,7 +81,7 @@ def main():
                         xtitle = 'p_{T}^{#mu}(reco) (GeV)',
                         ytitle = 'Efficiency',
                         legendlabels = ['p_{{T}}^{{L1 #mu}} #geq {} GeV'.format(thr) for thr in config['Thresholds']],
-                        axisranges = [3, 300],
+                        axisranges = [3, 1000],
                         extralabel = "#splitline{{Z#rightarrow#mu#mu, {}}}{}".format(label(qual), eta_label),
                         setlogx = True,
                         top_label = toplabel,
@@ -119,7 +119,7 @@ def main():
                                 xtitle = 'p_{T}^{#mu}(reco) (GeV)',
                                 ytitle = 'Efficiency',
                                 legendlabels = ['{} #leq nvtx < {}'.format(bins[i], bins[i+1]) for i in range(len(bins)-1)],
-                                axisranges = [3, 300],
+                                axisranges = [3, 1000],
                                 extralabel = "#splitline{{Z#rightarrow#mu#mu, {}}}{}".format(label(qual), eta_label),
                                 setlogx = True,
                                 top_label = toplabel,
@@ -376,6 +376,48 @@ def main():
                 axisranges = [355374, 362760, 0.9, 1.5],
                 )
 
+        if config['TurnOns'] and 'Qual12' in config['Qualities']:
+
+            regions = config['Regions'].values()
+            eta_ranges = ["eta{}to{}".format(region[0], region[1]).replace(".","p") for region in regions]
+            eta_labels = ['{} #leq | #eta| < {}'.format(region[0], region[1]) for region in regions]
+
+            # Efficiency vs pT
+            # Comparison between track finders
+            for thr in [5, 22]:
+                drawplots.makeeff(
+                    inputFiles_list = [input_file],
+                    saveplot = True,
+                    dirname = args.dir + '/plotsL1Run3',
+                    nvtx_suffix = s,
+                    den = ['h_Qual12_plots_{}'.format(eta_range) for eta_range in eta_ranges],
+                    num = ['h_Qual12_plots_{}_l1thrgeq{}'.format(eta_range, thr) for eta_range in eta_ranges],
+                    xtitle = 'p_{T}^{#mu}(reco) (GeV)',
+                    ytitle = 'Efficiency',
+                    legendlabels = eta_labels,
+                    axisranges = [3, 1000],
+                    extralabel = "#splitline{{Z#rightarrow#mu#mu, All qual.}}{{p_{{T}}^{{L1 #mu}} #geq {} GeV}}".format(thr),
+                    setlogx = True,
+                    top_label = toplabel,
+                    plotname = 'L1Mu{}_TurnOnQual12_EtaComparison'.format(thr) ,
+                    )
+
+                drawplots.makeeff(
+                    inputFiles_list = [input_file],
+                    saveplot = True,
+                    dirname = args.dir + '/plotsL1Run3',
+                    nvtx_suffix = s,
+                    den = ['h_Qual12_plots_{}'.format(eta_range) for eta_range in eta_ranges],
+                    num = ['h_Qual12_plots_{}_l1thrgeq{}'.format(eta_range, thr) for eta_range in eta_ranges],
+                    xtitle = 'p_{T}^{#mu}(reco) (GeV)',
+                    ytitle = 'Efficiency',
+                    legendlabels = eta_labels,
+                    axisranges = [3, 50],
+                    extralabel = "#splitline{{Z#rightarrow#mu#mu, All qual.}}{{p_{{T}}^{{L1 #mu}} #geq {} GeV}}".format(thr),
+                    #setlogx = True,
+                    top_label = toplabel,
+                    plotname = 'L1Mu{}_TurnOnQual12_EtaComparison_Zoom'.format(thr) ,
+                    )
 
 def label(qual):
     labels = {
