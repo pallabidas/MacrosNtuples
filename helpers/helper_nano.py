@@ -681,12 +681,34 @@ def AnalyzeCleanJets(df, JetRecoPtCut, L1JetPtCut, suffix = ''):
     
 
     if config['Prefiring']:
-        df = df.Define('probeL1Jet100to150Bxmin1_Eta','cleanJet_Eta[cleanJet_Pt>90&&cleanJet_Pt<160&&cleanJet_L1Pt>100&&cleanJet_L1Pt<=150&&cleanJet_L1Bx==-1]')
-        df = df.Define('probeL1Jet100to150Bxmin1_Phi','cleanJet_Phi[cleanJet_Pt>90&&cleanJet_Pt<160&&cleanJet_L1Pt>100&&cleanJet_L1Pt<=150&&cleanJet_L1Bx==-1]')
-        df = df.Define('probeL1Jet100to150Bx0_Eta','cleanJet_Eta[cleanJet_Pt>90&&cleanJet_Pt<160&&cleanJet_L1Pt>100&&cleanJet_L1Pt<=150&&cleanJet_L1Bx==0]')
-        df = df.Define('probeL1Jet100to150Bx0_Phi','cleanJet_Phi[cleanJet_Pt>90&&cleanJet_Pt<160&&cleanJet_L1Pt>100&&cleanJet_L1Pt<=150&&cleanJet_L1Bx==0]')
-        df = df.Define('probeL1Jet100to150Bxplus1_Eta','cleanJet_Eta[cleanJet_Pt>90&&cleanJet_Pt<160&&cleanJet_L1Pt>100&&cleanJet_L1Pt<=150&&cleanJet_L1Bx==1]')
-        df = df.Define('probeL1Jet100to150Bxplus1_Phi','cleanJet_Phi[cleanJet_Pt>90&&cleanJet_Pt<160&&cleanJet_L1Pt>100&&cleanJet_L1Pt<=150&&cleanJet_L1Bx==1]')
+
+        df = df.Define('cleanJet_idxL1jet_allBx', 'FindL1JetIdx(L1Jet_eta, L1Jet_phi, cleanJet_Eta, cleanJet_Phi)')
+        df = df.Define('cleanJet_L1Pt_allBx','GetVal(cleanJet_idxL1jet_allBx, L1Jet_pt)')
+
+        df = df.Define('cleanJet_idxL1jet_Bxmin1', 'FindL1JetIdx_setBx(L1Jet_eta, L1Jet_phi, L1Jet_bx, cleanJet_Eta, cleanJet_Phi, -1)')
+        df = df.Define('cleanJet_L1Pt_Bxmin1','GetVal(cleanJet_idxL1jet_Bxmin1, L1Jet_pt)')
+
+        df = df.Define('cleanJet_idxL1jet_Bxplus1', 'FindL1JetIdx_setBx(L1Jet_eta, L1Jet_phi, L1Jet_bx, cleanJet_Eta, cleanJet_Phi, 1)')
+        df = df.Define('cleanJet_L1Pt_Bxplus1','GetVal(cleanJet_idxL1jet_Bxplus1, L1Jet_pt)')
+
+        #
+
+        #df = df.Define('probeL1Jet100to150Bxmin1_Eta','cleanJet_Eta[cleanJet_Pt>90&&cleanJet_Pt<160&&cleanJet_L1Pt>100&&cleanJet_L1Pt<=150&&cleanJet_L1Bx==-1]')
+        #df = df.Define('probeL1Jet100to150Bxmin1_Phi','cleanJet_Phi[cleanJet_Pt>90&&cleanJet_Pt<160&&cleanJet_L1Pt>100&&cleanJet_L1Pt<=150&&cleanJet_L1Bx==-1]')
+        #df = df.Define('probeL1Jet100to150Bx0_Eta','cleanJet_Eta[cleanJet_Pt>90&&cleanJet_Pt<160&&cleanJet_L1Pt>100&&cleanJet_L1Pt<=150&&cleanJet_L1Bx==0]')
+        #df = df.Define('probeL1Jet100to150Bx0_Phi','cleanJet_Phi[cleanJet_Pt>90&&cleanJet_Pt<160&&cleanJet_L1Pt>100&&cleanJet_L1Pt<=150&&cleanJet_L1Bx==0]')
+        #df = df.Define('probeL1Jet100to150Bxplus1_Eta','cleanJet_Eta[cleanJet_Pt>90&&cleanJet_Pt<160&&cleanJet_L1Pt>100&&cleanJet_L1Pt<=150&&cleanJet_L1Bx==1]')
+        #df = df.Define('probeL1Jet100to150Bxplus1_Phi','cleanJet_Phi[cleanJet_Pt>90&&cleanJet_Pt<160&&cleanJet_L1Pt>100&&cleanJet_L1Pt<=150&&cleanJet_L1Bx==1]')
+
+        filter_100to150 = 'cleanJet_Pt>90&&cleanJet_Pt<160&&cleanJet_L1Pt_allBx>100&&cleanJet_L1Pt_allBx<=150'
+        df = df.Define('probeL1Jet100to150Bxmin1_Eta','cleanJet_Eta[{}&&cleanJet_L1Pt_Bxmin1>100&&cleanJet_L1Pt_Bxmin1<=150]'.format(filter_100to150))
+        df = df.Define('probeL1Jet100to150Bxmin1_Phi','cleanJet_Phi[{}&&cleanJet_L1Pt_Bxmin1>100&&cleanJet_L1Pt_Bxmin1<=150]'.format(filter_100to150))
+        df = df.Define('probeL1Jet100to150Bx0_Eta','cleanJet_Eta[{}&&cleanJet_L1Pt>100&&cleanJet_L1Pt<=150]'.format(filter_100to150))
+        df = df.Define('probeL1Jet100to150Bx0_Phi','cleanJet_Phi[{}&&cleanJet_L1Pt>100&&cleanJet_L1Pt<=150]'.format(filter_100to150))
+        df = df.Define('probeL1Jet100to150Bxplus1_Eta','cleanJet_Eta[{}&&cleanJet_L1Pt_Bxplus1>100&&cleanJet_L1Pt_Bxplus1<=150]'.format(filter_100to150))
+        df = df.Define('probeL1Jet100to150Bxplus1_Phi','cleanJet_Phi[{}&&cleanJet_L1Pt_Bxplus1>100&&cleanJet_L1Pt_Bxplus1<=150]'.format(filter_100to150))
+
+
 
         histos['L1Jet100to150_bxmin1_etaphi'+suffix] = df.Histo2D(ROOT.RDF.TH2DModel('L1Jet100to150_bxmin1_etaphi'+suffix, '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1Jet100to150Bxmin1_Eta', 'probeL1Jet100to150Bxmin1_Phi')
         histos['L1Jet100to150_bx0_etaphi'+suffix] = df.Histo2D(ROOT.RDF.TH2DModel('L1Jet100to150_bx0_etaphi'+suffix, '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1Jet100to150Bx0_Eta', 'probeL1Jet100to150Bx0_Phi')
