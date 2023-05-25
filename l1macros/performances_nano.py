@@ -43,13 +43,17 @@ def main():
     inputFile = args.inputFile
     if inputFile == '':
         if args.channel == 'PhotonJet':
-            inputFile = '/user/lathomas/Public/L1Studies/PhotonJet.root'
+            #inputFile = '/user/lathomas/Public/L1Studies/PhotonJet.root'
+            inputFile = '/pnfs/iihe/cms/ph/sc4/store/data/Run2023C/EGamma0/NANOAOD/PromptNanoAODv11p9_v1-v1/70000/3b1e99a5-71a0-46ee-b720-b79669f60029.root'
         elif args.channel == 'MuonJet':
-            inputFile = '/user/lathomas/Public/L1Studies/MuJet.root'
+            #inputFile = '/user/lathomas/Public/L1Studies/MuJet.root'
+            inputFile = '/pnfs/iihe/cms/ph/sc4/store/data/Run2023C/Muon1/NANOAOD/PromptNanoAODv11p9_v1-v1/60000/37c190ac-242c-47d7-a98f-9c51b111ff00.root'
         elif args.channel == 'ZToMuMu':
-            inputFile = '/user/lathomas/Public/L1Studies/ZToMuMu.root'
+            #inputFile = '/user/lathomas/Public/L1Studies/ZToMuMu.root'
+            inputFile = '/pnfs/iihe/cms/ph/sc4/store/data/Run2023C/Muon1/NANOAOD/PromptNanoAODv11p9_v1-v1/60000/37c190ac-242c-47d7-a98f-9c51b111ff00.root'
         elif args.channel == 'ZToEE':
-            inputFile = '/user/lathomas/Public/L1Studies/ZToEE.root'
+            #inputFile = '/user/lathomas/Public/L1Studies/ZToEE.root'
+            inputFile = '/pnfs/iihe/cms/ph/sc4/store/data/Run2023C/EGamma0/NANOAOD/PromptNanoAODv11p9_v1-v1/70000/3b1e99a5-71a0-46ee-b720-b79669f60029.root'
 
     ### Set default config file
     config_file = args.config
