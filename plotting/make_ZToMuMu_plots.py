@@ -177,7 +177,7 @@ def main():
                 ytitle = '#phi^{#mu}(reco)',
                 ztitle = 'bx-1 / (bx0 or bx-1)',
                 legendlabels = [''],
-                extralabel = '#splitline{Z#rightarrow#mu#mu}{10 #leq p_{T}^{#mu}(L1) < 21, L1 Qual. #geq 12}',
+                extralabel = '#splitline{Z#rightarrow#mu#mu, all events}{10 #leq p_{T}^{#mu}(L1) < 21, L1 Qual. #geq 12}',
                 top_label = toplabel,
                 plotname = 'L1Mu_PrefiringVsEtaPhi',
                 axisranges = [-2.4, 2.4, -3.1416, 3.1416, 0, 1.1],
@@ -213,14 +213,14 @@ def main():
                 xtitle = '#eta^{#mu}(reco)',
                 ytitle = 'bx-1 / (bx0 or bx-1)',
                 legendlabels = [''],
-                extralabel = '#splitline{Z#rightarrow#mu#mu}{10 #leq p_{T}^{#mu}(L1) < 21, L1 Qual. #geq 12}',
+                extralabel = '#splitline{Z#rightarrow#mu#mu, all events}{10 #leq p_{T}^{#mu}(L1) < 21, L1 Qual. #geq 12}',
                 top_label = toplabel,
                 plotname = 'L1Mu_PrefiringVsEta',
                 axisranges = [-2.4, 2.4, 0, 0.1],
                 addnumtoden = True,
                 )
             
-            # Same thing, for Mu 22
+            # Same thing, for Mu 10 and 22
             # Postfiring vs Eta Phi
             for pt_thr in ['10', '22']:
                 drawplots.makeeff(
@@ -254,7 +254,7 @@ def main():
                     ytitle = '#phi^{#mu}(reco)',
                     ztitle = 'bx-1 / (bx0 or bx-1)',
                     legendlabels = [''],
-                    extralabel = '#splitline{Z#rightarrow#mu#mu}{p_{T}^{#mu}(L1) > ' + pt_thr + ', L1 Qual. #geq 12}',
+                    extralabel = '#splitline{Z#rightarrow#mu#mu, unprefirable events}{p_{T}^{#mu}(L1) > ' + pt_thr + ', L1 Qual. #geq 12}',
                     top_label = toplabel,
                     plotname = 'L1Mu{}_PrefiringVsEtaPhi'.format(pt_thr),
                     axisranges = [-2.4, 2.4, -3.1416, 3.1416, 0, 1.1],
@@ -291,12 +291,51 @@ def main():
                     xtitle = '#eta^{#mu}(reco)',
                     ytitle = 'bx-1 / (bx0 or bx-1)',
                     legendlabels = [''],
-                    extralabel = '#splitline{Z#rightarrow#mu#mu}{p_{T}^{#mu}(L1) > ' + pt_thr + ', L1 Qual. #geq 12}',
+                    extralabel = '#splitline{Z#rightarrow#mu#mu, unprefirable events}{p_{T}^{#mu}(L1) > ' + pt_thr + ', L1 Qual. #geq 12}',
                     top_label = toplabel,
                     plotname = 'L1Mu{}_PrefiringVsEta'.format(pt_thr),
                     axisranges = [-2.4, 2.4, 0, 0.1],
                     addnumtoden = True,
                     )
+
+                drawplots.makeeff(
+                    inputFiles_list = [input_file],
+                    saveplot = True,
+                    dirname = args.dir + '/plotsL1Run3',
+                    nvtx_suffix = s,
+                    num = ['L1Mu{}_bx0_etaphi'.format(pt_thr)],
+                    den = ['L1Mu{}_all_etaphi'.format(pt_thr)],
+                    xtitle = '#eta^{#mu}(reco)',
+                    ytitle = '#phi^{#mu}(reco)',
+                    ztitle = 'bx0 / all bx',
+                    legendlabels = [''],
+                    extralabel = '#splitline{Z#rightarrow#mu#mu, all events}{p_{T}^{#mu}(L1) > ' + pt_thr + ', L1 Qual. #geq 12}',
+                    top_label = toplabel,
+                    plotname = 'L1Mu{}_OccupancyVsEtaPhi'.format(pt_thr),
+                    axisranges = [-2.4, 2.4, -3.1416, 3.1416, 0, 1.1],
+                    #addnumtoden = True,
+                    )
+
+            # Occupancy vs Eta Phi
+            drawplots.makeeff(
+                inputFiles_list = [input_file],
+                saveplot = True,
+                dirname = args.dir + '/plotsL1Run3',
+                nvtx_suffix = s,
+                num = ['L1Mu10to21_bx0_etaphi'],
+                den = ['L1Mu10to21_all_etaphi'],
+                xtitle = '#eta^{#mu}(reco)',
+                ytitle = '#phi^{#mu}(reco)',
+                ztitle = 'bx0 / all bx',
+                legendlabels = [''],
+                extralabel = '#splitline{Z#rightarrow#mu#mu, all events}{10 #leq p_{T}^{#mu}(L1) < 21, L1 Qual. #geq 12}',
+                top_label = toplabel,
+                plotname = 'L1Mu10to21_OccupancyVsEtaPhi',
+                axisranges = [-2.4, 2.4, -3.1416, 3.1416, 0, 1.1],
+                #addnumtoden = True,
+                )
+
+
 
 
         if config['Response'] and 'AllQual' in config['Qualities']:
