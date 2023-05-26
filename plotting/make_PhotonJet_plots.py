@@ -205,7 +205,7 @@ def main():
                 extralabel = '#splitline{#geq 1 tight #mu (p_{T} > 25 GeV), pass HLT_IsoMu24}{p_{T}^{jet} > 30 GeV}',
                 top_label = toplabel,
                 plotname = 'L1Jet_FromEGamma_PostfiringVsEtaPhi',
-                axisranges = [-5, 5, -3.1416, 3.1416, 0, 0.1],
+                axisranges = [-5, 5, -3.1416, 3.1416, 0, 1.1],
                 addnumtoden = True,
                 )
 
@@ -224,7 +224,7 @@ def main():
                 extralabel = '#splitline{#geq 1 tight #mu (p_{T} > 25 GeV), pass HLT_IsoMu24}{p_{T}^{jet} > 30 GeV}',
                 top_label = toplabel,
                 plotname = 'L1Jet_FromEGamma_PrefiringVsEtaPhi',
-                axisranges = [-5, 5, -3.1416, 3.1416, 0, 0.1],
+                axisranges = [-5, 5, -3.1416, 3.1416, 0, 1.1],
                 addnumtoden = True,
                 )
 
@@ -323,35 +323,37 @@ def main():
 
         # Pt Balance plots
 
-        drawplots.makeprof(
-            inputFiles_list = [input_file],
-            saveplot = True,
-            dirname = args.dir + '/plotsL1Run3',
-            nvtx_suffix = s,
-            h2d = ['h_L1PtBalanceVsRunNb_{}'.format(eta_range) for eta_range in eta_ranges],
-            xtitle = 'run number',
-            ytitle = '(p_{T}^{L1 jet}/p_{T}^{reco #gamma})',
-            extralabel = "#splitline{$selection_label, PFMET<50 GeV}{p_{T}^{jet} > 30 GeV, #Delta#phi(#gamma, jet) > 2.9}",
-            legendlabels = eta_labels,
-            top_label = toplabel,
-            axisranges = [320673, 325173, 0, 1.5],
-            plotname = 'L1Jet_FromEGamma_PtBalancevsRun',
-            )
+        if config['PtBalance']:
 
-        drawplots.makeprof(
-            inputFiles_list = [input_file],
-            saveplot = True,
-            dirname = args.dir + '/plotsL1Run3',
-            nvtx_suffix = s,
-            h2d = ['h_L1PtBalanceVsRunNb_singlejet_{}'.format(eta_range) for eta_range in eta_ranges],
-            xtitle = 'run number',
-            ytitle = '(p_{T}^{L1 jet}/p_{T}^{reco #gamma})',
-            extralabel = "#splitline{$selection_label, PFMET<50 GeV}{= 1 clean jet, p_{T}^{jet} > 30 GeV, #Delta#phi(#gamma, jet) > 2.9}",
-            legendlabels = eta_labels,
-            top_label = toplabel,
-            axisranges = [320673, 325173, 0, 1.5],
-            plotname = 'L1Jet_FromEGamma_PtBalancevsRun_singlejet',
-            )
+            drawplots.makeprof(
+                inputFiles_list = [input_file],
+                saveplot = True,
+                dirname = args.dir + '/plotsL1Run3',
+                nvtx_suffix = s,
+                h2d = ['h_L1PtBalanceVsRunNb_{}'.format(eta_range) for eta_range in eta_ranges],
+                xtitle = 'run number',
+                ytitle = '(p_{T}^{L1 jet}/p_{T}^{reco #gamma})',
+                extralabel = "#splitline{$selection_label, PFMET<50 GeV}{p_{T}^{jet} > 30 GeV, #Delta#phi(#gamma, jet) > 2.9}",
+                legendlabels = eta_labels,
+                top_label = toplabel,
+                axisranges = [320673, 325173, 0, 1.5],
+                plotname = 'L1Jet_FromEGamma_PtBalancevsRun',
+                )
+
+            drawplots.makeprof(
+                inputFiles_list = [input_file],
+                saveplot = True,
+                dirname = args.dir + '/plotsL1Run3',
+                nvtx_suffix = s,
+                h2d = ['h_L1PtBalanceVsRunNb_singlejet_{}'.format(eta_range) for eta_range in eta_ranges],
+                xtitle = 'run number',
+                ytitle = '(p_{T}^{L1 jet}/p_{T}^{reco #gamma})',
+                extralabel = "#splitline{$selection_label, PFMET<50 GeV}{= 1 clean jet, p_{T}^{jet} > 30 GeV, #Delta#phi(#gamma, jet) > 2.9}",
+                legendlabels = eta_labels,
+                top_label = toplabel,
+                axisranges = [320673, 325173, 0, 1.5],
+                plotname = 'L1Jet_FromEGamma_PtBalancevsRun_singlejet',
+                )
 
 if __name__ == '__main__':
     main()
