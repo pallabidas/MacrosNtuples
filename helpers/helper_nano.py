@@ -1,5 +1,6 @@
 import ROOT
 import yaml
+import json
 from array import array
 from math import floor, ceil
 
@@ -27,6 +28,22 @@ def set_config(stream):
         config = yaml.safe_load(stream)
     else:
         print("config_dict is already set")
+
+def make_filter(golden_json):
+    fltr = ''
+    if golden_json != '':
+        with open(golden_json) as j:
+            J = json.load(j)
+        for run_nb in J:
+            fltr += '(run=={}&&('.format(run_nb)
+            for lumis in J[run_nb]:
+                fltr += '(luminosityBlock>={}&&luminosityBlock<={})||'.format(lumis[0], lumis[1])
+            fltr = fltr[:-2] + '))||'
+
+        fltr = fltr[:-2]
+    return(fltr)
+
+
 
 #String printing stuff for a few events
 stringToPrint = '''
