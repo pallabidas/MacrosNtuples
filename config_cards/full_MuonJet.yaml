@@ -26,6 +26,10 @@ Response: true
 Prefiring: true
 # Efficiency vs Run Nb and vs Eta Phi
 Efficiency: true
+# MET plots
+MET_plots: true
+# HF noise
+HF_noise: true
 ### Settings for the plots in bins of nvtx
 PU_plots:
     # Whether or not to compute the histograms for each bin of nvtx.
@@ -52,6 +56,5 @@ PU_plots:
 #Efficiency: false
 #Prefiring: false
 #Response: false
-#
-# There are currently no fields regarding MET histograms/plots
-# Nor for HFNoise 
+#MET_plots: false
+#HF_noise: false
