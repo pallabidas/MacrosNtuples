@@ -104,7 +104,7 @@ if(EventsToPrint <100) {
 
 cout << "*********New Event********"<<endl;
 cout << "run " << run<<endl;
-cout << "met, met_phi " << MET_pt <<", "<<MET_phi<<endl;
+cout << "met, met_phi " << PuppiMET_pt <<", "<<PuppiMET_phi<<endl;
 for(unsigned int i = 0;i< (_lPt).size();i++ ){
 cout << "Lepton Pt, Eta, Phi: " << (_lPt)[i]<<", "<<(_lEta)[i]<<", "<<(_lPhi)[i]<<endl;
 cout << "Lepton pdgId: " << (_lpdgId)[i]<<endl;
@@ -146,7 +146,7 @@ def SinglePhotonSelection(df):
     Select events with exactly one photon with pT>20 GeV.
     The event must pass a photon trigger. 
     '''
-#    df = df.Filter('MET_pt<50')
+#    df = df.Filter('PuppiMET_pt<50')
     df = df.Filter('HLT_Photon110EB_TightID_TightIso')
 
     df = df.Define('photonsptgt20','Photon_pt>20')
@@ -269,7 +269,7 @@ def makehistosforturnons_inprobeetaranges(df, histos, etavarname, phivarname, pt
         str_bineta = "eta{}to{}".format(region[0], region[1]).replace(".","p")
         #Define columns corresponding to pt and response for the selected eta range 
         df_etarange = df.Define('inEtaRange','abs({})>={}'.format(etavarname, region[0])+'&&abs({})<{}'.format(etavarname, region[1]))
-        df_etarange = df_etarange.Filter('MET_pt<100')
+        df_etarange = df_etarange.Filter('PuppiMET_pt<100')
         df_etarange = df_etarange.Define('denominator_pt',ptvarname+'[inEtaRange]')
         df_etarange = df_etarange.Define('response',responsevarname+'[inEtaRange]')
         df_etarange = df_etarange.Define('runnb',"return ROOT::VecOps::RVec<int>(response.size(), run);")
@@ -594,8 +594,8 @@ def EtSum(df, suffix = ''):
 
     df = df.Define('muons_px','Sum(_lPt[abs(_lpdgId)==13]*cos(_lPhi[abs(_lpdgId)==13]))')
     df = df.Define('muons_py','Sum(_lPt[abs(_lpdgId)==13]*sin(_lPhi[abs(_lpdgId)==13]))')
-    df = df.Define('metnomu_x','MET_pt*cos(MET_phi)+muons_px')
-    df = df.Define('metnomu_y','MET_pt*sin(MET_phi)+muons_py')
+    df = df.Define('metnomu_x','PuppiMET_pt*cos(PuppiMET_phi)+muons_px')
+    df = df.Define('metnomu_y','PuppiMET_pt*sin(PuppiMET_phi)+muons_py')
     df = df.Define('MetNoMu','sqrt(metnomu_x*metnomu_x+metnomu_y*metnomu_y)')
 
     # Dijet selections
@@ -619,11 +619,11 @@ def EtSum(df, suffix = ''):
     histos['HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60'+suffix] =  df.Filter('HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60').Histo1D(ROOT.RDF.TH1DModel('h_HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
     
 
-    histos['h_HT_Denominator'+suffix] = df.Filter('MET_pt<50').Histo1D(ROOT.RDF.TH1DModel('h_HT_Denominator'+suffix, '', len(ht_bins)-1, array('d',ht_bins)), 'HT') 
-    histos['L1_HTT200er'+suffix] = df.Filter('L1_HTT200er').Filter('MET_pt<50').Histo1D(ROOT.RDF.TH1DModel('h_HT_L1_HTT200er'+suffix, '', len(ht_bins)-1, array('d',ht_bins)), 'HT')  
-    histos['L1_HTT280er'+suffix] = df.Filter('L1_HTT280er').Filter('MET_pt<50').Histo1D(ROOT.RDF.TH1DModel('h_HT_L1_HTT280er'+suffix, '', len(ht_bins)-1, array('d',ht_bins)), 'HT')
-    histos['L1_HTT360er'+suffix] = df.Filter('L1_HTT360er').Filter('MET_pt<50').Histo1D(ROOT.RDF.TH1DModel('h_HT_L1_HTT360er'+suffix, '', len(ht_bins)-1, array('d',ht_bins)), 'HT')
-    histos['HLT_PFHT1050'+suffix] =  df.Filter('HLT_PFHT1050').Filter('MET_pt<50').Histo1D(ROOT.RDF.TH1DModel('h_HLT_PFHT1050'+suffix, '', len(ht_bins)-1, array('d',ht_bins)), 'HT')
+    histos['h_HT_Denominator'+suffix] = df.Filter('PuppiMET_pt<50').Histo1D(ROOT.RDF.TH1DModel('h_HT_Denominator'+suffix, '', len(ht_bins)-1, array('d',ht_bins)), 'HT') 
+    histos['L1_HTT200er'+suffix] = df.Filter('L1_HTT200er').Filter('PuppiMET_pt<50').Histo1D(ROOT.RDF.TH1DModel('h_HT_L1_HTT200er'+suffix, '', len(ht_bins)-1, array('d',ht_bins)), 'HT')  
+    histos['L1_HTT280er'+suffix] = df.Filter('L1_HTT280er').Filter('PuppiMET_pt<50').Histo1D(ROOT.RDF.TH1DModel('h_HT_L1_HTT280er'+suffix, '', len(ht_bins)-1, array('d',ht_bins)), 'HT')
+    histos['L1_HTT360er'+suffix] = df.Filter('L1_HTT360er').Filter('PuppiMET_pt<50').Histo1D(ROOT.RDF.TH1DModel('h_HT_L1_HTT360er'+suffix, '', len(ht_bins)-1, array('d',ht_bins)), 'HT')
+    histos['HLT_PFHT1050'+suffix] =  df.Filter('HLT_PFHT1050').Filter('PuppiMET_pt<50').Histo1D(ROOT.RDF.TH1DModel('h_HLT_PFHT1050'+suffix, '', len(ht_bins)-1, array('d',ht_bins)), 'HT')
 
     # DiJet selections:
 
@@ -762,7 +762,7 @@ def HFNoiseStudy(df, suffix = ''):
         histos[p+'_HighPtJet_HFSEtaEtavsPhiPhi'+suffix] = df_passvsfailL1[i].Histo2D(ROOT.RDF.TH2DModel(p+'_HighPtJet_HFSEtaEtavsPhiPhi'+suffix, '', 100, 0, 0.2, 100, 0, 0.2), 'HighPtJet_HFSEtaEta','HighPtJet_HFSPhiPhi')
         histos[p+'_HighPtJet_HFCentralVsAdjacentEtaStripSize'+suffix] = df_passvsfailL1[i].Histo2D(ROOT.RDF.TH2DModel(p+'_HighPtJet_HFCentralVsAdjacentEtaStripSize'+suffix, '', 10, 0, 10, 10, 0, 10), 'HighPtJet_HFCentralEtaStripSize', 'HighPtJet_HFAdjacentEtaStripSize')
 
-        histos[p+'MET_pt'+suffix] = df_passvsfailL1[i].Histo1D(ROOT.RDF.TH1DModel(p+'MET_pt'+suffix, '', 100,0,500), 'MET_pt')
+        histos[p+'MET_pt'+suffix] = df_passvsfailL1[i].Histo1D(ROOT.RDF.TH1DModel(p+'PuppiMET_pt'+suffix, '', 100,0,500), 'PuppiMET_pt')
 
     return df, histos
     
