@@ -48,7 +48,6 @@ def main():
     #df = ROOT.RDataFrame('l1UpgradeTree/L1UpgradeTree', inputFile)
     nEvents = df.Count().GetValue()
     print('There are {} events'.format(nEvents))
-    
     max_events = min(nEvents, args.max_events) if args.max_events >=0 else nEvents
     df = df.Range(0, max_events)
     df = df.Filter('if(tdfentry_ %100000 == 0) {cout << "Event is  " << tdfentry_ << endl;cout << Event.event<<endl;  } return true;')
@@ -57,6 +56,8 @@ def main():
     
     #df = df.Filter("L1uGT.m_algoDecisionFinal[460]","zb") #bit 459 for L1_ZeroBias (standard ZB), bit 460 for L1_ZeroBias_copy (for Ephemeral ZB)
     df = df.Filter("L1uGT.m_algoDecisionInitial[460]","zb")
+    #df = df.Filter("Vertex.nVtx < 30","nVtx < 30") #low PU
+    #df = df.Filter("Vertex.nVtx > 45","nVtx > 45") #high PU
     df = df.Filter('bool trigger = false; for(int i=0; i < Event.hlt.size(); i++){ string string_search ("HLT_IsoMu24_v"); bool found = Event.hlt[i].Contains(string_search); if(found) trigger = true; } return trigger;', "IsoMu24 trigger")
     h = df.Histo1D(ROOT.RDF.TH1DModel('h_evtbx', '', 4000, 0, 4000), 'Event.bx')
 
@@ -78,6 +79,10 @@ def main():
 
 
     h.Write()
+
+    # add nvtx histo
+    nvtx_histo = df.Histo1D(ROOT.RDF.TH1DModel("h_nvtx" , "Number of reco vertices;N_{vtx};Events"  ,    100, 0., 100.), "Vertex.nVtx")
+    nvtx_histo.GetValue().Write()
 
     df_report.Print()
 

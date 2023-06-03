@@ -1,6 +1,6 @@
 import ROOT
 from array import array
-jetEtaBins = [0., 1.3, 2.5, 3., 3.5, 4., 5.]
+jetEtaBins = [0., 1.3, 2.5, 3., 5.]
 egEtaBins = [0., 1.479, 2.5]
 muEtaBins = [0., 0.83, 1.24, 2.4]
 
@@ -170,6 +170,8 @@ def AnalyzeCleanJets(df, JetRecoPtCut, L1JetPtCut):
     df = df.Define('cleanJet_idxL1jet', 'FindL1ObjIdx_setBx(L1Upgrade.jetEta, L1Upgrade.jetPhi, L1Upgrade.jetBx, cleanJet_Eta, cleanJet_Phi, 0)')
     #df = df.Define('cleanJet_idxL1jet','FindL1ObjIdx(L1Upgrade.jetEta, L1Upgrade.jetPhi, cleanJet_Eta, cleanJet_Phi)')
     df = df.Define('cleanJet_L1Pt','GetVal(cleanJet_idxL1jet,L1Upgrade.jetEt)')
+    #df = df.Define('cleanJet_L1Pt','GetVal(cleanJet_idxL1jet,(L1Upgrade.jetRawEt - L1Upgrade.jetPUEt)*0.5)') #chunkydonut w/o layer-1 SF
+    #df = df.Define('cleanJet_L1Pt','GetVal(cleanJet_idxL1jet,(L1Upgrade.jetRawEt - L1Upgrade.jetPUEt)*0.5714285714)') #phiring w/o layer-1 SF
     df = df.Define('cleanJet_L1Bx','GetVal(cleanJet_idxL1jet,L1Upgrade.jetBx)')
     df = df.Define('cleanJet_L1PtoverRecoPt','cleanJet_L1Pt/cleanJet_Pt')
     #Now some plotting (turn ons for now)
@@ -203,6 +205,7 @@ def AnalyzeCleanJets(df, JetRecoPtCut, L1JetPtCut):
     histos['L1Jet100to150_bxmin1_etaphi'] = df.Histo2D(ROOT.RDF.TH2DModel('L1Jet100to150_bxmin1_etaphi', '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1Jet100to150Bxmin1_Eta', 'probeL1Jet100to150Bxmin1_Phi')
     histos['L1Jet100to150_bx0_etaphi'] = df.Histo2D(ROOT.RDF.TH2DModel('L1Jet100to150_bx0_etaphi', '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1Jet100to150Bx0_Eta', 'probeL1Jet100to150Bx0_Phi')
     histos['L1Jet100to150_bxplus1_etaphi'] = df.Histo2D(ROOT.RDF.TH2DModel('L1Jet100to150_bxplus1_etaphi', '', 100, -5,5, 100, -3.1416, 3.1416), 'probeL1Jet100to150Bxplus1_Eta', 'probeL1Jet100to150Bxplus1_Phi')
+    #histos['test_pt'] = df.Histo1D(ROOT.RDF.TH1DModel("test_pt" , "test_pt;p_{T} [GeV];Events"  ,    40, 0., 200.), "cleanJet_L1Pt")
 
 
 
