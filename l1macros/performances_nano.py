@@ -90,7 +90,8 @@ def main():
     ###
 
     df = ROOT.RDataFrame('Events', inputFile)
-    df = df.Filter(fltr)
+    if fltr != '':
+        df = df.Filter(fltr)
     nEvents = df.Count().GetValue()
 
     print('There are {} events'.format(nEvents))
@@ -136,34 +137,34 @@ def main():
         for i, df_element in enumerate(df_list):
             df_element, histos_jets = h.AnalyzeCleanJets(df_element, 200, 100, suffix = suffix_list[i])
             df_element = h.lepton_iselectron(df_element)
-            if config['PtBalance']:
+            if h.config['PtBalance']:
                 df_element = h.PtBalanceSelection(df_element)
                 df_element, histos_balance = h.AnalyzePtBalance(df_element, suffix = suffix_list[i])
             #df_report = df_element.Report()
-            if config['HF_noise']:
+            if h.config['HF_noise']:
                 df_element, histos_hf = h.HFNoiseStudy(df_element, suffix = suffix_list[i])
 
             for key, val in histos_jets.items():
                 all_histos_jets[key] = val
 
-            if config['PtBalance']:
+            if h.config['PtBalance']:
                 for key, val in histos_balance.items():
                     all_histos_balance[key] = val
 
-            if config['HF_noise']:
-            for key, val in histos_hf.items():
-                all_histos_hf[key] = val
+            if h.config['HF_noise']:
+                for key, val in histos_hf.items():
+                    all_histos_hf[key] = val
 
             #df_report.Print()
 
         for i in all_histos_jets:
             all_histos_jets[i].GetValue().Write()
             
-        if config['PtBalance']:
+        if h.config['PtBalance']:
             for i in all_histos_balance:
                 all_histos_balance[i].GetValue().Write()
             
-        if config['HF_noise']:
+        if h.config['HF_noise']:
             for i in all_histos_hf:
                 all_histos_hf[i].GetValue().Write()
 

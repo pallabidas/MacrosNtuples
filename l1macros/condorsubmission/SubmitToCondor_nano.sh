@@ -11,6 +11,7 @@ else
     sed -ie "s#OUTPUTDIR#$1#g" scriptcondor.sub
     sed -ie "s#CHANNEL#$2#g" scriptcondor.sub
     sed -ie "s#FILENAMES#$3#g" scriptcondor.sub
+    sed -ie "s#GOLDENJSON#$4#g" scriptcondor.sub
     
     condor_submit scriptcondor.sub 
 fi
