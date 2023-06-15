@@ -23,6 +23,7 @@ double deltaphi_offlinemustation2_l1mu(int charge, double mupt, double mueta, do
 
     if(dphi> M_PI) dphi -= 2* M_PI;
     if(dphi<- M_PI) dphi += 2* M_PI;
+
     return dphi;
 }  
 
@@ -92,7 +93,7 @@ vector<int> FindL1MuIdx(ROOT::VecOps::RVec<float>L1Obj_eta, ROOT::VecOps::RVec<f
       }
       double deta = abs(recoObj_Eta[i]-L1Obj_eta[j]);
       // Delta Phi correction at station 2
-      double dphi = deltaphi_offlinemustation2_l1mu(charge[j], recoObj_Pt[i], recoObj_Eta[i], recoObj_Phi[i], L1Obj_phi[j]);
+      double dphi = deltaphi_offlinemustation2_l1mu(charge[i], recoObj_Pt[i], recoObj_Eta[i], recoObj_Phi[i], L1Obj_phi[j]);
       double dr = sqrt(deta*deta+dphi*dphi);
       if(dr<=drmin){ 
 	drmin = dr; 
@@ -120,7 +121,7 @@ vector<int> FindL1MuIdx_setBx(ROOT::VecOps::RVec<float>L1Obj_eta, ROOT::VecOps::
       }
       double deta = abs(recoObj_Eta[i]-L1Obj_eta[j]);
       // Delta Phi correction at station 2
-      double dphi = deltaphi_offlinemustation2_l1mu(charge[j], recoObj_Pt[i], recoObj_Eta[i], recoObj_Phi[i], L1Obj_phi[j]);
+      double dphi = deltaphi_offlinemustation2_l1mu(charge[i], recoObj_Pt[i], recoObj_Eta[i], recoObj_Phi[i], L1Obj_phi[j]);
       double dr = sqrt(deta*deta+dphi*dphi);
       if(dr<=drmin){ 
 	drmin = dr; 
@@ -373,14 +374,44 @@ float mll(ROOT::VecOps::RVec<float>l_pt, ROOT::VecOps::RVec<float>l_eta, ROOT::V
   }
   return mll;
 }
-// convert hwCharge (0 / +1) to charge (-1 / +1)
-ROOT::VecOps::RVec<int> charge_conversion(ROOT::VecOps::RVec<int>hwCharge){
-    vector <int> result = {};
-    for( unsigned int i = 0; i < hwCharge.size(); i++){
-        if(hwCharge[i] == 0) result.push_back(+1);
-        else result.push_back(-1);
-    }
-    return result;
+
+vector<vector<vector<float>>> dR_mll(ROOT::VecOps::RVec<float>l_pt, ROOT::VecOps::RVec<float>l_eta, ROOT::VecOps::RVec<float>l_phi, ROOT::VecOps::RVec<bool>l_isTag, ROOT::VecOps::RVec<bool>l_isProbe){
+  //float mll = -1.;
+  vector<vector<vector<float>>> result = {};
+  if(l_pt.size() < 2){
+      return result;
+  }
+  for(unsigned int i = 0; i < l_pt.size(); i++){
+      vector<vector<float>> line = {};
+      for(unsigned int j = 0; j < l_pt.size(); j++){
+
+          float DeltaR = -1;
+          float mll = -1;
+          vector<float> pair = {};
+
+          if((l_isProbe[i] == false)||(l_isTag[j] == false)||(i == j)){
+              pair.push_back(DeltaR);
+              pair.push_back(mll);
+              line.push_back(pair);
+              continue;
+          }
+
+          TLorentzVector lep1;
+          TLorentzVector lep2;
+          lep1.SetPtEtaPhiE(l_pt[i], l_eta[i], l_phi[i], l_pt[i] * cosh(l_eta[i]));
+          lep2.SetPtEtaPhiE(l_pt[j], l_eta[j], l_phi[j], l_pt[j] * cosh(l_eta[j]));
+
+          DeltaR = lep1.DeltaR(lep2);
+          mll = (lep1+lep2).Mag();
+
+          pair.push_back(DeltaR);
+          pair.push_back(mll);
+          line.push_back(pair);
+
+      }
+      result.push_back(line);
+  }
+  return result;
 }
 
 // Match L1Mu to TrigObj

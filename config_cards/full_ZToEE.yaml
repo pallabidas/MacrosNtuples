@@ -19,7 +19,7 @@ Regions:
 ### The thresholds to draw the turn-on of
 # Thresholds: [<thr 1>, <thr 2>, ...]
 # thr # are the different threshold values (in GeV) to use
-Thresholds: [5, 10, 15, 20, 25, 30, 36, 37]
+Thresholds: [10, 15, 20, 25, 30, 36, 37]
 ### These are some boolean fields to select to compute and draw some plots or not
 #   these fields need to exist, and must be set to either true or false.
 # All the Turn On plots:

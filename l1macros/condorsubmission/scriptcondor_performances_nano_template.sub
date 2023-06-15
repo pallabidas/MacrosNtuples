@@ -1,18 +1,11 @@
 # Files
 executable = scriptcondor_performances_nano.sh
-#output = /user/lathomas/PortingCodeToGitIIHECMS/CMSSW_12_4_8/src/MacrosNtuples/l1macros/condorsubmission/OUTPUTDIR/log/scriptcondor_$(Process).out
-#error = /user/lathomas/PortingCodeToGitIIHECMS/CMSSW_12_4_8/src/MacrosNtuples/l1macros/condorsubmission/OUTPUTDIR/log/scriptcondor_$(Process).err
-#log = /user/lathomas/PortingCodeToGitIIHECMS/CMSSW_12_4_8/src/MacrosNtuples/l1macros/condorsubmission/OUTPUTDIR/log/scriptcondor_$(Process).log
 output = /user/hevard/CMSSW_12_4_8/src/MacrosNtuples/l1macros/condorsubmission/OUTPUTDIR/log/scriptcondor_$(Process).out
 error = /user/hevard/CMSSW_12_4_8/src/MacrosNtuples/l1macros/condorsubmission/OUTPUTDIR/log/scriptcondor_$(Process).err
 log = /user/hevard/CMSSW_12_4_8/src/MacrosNtuples/l1macros/condorsubmission/OUTPUTDIR/log/scriptcondor_$(Process).log
-#arguments    = $(Process)
-
 
 transfer_input_files = $(filename)
-arguments            = $(filename)  /user/hevard/CMSSW_12_4_8/src/MacrosNtuples/l1macros/condorsubmission/OUTPUTDIR/output_$(Process).root CHANNEL
-
-
+arguments            = $(filename)  /user/hevard/CMSSW_12_4_8/src/MacrosNtuples/l1macros/condorsubmission/OUTPUTDIR/output_$(Process).root CHANNEL GOLDENJSON
 
 # File transfer behavior
 #should_transfer_files = no
@@ -31,6 +24,3 @@ request_disk   = 100MB
 
 # Run job
 queue filename matching files FILENAMES
-
-
-#queue 100 
