@@ -27,6 +27,7 @@ def main():
     parser.add_argument("--max_events", dest="max_events", help="Maximum number of events to analyze. Default=-1 i.e. run on all events.", type=int, default=-1)
     parser.add_argument("-i", "--input", dest="inputFile", help="Input file", type=str, default='')
     parser.add_argument("-o", "--output", dest="outputFile", help="Output file", type=str, default='')
+    parser.add_argument("-g", "--golden", dest="golden", help="Golden JSON file to use", type = str, default = '')
     parser.add_argument("-c", "--channel", dest="channel", help=
                         '''Set channel and analysis:
                         -PhotonJet: For L1 jet studies with events trigger with a SinglePhoton trigger
@@ -43,13 +44,17 @@ def main():
     inputFile = args.inputFile
     if inputFile == '':
         if args.channel == 'PhotonJet':
-            inputFile = '/user/lathomas/Public/L1Studies/PhotonJet.root'
+            #inputFile = '/user/lathomas/Public/L1Studies/PhotonJet.root'
+            inputFile = '/pnfs/iihe/cms/ph/sc4/store/data/Run2023C/EGamma0/NANOAOD/PromptNanoAODv11p9_v1-v1/70000/3b1e99a5-71a0-46ee-b720-b79669f60029.root'
         elif args.channel == 'MuonJet':
-            inputFile = '/user/lathomas/Public/L1Studies/MuJet.root'
+            #inputFile = '/user/lathomas/Public/L1Studies/MuJet.root'
+            inputFile = '/pnfs/iihe/cms/ph/sc4/store/data/Run2023C/Muon1/NANOAOD/PromptNanoAODv11p9_v1-v1/60000/37c190ac-242c-47d7-a98f-9c51b111ff00.root'
         elif args.channel == 'ZToMuMu':
-            inputFile = '/user/lathomas/Public/L1Studies/ZToMuMu.root'
+            #inputFile = '/user/lathomas/Public/L1Studies/ZToMuMu.root'
+            inputFile = '/pnfs/iihe/cms/ph/sc4/store/data/Run2023C/Muon1/NANOAOD/PromptNanoAODv11p9_v1-v1/60000/37c190ac-242c-47d7-a98f-9c51b111ff00.root'
         elif args.channel == 'ZToEE':
-            inputFile = '/user/lathomas/Public/L1Studies/ZToEE.root'
+            #inputFile = '/user/lathomas/Public/L1Studies/ZToEE.root'
+            inputFile = '/pnfs/iihe/cms/ph/sc4/store/data/Run2023C/EGamma0/NANOAOD/PromptNanoAODv11p9_v1-v1/70000/3b1e99a5-71a0-46ee-b720-b79669f60029.root'
 
     ### Set default config file
     config_file = args.config
@@ -67,6 +72,8 @@ def main():
     with open(config_file) as s:
         h.set_config(s)
 
+    fltr = h.make_filter(args.golden)
+
     ### Create filters and suffix, if needed, to later run on bins of nvtx
 
     filter_list = ["true"]
@@ -83,10 +90,12 @@ def main():
     ###
 
     df = ROOT.RDataFrame('Events', inputFile)
+    if fltr != '':
+        df = df.Filter(fltr)
     nEvents = df.Count().GetValue()
 
     print('There are {} events'.format(nEvents))
-    
+
     #Max events to run on 
     max_events = min(nEvents, args.max_events) if args.max_events >=0 else nEvents
     df = df.Range(0, max_events)
@@ -128,30 +137,36 @@ def main():
         for i, df_element in enumerate(df_list):
             df_element, histos_jets = h.AnalyzeCleanJets(df_element, 200, 100, suffix = suffix_list[i])
             df_element = h.lepton_iselectron(df_element)
-            df_element = h.PtBalanceSelection(df_element)
-            df_element, histos_balance = h.AnalyzePtBalance(df_element, suffix = suffix_list[i])
+            if h.config['PtBalance']:
+                df_element = h.PtBalanceSelection(df_element)
+                df_element, histos_balance = h.AnalyzePtBalance(df_element, suffix = suffix_list[i])
             #df_report = df_element.Report()
-            df_element, histos_hf = h.HFNoiseStudy(df_element, suffix = suffix_list[i])
+            if h.config['HF_noise']:
+                df_element, histos_hf = h.HFNoiseStudy(df_element, suffix = suffix_list[i])
 
             for key, val in histos_jets.items():
                 all_histos_jets[key] = val
 
-            for key, val in histos_balance.items():
-                all_histos_balance[key] = val
+            if h.config['PtBalance']:
+                for key, val in histos_balance.items():
+                    all_histos_balance[key] = val
 
-            for key, val in histos_hf.items():
-                all_histos_hf[key] = val
+            if h.config['HF_noise']:
+                for key, val in histos_hf.items():
+                    all_histos_hf[key] = val
 
             #df_report.Print()
 
         for i in all_histos_jets:
             all_histos_jets[i].GetValue().Write()
             
-        for i in all_histos_balance:
-            all_histos_balance[i].GetValue().Write()
+        if h.config['PtBalance']:
+            for i in all_histos_balance:
+                all_histos_balance[i].GetValue().Write()
             
-        for i in all_histos_hf:
-            all_histos_hf[i].GetValue().Write()
+        if h.config['HF_noise']:
+            for i in all_histos_hf:
+                all_histos_hf[i].GetValue().Write()
 
 #        df, histos_jets = AnalyzeCleanJets(df, 200, 100) 
 #        
@@ -191,26 +206,32 @@ def main():
         for i, df_element in enumerate(df_list):
             df_element, histos_jets = h.AnalyzeCleanJets(df_element, 100, 50, suffix = suffix_list[i]) 
             df_element = h.lepton_ismuon(df_element)
-            df_element, histos_sum = h.EtSum(df_element, suffix = suffix_list[i])
-            df_element, histos_hf = h.HFNoiseStudy(df_element, suffix = suffix_list[i])
+            if h.config['MET_plots']:
+                df_element, histos_sum = h.EtSum(df_element, suffix = suffix_list[i])
+            if h.config['HF_noise']:
+                df_element, histos_hf = h.HFNoiseStudy(df_element, suffix = suffix_list[i])
 
             for key, val in histos_jets.items():
                 all_histos_jets[key] = val
 
-            for key, val in histos_sum.items():
-                all_histos_sum[key] = val
+            if h.config['MET_plots']:
+                for key, val in histos_sum.items():
+                    all_histos_sum[key] = val
 
-            for key, val in histos_hf.items():
-                all_histos_hf[key] = val
+            if h.config['HF_noise']:
+                for key, val in histos_hf.items():
+                    all_histos_hf[key] = val
 
         for i in all_histos_jets:
             all_histos_jets[i].GetValue().Write()
             
-        for i in all_histos_sum:
-            all_histos_sum[i].GetValue().Write()
+        if h.config['MET_plots']:
+            for i in all_histos_sum:
+                all_histos_sum[i].GetValue().Write()
 
-        for i in all_histos_hf:
-            all_histos_hf[i].GetValue().Write()
+        if h.config['HF_noise']:
+            for i in all_histos_hf:
+                all_histos_hf[i].GetValue().Write()
             
 #        df, histos_jets = AnalyzeCleanJets(df, 100, 50) 
 #        

@@ -1,10 +1,31 @@
 #!/bin/bash
 
-echo 2023B ZToMuMu
-sh SubmitToCondor_nano.sh outdir/2023B/outputcondor_ZToMuMu ZToMuMu "/user/hevard/CMSSW_12_4_8/src/MacrosNtuples/l1macros/test_io/Run2023B/Muons/*.root"
-echo 2023B MuonJet
-sh SubmitToCondor_nano.sh outdir/2023B/outputcondor_MuonJet MuonJet "/user/hevard/CMSSW_12_4_8/src/MacrosNtuples/l1macros/test_io/Run2023B/Muons/*.root"
-echo 2023B ZToEE
-sh SubmitToCondor_nano.sh outdir/2023B/outputcondor_ZToEE ZToEE "/pnfs/iihe/cms/ph/sc4/store/data/Run2023B/EGamma*/NANOAOD/PromptNanoAODv11p9_v1-v1/*/*.root"
-echo 2023B PhotonJet
-sh SubmitToCondor_nano.sh outdir/2023B/outputcondor_PhotonJet PhotonJet "/pnfs/iihe/cms/ph/sc4/store/data/Run2023B/EGamma*/NANOAOD/PromptNanoAODv11p9_v1-v1/*/*.root"
+for run in '2023B' '2023C'
+do
+    for skim in 'Muon','ZToMuMu' 'Muon','MuonJet' 'EGamma','ZToEE' 'EGamma','PhotonJet'
+    do
+        IFS=','
+        set $skim
+        case $run in
+            "2023B")
+                dir=/pnfs/iihe/cms/ph/sc4/store/data/Run$run/$1?/NANOAOD/PromptNanoAODv11p9_v1-v?
+                golden='Cert_Collisions2023_eraB_366403_367079_Golden.json'
+                ;;
+
+            "2023C")
+                dir=/pnfs/iihe/cms/ph/sc4/store/data/Run$run/$1?/NANOAOD/PromptNanoAODv12_v[2-4]-v?
+                golden='Cert_Collisions2023_eraC_367095_368224_Golden.json'
+                ;;
+
+            *)
+                dir=''
+                golden=''
+                ;;
+        esac
+
+
+        echo $run $2
+        sh SubmitToCondor_nano.sh outdir/"$run"/outputcondor_"$2" "$2" "$dir/*/*.root"
+        sh SubmitToCondor_nano.sh outdir/golden_"$run"/outputcondor_"$2" "$2" "$dir/*/*.root" $golden
+    done
+done
