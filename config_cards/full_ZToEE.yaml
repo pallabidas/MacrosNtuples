@@ -46,7 +46,7 @@ PU_plots:
     # For each thr #, a turn on figure will be made, 
     # comparing the turn on of this threshold accross all bins of nvtx
     # For this to be possible, make_histos has to be set to true
-    draw_thresholds: [5]
+    draw_thresholds: [10]
 #
 #
 #
