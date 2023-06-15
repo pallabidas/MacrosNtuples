@@ -163,6 +163,7 @@ def drawplots(objs, legendlabels, xtitle='', ytitle='', ztitle='',  extralabel='
         for i in range(len(objs)):
             legendlabels.append('')
 
+    labelsize = len(legendlabels)
     # get max extent of legend entries
     legend_w, legend_h = 0, 0
     for i in range(labelsize):
@@ -175,6 +176,7 @@ def drawplots(objs, legendlabels, xtitle='', ytitle='', ztitle='',  extralabel='
         legend_h = max(entry_h, legend_h)
     if labelsize == 0:
         entry_w, entry_h = 0, 0
+
 
     # get size of lumi label (for some reason, this is broken later on)
     label_lumi = ROOT.TLatex(0.5, 0.5, top_label)
@@ -226,7 +228,6 @@ def drawplots(objs, legendlabels, xtitle='', ytitle='', ztitle='',  extralabel='
     # ticks for run number
     if plotname.find('VsRunNb')>=0:
         drawnobject.GetXaxis().SetLabelSize(0.0275)
-
 
     if objs[0].GetDimension() >=2:
         drawnobject.GetZaxis().SetTitleSize(0.04)
