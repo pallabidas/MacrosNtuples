@@ -14,8 +14,8 @@ arguments            = FILENAMES /eos/cms/store/group/dpg_trigger/comm_trigger/L
 
 # Resource requests
 #request_cpus   = 4
-request_memory = 100MB
-request_disk   = 100MB
+#request_memory = 100MB
+#request_disk   = 100MB
 +JobFlavour = longlunch
 getenv = True
 
