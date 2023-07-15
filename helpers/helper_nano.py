@@ -812,6 +812,7 @@ def AnalyzePtBalance(df, suffix = ''):
     histos = {}
     df_JetsBinnedInEta ={}
     histos['L1JetvsEtaPhi'+suffix] = df.Histo3D(ROOT.RDF.TH3DModel('h_L1PtBalanceVsEtaPhi'+suffix, 'ptbalanceL1', 100, -5, 5, 100, -3.1416, 3.1416, 100, 0, 2), 'probe_Eta','probe_Phi','ptbalanceL1')
+    histos['L1JetPtBalance'+suffix] = df.Histo1D(ROOT.RDF.TH1DModel('h_L1PtBalance'+suffix, 'ptbalanceL1', 100, -5, 5), 'ptbalanceL1')
     for r in config['Regions']:
         region = config['Regions'][r]
         str_bineta = "eta{}to{}".format(region[0], region[1]).replace(".","p")
@@ -821,5 +822,6 @@ def AnalyzePtBalance(df, suffix = ''):
         histos['L1JetvsPU'+str_bineta+suffix] = df_JetsBinnedInEta[str_bineta].Histo2D(ROOT.RDF.TH2DModel('h_L1PtBalanceVsPU_{}'.format(str_bineta)+suffix, 'ptbalanceL1', 100, 0, 100, 100, 0, 2), 'PV_npvs','ptbalanceL1')
         # only one jet with pT > 30 GeV
         histos['L1JetvsRunNb_singlejet'+str_bineta+suffix] = df_JetsBinnedInEta[str_bineta].Filter('Sum(isCleanJet)==1','==1 clean jet with p_{T}>30 GeV').Histo2D(ROOT.RDF.TH2DModel('h_L1PtBalanceVsRunNb_singlejet_{}'.format(str_bineta)+suffix, 'ptbalanceL1', len(runnb_bins)-1, runnb_bins, len(response_bins)-1, response_bins), 'run','ptbalanceL1')
+        histos['L1JetPtBalance'+str_bineta+suffix] = df_JetsBinnedInEta[str_bineta].Histo1D(ROOT.RDF.TH1DModel('h_L1PtBalance_{}'.format(str_bineta)+suffix, 'ptbalanceL1', 100, -5, 5), 'ptbalanceL1')
 
     return df, histos
