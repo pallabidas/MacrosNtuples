@@ -1,17 +1,18 @@
 count="1"
-while [ $count -lt 2 ] 
-do
+
+file=$1
+while read -r line; do
 
 echo count $count
 
-line=$(sed -n "${count}p" < filelist.txt)
-
 input_filename=$(echo $line | awk '{print $1}')
 
-sh SubmitToCondor_nano.sh output_${count} MuonJet ${input_filename} /eos/user/c/cmsdqm/www/CAF/certification/Collisions23/Cert_Collisions2023_eraC_367095_368823_Golden.json
+echo $input_filename
+
+sh SubmitToCondor_nano.sh output_${1}_${count} MuonJet ${input_filename} /eos/user/c/cmsdqm/www/CAF/certification/Collisions23/Cert_Collisions2023_eraC_367095_368823_Golden.json
 
 count=$[$count+1]
 
-done
+done < $file
 
 exit 0

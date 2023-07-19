@@ -18,9 +18,9 @@ def main():
     parser.add_argument("-i", "--input", dest="inputFiles", help="Input file", nargs='+', type=str, default='')
     parser.add_argument("--den", dest="den", help="Name(s) of the histo denominator(s). There can be 1 or the same number as numerator histos ", nargs='+', type=str, default='')
     parser.add_argument("--num", dest="num", help="Name(s) of the histo numerator(s)", nargs='+', type=str, default='')
-    parser.add_argument("--xtitle", dest="xtitle", help="X axis title", type=str, default='p_{T} (GeV)')
-    parser.add_argument("--ytitle", dest="ytitle", help="Y axis title", type=str, default='Number of entries')
-    parser.add_argument("--ztitle", dest="ztitle", help="Z axis title", type=str, default='Number of entries')
+    parser.add_argument("--xtitle", dest="xtitle", help="X axis title", type=str, default='p_{T} [GeV]')
+    parser.add_argument("--ytitle", dest="ytitle", help="Y axis title", type=str, default='')
+    parser.add_argument("--ztitle", dest="ztitle", help="Z axis title", type=str, default='')
     parser.add_argument("--legend", dest="legendlabels", help="Legend labels", nargs='+', type=str, default='')
     parser.add_argument("--extralabel", dest="extralabel", help="Extra label", type=str, default='')
     parser.add_argument("--setlogx", dest="setlogx", help="Set log x", type=bool, default=False)
@@ -28,11 +28,11 @@ def main():
     parser.add_argument("--h2d", dest="h2d", help="2D histo (for profile etc)", nargs='+',type=str)
     parser.add_argument("--axisranges", dest="axisranges", help="Axis ranges [xmin, xmax, ymin, ymax, zmin, zmax]", nargs='+', type=float, default=[])
     parser.add_argument("--addnumtoden", dest="addnumtoden", help="Add numerator histo to denominator (because it only contains complementary events e.g. failing probes)",type=bool, default=False)
-    parser.add_argument("--saveplot", dest="saveplot", help="Save plots or not",type=bool, default = False)
+    parser.add_argument("--saveplot", dest="saveplot", help="Save plots or not",type=bool, default = True)
     parser.add_argument("--interactive", dest="interactive", help="Run in interactive mode (keep plot drawn)", type=bool, default=False)
     parser.add_argument("--suffix_files", dest="suffix_files", help="Input files suffix", nargs='+', type=str, default='')
-    parser.add_argument("--toplabel", dest="top_label", help="Label to put on top right of plot (for sqrt(s) and lumi values)", type=str, default="")
-    parser.add_argument("--legendpos", dest="legend_pos", help="Position of the legend. String, accepted values: top, bottom. Default: bottom", type=str, default="bottom")
+    parser.add_argument("--toplabel", dest="top_label", help="Label to put on top right of plot (for sqrt(s) and lumi values)", type=str, default="17.9 fb^{-1} (2023C, 13.6 TeV)")
+    parser.add_argument("--legendpos", dest="legend_pos", help="Position of the legend. String, accepted values: top, bottom. Default: bottom", type=str, default="top")
     parser.add_argument("--nvtx_suffix", dest="nvtx_suffix", help="Suffix to append to dirname and histogram names, to make plots in bins of nvtx. Default: None", type=str, default="")
     parser.add_argument("--h1d", dest="h1d", help="1D histo (for simple distribution, etc)", nargs='+',type=str)
     parser.add_argument("--dirname", dest="dirname", help="Directory to store the plots in", type=str, default='plotsL1Run3')
@@ -46,7 +46,7 @@ def main():
         makeprof(inputFiles_list = args.inputFiles, h2d = args.h2d, legendlabels = args.legendlabels, xtitle=args.xtitle, ytitle=args.ytitle, ztitle=args.ztitle, extralabel=args.extralabel, setlogx=args.setlogx, plotname=args.plotname, axisranges=args.axisranges, saveplot = args.saveplot, interactive=args.interactive, top_label = args.top_label, legend_pos = args.legend_pos, nvtx_suffix = args.nvtx_suffix, dirname = args.dirname)
 
     if args.type=='resolvsx':
-        makeresol(inputFiles_list = args.inputFiles, h2d = args.h2d, legendlabels = args.legendlabels, xtitle=args.xtitle, ytitle='#sigma_{scale corr.}'+args.ytitle, ztitle=args.ztitle, extralabel=args.extralabel, setlogx=args.setlogx, plotname=args.plotname, axisranges=args.axisranges, saveplot = args.saveplot, interactive=args.interactive, top_label = args.top_label, legend_pos = args.legend_pos, nvtx_suffix = args.nvtx_suffix, dirname = args.dirname)
+        makeresol(inputFiles_list = args.inputFiles, h2d = args.h2d, legendlabels = args.legendlabels, xtitle=args.xtitle, ytitle=args.ytitle, ztitle=args.ztitle, extralabel=args.extralabel, setlogx=args.setlogx, plotname=args.plotname, axisranges=args.axisranges, saveplot = args.saveplot, interactive=args.interactive, top_label = args.top_label, legend_pos = args.legend_pos, nvtx_suffix = args.nvtx_suffix, dirname = args.dirname)
 
     if args.type=='distribution':
         makedist(inputFiles_list = args.inputFiles, h1d = args.h1d, legendlabels = args.legendlabels, xtitle=args.xtitle, ytitle=args.ytitle, ztitle=args.ztitle, extralabel=args.extralabel, setlogx=args.setlogx, plotname=args.plotname, axisranges=args.axisranges, saveplot = args.saveplot, interactive=args.interactive, top_label = args.top_label, legend_pos = args.legend_pos, nvtx_suffix = args.nvtx_suffix, dirname = args.dirname)
@@ -95,7 +95,7 @@ def makeprof(inputFiles_list = [], h2d=[], legendlabels=[], xtitle='p_{T} (GeV)'
     profiles = compute_profilex(h2ds)
     drawplots(profiles, legendlabels = legendlabels, xtitle=xtitle, ytitle=ytitle, ztitle=ztitle, extralabel=extralabel, setlogx=setlogx, plotname=plotname, axisranges=axisranges, saveplot = saveplot, interactive=interactive, top_label = top_label, legend_pos = legend_pos, nvtx_suffix = nvtx_suffix, dirname = dirname)
 
-def makeresol(inputFiles_list = [], h2d=[], legendlabels=[], xtitle='p_{T} (GeV)', ytitle='Number of entries', ztitle='Number of entries', extralabel='', setlogx=False, plotname='plot', axisranges=[], saveplot=False, interactive=False, suffix_files='', top_label='', legend_pos='bottom', nvtx_suffix='', dirname = 'plotsL1Run3'):
+def makeresol(inputFiles_list = [], h2d=[], legendlabels=[], xtitle='p_{T} [GeV]', ytitle='', ztitle='', extralabel='', setlogx=False, plotname='plot', axisranges=[], saveplot=False, interactive=False, suffix_files='', top_label='', legend_pos='top', nvtx_suffix='', dirname = 'plotsL1Run3'):
 
     if interactive == False:
         ROOT.gROOT.SetBatch(1)
@@ -110,6 +110,7 @@ def makeresol(inputFiles_list = [], h2d=[], legendlabels=[], xtitle='p_{T} (GeV)
             h2ds.append(inputFile.Get(h2d[i]+nvtx_suffix).Clone())
             h2ds[i].SetName(h2ds[i].GetName()+"_{}".format(i))
     hresponse, hresol = compute_ResolutionvsX(h2ds)
+    axisranges[3] = 1.6
     drawplots(hresponse, legendlabels = legendlabels, xtitle=xtitle, ytitle='#mu'+ytitle, ztitle=ztitle, extralabel=extralabel, setlogx=setlogx, plotname='mu_'+plotname, axisranges=axisranges, saveplot = saveplot, interactive=interactive, suffix_files = suffix_files, top_label = top_label, legend_pos = legend_pos, nvtx_suffix = nvtx_suffix, dirname = dirname)
     axisranges[2] = 0
     axisranges[3] = 0.6
@@ -252,7 +253,7 @@ def drawplots(objs, legendlabels, xtitle='', ytitle='', ztitle='',  extralabel='
     # CMS label
     label_cms = ROOT.TLatex()
     label_cms.SetTextSize(0.05)
-    label_cms.DrawLatexNDC(lmargin_frac, 0.92, "#bf{CMS} #it{Internal}")
+    label_cms.DrawLatexNDC(lmargin_frac, 0.92, "#bf{CMS} #it{Preliminary}")
 
 
     # Lumi label
