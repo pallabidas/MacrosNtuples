@@ -30,16 +30,21 @@ def main():
     inputFile = ROOT.TFile.Open(args.inputFile)
     tree = inputFile.Get('l1EventTree/L1EventTree')
     tree_Upgrade = inputFile.Get('l1UpgradeEmuTree/L1UpgradeTree')
+    #tree_Upgrade = inputFile.Get('l1UpgradeTree/L1UpgradeTree')
     tree_uGT  = inputFile.Get('l1uGTEmuTree/L1uGTTree')
+    #tree_uGT  = inputFile.Get('l1uGTTree/L1uGTTree')
     tree_Reco = inputFile.Get('l1RecoTree/RecoTree')
     tree_RecoJet = inputFile.Get('l1JetRecoTree/JetRecoTree')
     tree_RecoMuon = inputFile.Get('l1MuonRecoTree/Muon2RecoTree')
     tree_RecoElectron = inputFile.Get('l1ElectronRecoTree/ElectronRecoTree')
+    tree_RecoPhoton = inputFile.Get('l1PhotonRecoTree/PhotonRecoTree')
     tree.AddFriend(tree_Upgrade)
     tree.AddFriend(tree_uGT)
     tree.AddFriend(tree_Reco)
     tree.AddFriend(tree_RecoMuon)
     tree.AddFriend(tree_RecoJet)
+    tree.AddFriend(tree_RecoElectron)
+    tree.AddFriend(tree_RecoPhoton)
     
 
     #tree = ROOT.TTree(ROOT.TFile(inputFile,'open').Get('l1UpgradeTree/L1UpgradeTree'))
@@ -51,6 +56,7 @@ def main():
     max_events = min(nEvents, args.max_events) if args.max_events >=0 else nEvents
     df = df.Range(0, max_events)
     df = df.Filter('if(tdfentry_ %100000 == 0) {cout << "Event is  " << tdfentry_ << endl;cout << Event.event<<endl;  } return true;')
+    set_runnb_bins(df)
 
     out = ROOT.TFile(args.outputFile, "recreate")
     
@@ -58,33 +64,59 @@ def main():
     df = df.Filter("L1uGT.m_algoDecisionInitial[460]","zb")
     #df = df.Filter("Vertex.nVtx < 30","nVtx < 30") #low PU
     #df = df.Filter("Vertex.nVtx > 45","nVtx > 45") #high PU
-    df = df.Filter('bool trigger = false; for(int i=0; i < Event.hlt.size(); i++){ string string_search ("HLT_IsoMu24_v"); bool found = Event.hlt[i].Contains(string_search); if(found) trigger = true; } return trigger;', "IsoMu24 trigger")
-    h = df.Histo1D(ROOT.RDF.TH1DModel('h_evtbx', '', 4000, 0, 4000), 'Event.bx')
 
-    
-    df = MuonJet_MuonSelection(df)
-    df = CleanJets(df)
-    
-    df, histos_jets = AnalyzeCleanJets(df, 100, 50)
-    
-    df, histos_sum = EtSum(df)
-    
-    df_report = df.Report()
+    if args.channel == 'MuonJet':
+        df = df.Filter('bool trigger = false; for(int i=0; i < Event.hlt.size(); i++){ string string_search ("HLT_IsoMu24_v"); bool found = Event.hlt[i].Contains(string_search); if(found) trigger = true; } return trigger;', "IsoMu24 trigger")
+        h = df.Histo1D(ROOT.RDF.TH1DModel('h_evtbx', '', 4000, 0, 4000), 'Event.bx')
+        h.Write()
 
-    for i in histos_jets:
-        histos_jets[i].GetValue().Write()
+        df = MuonJet_MuonSelection(df)
+        df = CleanMuonJets(df)
 
-    for i in histos_sum:
-        histos_sum[i].GetValue().Write()
+        df, histos_jets = AnalyzeCleanJets(df, 100, 50)
+
+        df, histos_sum = EtSum(df)
+
+        df_report = df.Report()
+
+        for i in histos_jets:
+            histos_jets[i].GetValue().Write()
+
+        for i in histos_sum:
+            histos_sum[i].GetValue().Write()
+
+        df_report.Print()
+
+    if args.channel == 'PhotonJet':
+        df = df.Filter('bool trigger = false; for(int i=0; i < Event.hlt.size(); i++){ string string_search ("HLT_Photon110EB_TightID_TightIso_v"); bool found = Event.hlt[i].Contains(string_search); if(found) trigger = true; } return trigger;', "Photon trigger")
+        h = df.Histo1D(ROOT.RDF.TH1DModel('h_evtbx', '', 4000, 0, 4000), 'Event.bx')
+        h.Write()
+
+        df = SinglePhotonSelection(df)
+        df = CleanPhotonJets(df)
+
+        df, histos_jets = AnalyzeCleanJets(df, 100, 50)
+
+        df = PtBalanceSelection(df)
+
+        df, histos_balance = AnalyzePtBalance(df)
+
+        df_report = df.Report()
+
+        for i in histos_jets:
+            histos_jets[i].GetValue().Write()
+
+        for i in histos_balance:
+            histos_balance[i].GetValue().Write()
+
+        df_report.Print()
 
 
-    h.Write()
 
     # add nvtx histo
-    nvtx_histo = df.Histo1D(ROOT.RDF.TH1DModel("h_nvtx" , "Number of reco vertices;N_{vtx};Events"  ,    100, 0., 100.), "Vertex.nVtx")
+    nvtx_histo = df.Histo1D(ROOT.RDF.TH1DModel("h_nvtx" , "Number of reco vertices;N_{vtx};Events", 100, 0., 100.), "Vertex.nVtx")
     nvtx_histo.GetValue().Write()
 
-    df_report.Print()
 
 if __name__ == '__main__':
     main()
