@@ -579,7 +579,8 @@ def CleanJets(df):
     #df = df.Define('_jetLeptonPhotonCleaned', 'true') 
     #df = df.Define('isCleanJet','_jetPassID&&_jetLeptonPhotonCleaned&&Jet_pt>30&&Jet_muEF<0.5&&Jet_chEmEF<0.5')
     # _jetLeptonPhotonCleaned redondant with _jetPassID
-    df = df.Define('isCleanJet','_jetPassID&&Jet_pt>30&&Jet_muEF<0.5&&Jet_chEmEF<0.5')
+    df = df.Define('isCleanJet','_jetPassID&&Jet_muEF<0.5&&Jet_chEmEF<0.5')
+    df = df.Define('minPtJet','_jetPassID&&Jet_pt>30&&Jet_muEF<0.5&&Jet_chEmEF<0.5')
     df = df.Define('cleanJet_Pt','Jet_pt[isCleanJet]')
     df = df.Define('cleanJet_Eta','Jet_eta[isCleanJet]')
     df = df.Define('cleanJet_Phi','Jet_phi[isCleanJet]')
@@ -589,7 +590,7 @@ def CleanJets(df):
     df = df.Define('cleanJet_CEEF','Jet_chEmEF[isCleanJet]')
     df = df.Define('cleanJet_MUEF','Jet_muEF[isCleanJet]')
     df = df.Filter(stringToPrintJets)
-    df = df.Filter('Sum(isCleanJet)>=1','>=1 clean jet with p_{T}>30 GeV')
+    df = df.Filter('Sum(minPtJet)>=1','>=1 clean jet with p_{T}>30 GeV')
 
     return df
 
