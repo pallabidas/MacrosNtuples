@@ -31,6 +31,7 @@ def main():
     parser.add_argument("-c", "--channel", dest="channel", help=
                         '''Set channel and analysis:
                         -PhotonJet: For L1 jet studies with events trigger with a SinglePhoton trigger
+                        -DiJet: For L1 jet studies with events triggered with a SingleJet trigger
                         -MuonJet: For L1 jet studies with events trigger with a SingleMuon trigger
                         -ZToMuMu: For L1 muon studies with Z->mumu
                         -ZToEE: For L1 EG studies with Z->ee''', 
@@ -44,18 +45,16 @@ def main():
     inputFile = args.inputFile
     if inputFile == '':
         if args.channel == 'PhotonJet':
-            #inputFile = '/user/lathomas/Public/L1Studies/PhotonJet.root'
-            inputFile = '/pnfs/iihe/cms/ph/sc4/store/data/Run2023C/EGamma0/NANOAOD/PromptNanoAODv11p9_v1-v1/70000/3b1e99a5-71a0-46ee-b720-b79669f60029.root'
+            inputFile = '/pnfs/iihe/cms/store/user/lathomas/EGamma1/2023Dv1_L1TNanowithPrefiringInfo/231129_154543/0000/out_234.root'
         elif args.channel == 'MuonJet':
-            #inputFile = '/user/lathomas/Public/L1Studies/MuJet.root'
-            inputFile = '/pnfs/iihe/cms/ph/sc4/store/data/Run2023C/Muon1/NANOAOD/PromptNanoAODv11p9_v1-v1/60000/37c190ac-242c-47d7-a98f-9c51b111ff00.root'
+            inputFile = '/pnfs/iihe/cms/store/user/lathomas/Muon1/2023Dv1_L1TNanowithPrefiringInfo/231129_162737/0000/out_196.root'
         elif args.channel == 'ZToMuMu':
-            #inputFile = '/user/lathomas/Public/L1Studies/ZToMuMu.root'
-            inputFile = '/pnfs/iihe/cms/ph/sc4/store/data/Run2023C/Muon1/NANOAOD/PromptNanoAODv11p9_v1-v1/60000/37c190ac-242c-47d7-a98f-9c51b111ff00.root'
+            inputFile = '/pnfs/iihe/cms/store/user/lathomas/Muon1/2023Dv1_L1TNanowithPrefiringInfo/231129_162737/0000/out_196.root'
         elif args.channel == 'ZToEE':
-            #inputFile = '/user/lathomas/Public/L1Studies/ZToEE.root'
-            inputFile = '/pnfs/iihe/cms/ph/sc4/store/data/Run2023C/EGamma0/NANOAOD/PromptNanoAODv11p9_v1-v1/70000/3b1e99a5-71a0-46ee-b720-b79669f60029.root'
-
+            inputFile = '/pnfs/iihe/cms/store/user/lathomas/EGamma1/2023Dv1_L1TNanowithPrefiringInfo/231129_154543/0000/out_234.root'
+        elif args.channel == 'DiJet':
+            inputFile = '/pnfs/iihe/cms/store/user/lathomas/JetMET1/2023Dv1_L1TNanowithPrefiringInfo/231129_162802/0000/out_98.root'
+        
     ### Set default config file
     config_file = args.config
     if config_file == '':
@@ -67,6 +66,8 @@ def main():
             config_file = '../config_cards/full_ZToMuMu.yaml'
         elif args.channel == 'ZToEE':
             config_file = '../config_cards/full_ZToEE.yaml'
+        if args.channel == 'DiJet':
+            config_file = '../config_cards/full_DiJet.yaml'
 
     # Read config and set config_dict in helper
     with open(config_file) as s:
@@ -113,13 +114,13 @@ def main():
     out = ROOT.TFile(args.outputFile, "recreate")
     ####The sequence of filters/column definition starts here
     
-    if args.channel not in ['PhotonJet','MuonJet','ZToMuMu','ZToEE']:
+    if args.channel not in ['PhotonJet','MuonJet','ZToMuMu','ZToEE', 'DiJet']:
         print("Channel {} does not exist".format(args.channel))
         return 
 
     # add nvtx histo
     nvtx_histo = df.Histo1D(ROOT.RDF.TH1DModel("h_nvtx" , "Number of reco vertices;N_{vtx};Events"  ,    100, 0., 100.), "PV_npvs")
-    nvtx_histo.GetValue().Write()
+
         
     if args.channel == 'PhotonJet':
         df = h.SinglePhotonSelection(df) 
@@ -286,6 +287,22 @@ def main():
 
         for i in all_histos:
             all_histos[i].GetValue().Write()
+
+    if args.channel == 'DiJet':
+        df = h.DiJetSelection(df) 
+        #df = h.DiJet_Plots(df)
+        df = h.CleanJets(df)
+        all_histos_jets = {}
+
+        df, histos_jets = h.AnalyzeCleanJets(df, 100, 50 )
+        #histos = {}
+        
+        for i in histos_jets:
+            histos_jets[i].GetValue().Write()
+
+
+            
+    nvtx_histo.GetValue().Write()
 
 if __name__ == '__main__':
     main()
