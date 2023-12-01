@@ -13,15 +13,15 @@ balance_bins = array('f',[0.+float(i)/100. for i in range(200)] )
 def SinglePhotonSelection(df):
     '''
     Select events with exactly one photon with pT>20 GeV.
-    The event must pass a photon trigger (for now 110 GeV trigger only) 
+    The event must pass a photon trigger (for now 120 GeV trigger only)
     '''
 #    df = df.Filter('MET_pt<50')
-    df = df.Filter('HLT_Photon30EB_TightID_TightIso || HLT_Photon50EB_TightID_TightIso || HLT_Photon75EB_TightID_TightIso || HLT_Photon90EB_TightID_TightIso || HLT_Photon110EB_TightID_TightIso','trigger single photon')
+    df = df.Filter('HLT_Photon30EB_TightID_TightIso || HLT_Photon100EB_TightID_TightIso || HLT_Photon110EB_TightID_TightIso || HLT_Photon120EB_TightID_TightIso','trigger single photon')
 
     df = df.Define('photonsptgt20','Photon_pt>20&&Photon_pfChargedIsoPFPV<0.2')
     df = df.Filter('Sum(photonsptgt20)==1','=1 photon with p_{T}>20 GeV')
 
-    str_ptandhltpath = '((Photon_pt>35&&Photon_pt<=55&&HLT_Photon30EB_TightID_TightIso)||(Photon_pt>55&&Photon_pt<=80&&HLT_Photon50EB_TightID_TightIso)||(Photon_pt>80&&Photon_pt<=95&&HLT_Photon75EB_TightID_TightIso)||(Photon_pt>95&&Photon_pt<=115&&HLT_Photon90EB_TightID_TightIso)||(Photon_pt>115&&HLT_Photon110EB_TightID_TightIso))'
+    str_ptandhltpath = '((Photon_pt>35&&Photon_pt<=105&&HLT_Photon30EB_TightID_TightIso)||(Photon_pt>105&&Photon_pt<=115&&HLT_Photon100EB_TightID_TightIso)||(Photon_pt>115&&Photon_pt<=125&&HLT_Photon110EB_TightID_TightIso)||(Photon_pt>125&&HLT_Photon120EB_TightID_TightIso))'
     df = df.Define('isRefPhoton','Photon_mvaID_WP80&&Photon_electronVeto&&Photon_pfChargedIsoPFPV<0.03&&Photon_pfRelIso03_all_quadratic<0.05&&abs(Photon_eta)<1.479&&'+str_ptandhltpath)
     
     df = df.Filter('Sum(isRefPhoton)==1','Photon passes tight ID and is in EB')

@@ -34,15 +34,15 @@ def main():
     args = parser.parse_args() 
 
     
-    ###Define the RDataFrame from the input tree
+    ###Define the RDataFrame from the input tree (JME custom Nano)
     inputFile = args.inputFile
     if inputFile == '':
         if args.channel == 'Photon':
-            inputFile = '/pnfs/iihe/cms/ph/sc4/store/data/Run2023D/EGamma0/NANOAOD/22Sep2023_v2-v1/50000/88f67549-4d5f-45a7-8aba-06f5b43fa5d7.root'
+            inputFile = '/pnfs/iihe/cms/ph/sc4/store/data/Run2022C/EGamma/NANOAOD/JMENano12p5-v1/60000/7833bda9-26cd-40c6-812e-53ce7f77e99f.root'
         elif args.channel == 'ZToEE':
-            inputFile = '/pnfs/iihe/cms/ph/sc4/store/data/Run2023D/EGamma0/NANOAOD/22Sep2023_v2-v1/50000/88f67549-4d5f-45a7-8aba-06f5b43fa5d7.root'
+            inputFile = '/pnfs/iihe/cms/ph/sc4/store/data/Run2022C/EGamma/NANOAOD/JMENano12p5-v1/60000/7833bda9-26cd-40c6-812e-53ce7f77e99f.root'
         elif args.channel == 'ZToMuMu':
-            inputFile = '/pnfs/iihe/cms/ph/sc4/store/data/Run2023D/Muon0/NANOAOD/22Sep2023_v2-v1/2530000/22c6aed1-75c2-4e54-80a0-c8f5a8e94700.root'
+            inputFile = '/pnfs/iihe/cms/ph/sc4/store/data/Run2022C/Muon/NANOAOD/JMENano12p5-v1/70000/eb41ead3-897f-4759-926a-4d0366317478.root'
 
 
             
