@@ -1,25 +1,26 @@
 #!/bin/bash                                                           
 
 # Set the paths below according to your needs:
-swpath=/user/gparaske/JEC/CMSSW_12_6_5/src                                      # To be used only for cms environment setup
-jobpath=JobSub                                                                  # New directory to be created for the submission
-subpath=/user/gparaske/JEC/MacrosNtuples/zorphotonjet_jecs/HTCondor/${jobpath}  # Path to be used for submission of jobs to HTCondor
+swpath=/user/${USER}/JEC/CMSSW_12_6_5/src              # To be used only for cms environment setup
+jobpath=JobSub                                         # New directory to be created for the submission
+subpath=${PWD}/${jobpath}                              # Path to be used for submission of jobs to HTCondor
 
-# Color variables for error printing
+# Color variables for message and error printing
 RED='\033[0;31m'
 NC='\033[0m' # No Color 
              
 # Help message                                                       
 Help(){
     echo                                                                
-    printf "=%.0s" {1..115}; printf "\n"                                 
-    echo "Usage:   $0  <Dataset>  <Year>  <Era>  <Output>" 
-    printf "=%.0s" {1..115}; printf "\n"                                 
+    printf "=%.0s" {1..114}; printf "\n"                                 
+    echo -e "                ${RED}Usage:   $0  <Dataset>  <Year>  <Era>  <Output>${NC}" 
+    printf "=%.0s" {1..114}; printf "\n"                                 
+    echo
     echo "Dataset    ---> All / EGamma / Muon / SingleMuon / G-4Jets"    
     echo "Year       ---> 2022 / 2023"
     echo "Era        ---> C / D / E / F / G / Summer22 (Depending on the Year and Dataset: check Datasets.md)"   
-    echo "Output     ---> Output directory to be created in /pnfs/iihe/cms/store/user/${USER}/JEC/<Year>/Run<Era>/<Dataset>/"
-    printf "=%.0s" {1..115}; printf "\n"                                 
+    echo "Output     ---> Output directory to be created in /pnfs/iihe/cms/store/user/${USER}/JEC/<Year>/Run<Era>/<Dataset>"
+    printf "=%.0s" {1..114}; printf "\n"                                 
     echo                                                                
     exit 1                                                              
 }
@@ -35,7 +36,7 @@ dataset=$1
 if ! [[ "$dataset" =~ ^(All|EGamma|Muon|SingleMuon|G-4Jets) ]]
 then                                                                                     
     echo
-    echo -e "${RED}Error : Invalid Dataset name!${RED}${NC}"                                                       
+    echo -e "${RED}Error : Invalid Dataset name!${NC}"                                                       
     Help
     exit 1                                                                                  
 else
@@ -60,13 +61,13 @@ fi
 year=$2
 if ! [[ "$year" =~ ^(2022|2023) ]]; then
     echo
-    echo -e "${RED}Error : Invalid Year!${RED}${NC}"                                                       
+    echo -e "${RED}Error : Invalid Year!${NC}"                                                       
     Help
     exit 1
 fi
 
 # To do: Check if era is correct (different eras per year) 
-# Use carefully until then!!
+# Use carefully until then !!!
 era=$3
 
 # Prepare the output directory in personal pnfs store area
@@ -76,7 +77,7 @@ then
     mkdir -p $output
 else
     echo
-    echo -e "${RED}The directory $output already exists, please give another Output name!${RED}${NC}"
+    echo -e "${RED}The directory $output already exists, please give another Output name!${NC}"
     echo
     exit 1
 fi
@@ -107,9 +108,9 @@ sed -i 's@channel@'$channel'@g' $newexe            # channel as set above
 chmod 744 $newexe
 
 # New submission script
-sed 's@exe.sh@'$newexe'@g' $tmpsub > $newsub         # executable name in the submit file
-sed -i 's@path_to_output@'$output'@g' $newsub        # path for the output root files in the submit file
-sed -i 's@list_of_files@'$files'@g' $newsub          # list of input files in the submit file
+sed 's@exe.sh@'$newexe'@g' $tmpsub > $newsub        # executable name in the submit file
+sed -i 's@path_to_output@'$output'@g' $newsub       # path for the output root files in the submit file
+sed -i 's@list_of_files@'$files'@g' $newsub         # list of input files in the submit file
 
 # New analysis script
 sed 's@../helpers@../../../helpers@g' $tmpana > $newana     # C++ libraries path in python script
@@ -117,8 +118,8 @@ sed 's@../helpers@../../../helpers@g' $tmpana > $newana     # C++ libraries path
 # New helper script is the same for the moment
 cp $tmphel $newhel
 
-# Check whether directory set above exists, otherwise create 
-# it and move inside it to proceed with job submission
+# Check whether the directory as set above exists. 
+# Otherwise create it and move inside it to proceed with job submission.
 if [ ! -d $jobpath ]; then
     mkdir $jobpath
 fi
@@ -147,11 +148,11 @@ condor_submit $newsub
 # Print sumbission information
 echo
 printf "=%.0s" {1..120}; printf "\n"
-echo "                                            Jobs submitted!"
+echo -e "                                           ${RED}Jobs submitted!${NC}"
 printf "=%.0s" {1..120}; printf "\n"
 echo
 echo "The submission files can be found in: ${PWD}"
 echo "The error/output/log files will be stored in: ${PWD}"
 echo "The output root files will be stored in: $output"
-printf "=%.0s" {1..130}; printf "\n"
+printf "=%.0s" {1..120}; printf "\n"
 echo

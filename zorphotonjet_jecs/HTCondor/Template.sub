@@ -1,11 +1,12 @@
-########################################################################
-# Script to be executed and is set from the SubmitToHTCondor.sh script #
-########################################################################
+#################################################################
+# Script to be executed on the node.                            #
+# "exe.sh" will be modified from the SubmitToHTCondor.sh script #
+#################################################################
 executable            		= exe.sh
 
-###########################################  
-# Definition of output ,error , log files # 
-###########################################
+#############################################  
+# Definition of output, error and log files # 
+#############################################
 output                		= output/$(ClusterId)$(ProcId).out
 error                 		= error/$(ClusterId)$(ProcId).err
 log                   		= log/$(ClusterId).log
@@ -16,11 +17,11 @@ log                   		= log/$(ClusterId).log
 ################################################################################
 transfer_input_files            = $(filename)
 
-##########################################################################
-# Arguments for the executable script                                    #
-# $filename = for the input file                                         #                                         
-# path_to_output to be replaced from the SubmitToHTCondor.sh script      #
-##########################################################################
+##############################################################################
+# Arguments for the executable script                                        #
+# $1 = $filename = for the input file (as explained above)                   #                                          
+# $2 = "path_to_output" will be modified from the SubmitToHTCondor.sh script #
+##############################################################################
 arguments                       = $(filename) path_to_output/output_$(ClusterId)$(ProcId).root
 
 ###########################################################
@@ -43,7 +44,7 @@ arguments                       = $(filename) path_to_output/output_$(ClusterId)
 ###############################
 # +JobFlavour           	= microcentury
 
-##################################################################################################
-# Job submission : one job per file list_of_files to be replaced from SubmitToHTCondor.sh script #
-##################################################################################################
+######################################################################################################
+# Job submission : one job per file "list_of_files" will be modified from SubmitToHTCondor.sh script #
+######################################################################################################
 queue filename matching files list_of_files
