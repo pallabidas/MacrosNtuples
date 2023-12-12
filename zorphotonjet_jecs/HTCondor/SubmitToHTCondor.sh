@@ -7,6 +7,7 @@ subpath=${PWD}/${jobpath}                              # Path to be used for sub
 
 # Color variables for message and error printing
 RED='\033[0;31m'
+PURPLE='\033[1;35m'
 NC='\033[0m' # No Color 
              
 # Help message                                                       
@@ -92,14 +93,10 @@ files="/pnfs/iihe/cms/ph/sc4/store/data/Run2022C/EGamma/NANOAOD/JMENano12p5-v1/6
 # Template scripts
 tmpexe="Template.sh"
 tmpsub="Template.sub"
-tmpana="../analysis.py"
-tmphel="../helper.py"
 
 # New scripts where the parameters are set
 newexe="$dataset"_"$year"_Run"$era".sh
 newsub="$dataset"_"$year"_Run"$era".sub
-newana="analysis.py"
-newhel="helper.py"
 
 # New executable script
 sed 's@swpath@'$swpath'@g' $tmpexe > $newexe       # software path as set above
@@ -112,12 +109,6 @@ sed 's@exe.sh@'$newexe'@g' $tmpsub > $newsub        # executable name in the sub
 sed -i 's@path_to_output@'$output'@g' $newsub       # path for the output root files in the submit file
 sed -i 's@list_of_files@'$files'@g' $newsub         # list of input files in the submit file
 
-# New analysis script
-sed 's@../helpers@../../../helpers@g' $tmpana > $newana     # C++ libraries path in python script
-
-# New helper script is the same for the moment
-cp $tmphel $newhel
-
 # Check whether the directory as set above exists. 
 # Otherwise create it and move inside it to proceed with job submission.
 if [ ! -d $jobpath ]; then
@@ -127,8 +118,6 @@ fi
 # New scripts will be moved inside the submission directory
 mv $newexe ./${jobpath}
 mv $newsub ./${jobpath}
-mv $newana ./${jobpath}
-mv $newhel ./${jobpath}
 cd ./${jobpath}
 
 # Create directories error - log - output
@@ -148,7 +137,7 @@ condor_submit $newsub
 # Print sumbission information
 echo
 printf "=%.0s" {1..120}; printf "\n"
-echo -e "                                           ${RED}Jobs submitted!${NC}"
+echo -e "                                           ${PURPLE}Jobs submitted!${NC}"
 printf "=%.0s" {1..120}; printf "\n"
 echo
 echo "The submission files can be found in: ${PWD}"
