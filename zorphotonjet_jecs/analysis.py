@@ -6,16 +6,15 @@ import sys
 import argparse
 
 
-
-#In case you want to load an helper for C++ functions
-ROOT.gInterpreter.Declare('#include "../helpers/Helper.h"')
-ROOT.gInterpreter.Declare('#include "../helpers/Helper_InvariantMass.h"')
-#Importing stuff from other python files
+## Importing stuff from other python files
 from helper import * 
+from trigger import *
 
 
 def main():
-    ###Arguments 
+
+
+    ## Arguments 
     parser = argparse.ArgumentParser(
         description='''Jet energy correction studies with Z/photon+jets
         ''',
@@ -33,8 +32,14 @@ def main():
                         type=str, default='Photon')
     args = parser.parse_args() 
 
+
+    ## Check if the channel is correct    
+    if args.channel not in ['Photon','ZToMuMu','ZToEE']:
+        print("Channel {} does not exist".format(args.channel))
+        return 
+
     
-    ###Define the RDataFrame from the input tree (JME custom Nano)
+    ## Define the default input files (JME custom nano) depending on the channel
     inputFile = args.inputFile
     if inputFile == '':
         if args.channel == 'Photon':
@@ -45,7 +50,7 @@ def main():
             inputFile = '/pnfs/iihe/cms/ph/sc4/store/data/Run2022C/Muon/NANOAOD/JMENano12p5-v1/70000/eb41ead3-897f-4759-926a-4d0366317478.root'
 
 
-            
+    ## Define the RDataFrame (Events branch) and print information
     df = ROOT.RDataFrame('Events', inputFile)    
     nEvents = df.Count().GetValue()
 
@@ -55,30 +60,32 @@ def main():
     
     print('There are {} events'.format(nEvents))
     
-    #Max events to run on 
+
+    # Max events to run on 
     max_events = min(nEvents, args.max_events) if args.max_events >=0 else nEvents
     df = df.Range(0, max_events)
-    #Next line to monitor event loop progress
+    # Next line to monitor event loop progress
     df = df.Filter('if(tdfentry_ %100000 == 0) {cout << "Event is  " << tdfentry_ << endl;} return true;')
 
-    #Apply MET filters
-    df = df.Filter('Flag_HBHENoiseFilter&&Flag_HBHENoiseIsoFilter&&Flag_goodVertices&&Flag_EcalDeadCellTriggerPrimitiveFilter&&Flag_BadPFMuonFilter&&Flag_BadPFMuonDzFilter')
-    
-    
+
+    ## Output root file definition
     if args.outputFile == '':
         args.outputFile = 'output_'+args.channel+'.root'
     out = ROOT.TFile(args.outputFile, "recreate")
 
-    
-    ####The sequence of filters/column definition starts here
-    
-    if args.channel not in ['Photon','ZToMuMu','ZToEE']:
-        print("Channel {} does not exist".format(args.channel))
-        return 
+ 
+    ## Apply the MET filters 
+    df = df.Filter('Flag_HBHENoiseFilter&&Flag_HBHENoiseIsoFilter&&Flag_goodVertices&&Flag_EcalDeadCellTriggerPrimitiveFilter&&Flag_BadPFMuonFilter&&Flag_BadPFMuonDzFilter') 
+  
+ 
+    ## Initialize the list of triggers present in the input file
+    triggers = TriggerInit(df, args.channel)
 
-    
+
+    ## Do the analysis depending on the channel
     if args.channel == 'Photon':
-        df = SinglePhotonSelection(df) 
+           
+        df = SinglePhotonSelection(df, triggers) 
         
         df = CleanJets(df)
         
@@ -93,7 +100,6 @@ def main():
 
         df_report.Print()
         
-
 
 if __name__ == '__main__':
     main()
