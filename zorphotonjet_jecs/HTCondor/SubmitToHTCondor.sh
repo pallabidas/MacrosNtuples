@@ -20,7 +20,7 @@ Help(){
     echo "Dataset    ---> All / EGamma / Muon / SingleMuon / G-4Jets"    
     echo "Year       ---> 2022 / 2023"
     echo "Era        ---> C / D / E / F / G / Summer22 (Depending on the Year and Dataset: check Datasets.md)"   
-    echo "Output     ---> Output directory to be created in /pnfs/iihe/cms/store/user/${USER}/JEC/<Year>/Run<Era>/<Dataset>"
+    echo "Output     ---> Output directory to be created in /pnfs/iihe/cms/store/user/${USER}/JEC/<Year>/<Dataset>/Run<Era>/"
     printf "=%.0s" {1..114}; printf "\n"                                 
     echo                                                                
     exit 1                                                              
@@ -72,7 +72,7 @@ fi
 era=$3
 
 # Prepare the output directory in personal pnfs store area
-output=/pnfs/iihe/cms/store/user/${USER}/JEC/${year}/Run$era/${dataset}/$4
+output=/pnfs/iihe/cms/store/user/${USER}/JEC/${year}/${dataset}/Run$era/$4
 if [ ! -d $output ] 
 then
     mkdir -p $output
@@ -86,8 +86,8 @@ fi
 # To do: pick the list of files in a generic way depending on the dataset/year/era
 # This will be done from the txt files in the Datasets directory 
 # Here we hardcode EGamma 2022 RunC --> to be replaced.
-files="/pnfs/iihe/cms/ph/sc4/store/data/Run2022C/EGamma/NANOAOD/JMENano12p5-v1/60000/e*.root"  # Small subset 7 files
-#files="/pnfs/iihe/cms/ph/sc4/store/data/Run2022C/EGamma/NANOAOD/JMENano12p5-v1/*/*.root" # All files
+#files="/pnfs/iihe/cms/ph/sc4/store/data/Run2022C/EGamma/NANOAOD/JMENano12p5-v1/60000/e*.root"  # Small subset 7 files
+files="/pnfs/iihe/cms/ph/sc4/store/data/Run2022C/EGamma/NANOAOD/JMENano12p5-v1/*/*.root" # All files
 
 # Modify the template scripts and store the submitted files in the submission directory
 # Template scripts
