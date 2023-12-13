@@ -1,20 +1,44 @@
 from ROOT import TFile, TH2, TCanvas
 
-infile = TFile('Test_2022C_JMENano_Photon.root')
+infile = TFile('/pnfs/iihe/cms/store/user/gparaske/JEC/2022/EGamma/RunC/Test/All.root')
 
-jetEtaBins = [0.0, 1.3, 2.5, 3.0, 3.5, 4.0, 5.0]
+jetetaBins = [0.0, 1.3, 2.5, 3.0, 3.5, 4.0, 5.0]
+alphaBins = [0.00, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.50, 1.00]
+
 keys = infile.GetListOfKeys()
 
-histo1DProjY = []
+ptBalance = []
+jetptResponse = []
 for key in keys:
     histo2D = key.ReadObj()
     if isinstance(histo2D, TH2):
-#        print(key.GetName()) 
-        histo1DProjY.append(histo2D.ProjectionY())
+       ptBalance.append(histo2D.ProjectionY())
+       jetptResponse.append(histo2D.ProfileX())
 
-for index, histo in enumerate(histo1DProjY):
-    c = TCanvas('eta=['+str(jetEtaBins[index])+','+str(jetEtaBins[index+1])+']','Canvas', 800, 800 )
-    histo.SetTitle('p_{T} balance: #eta=['+str(jetEtaBins[index])+','+str(jetEtaBins[index+1])+']')
-    histo.Draw();    
-    str_bineta = "eta{}to{}".format(jetEtaBins[index], jetEtaBins[index+1]).replace(".","p")
-    c.SaveAs(str_bineta+'.pdf')
+# To do: For jet pt response histos we need two addtional histos (for each eta region) : alpha<0.3 and alpha<1.0
+
+# Template drawing for the pt balance plots
+# To do: style/names/directories etc...
+index = 0
+for a in range(len(alphaBins)-1):
+    for e in range(len(jetetaBins)-1):
+       c = TCanvas('alpha=['+str(alphaBins[a])+','+str(alphaBins[a+1])+']' + ' , ' + 'eta=['+str(jetetaBins[e])+','+str(jetetaBins[e+1])+']','Canvas', 1000, 1000 )
+       ptBalance[index].SetTitle('p_{T} balance: #alpha=['+str(alphaBins[a])+','+str(alphaBins[a+1])+'], '+' #eta=['+str(jetetaBins[e])+','+str(jetetaBins[e+1])+']')
+       ptBalance[index].Draw()
+       str_binalpha = "alpha{}to{}".format(alphaBins[a], alphaBins[a+1]).replace(".","p")
+       str_bineta = "eta{}to{}".format(jetetaBins[e], jetetaBins[e+1]).replace(".","p")
+       c.SaveAs('ptBalance_'+str_binalpha + '_' + str_bineta+'.pdf')
+       index += 1
+
+# Template drawing for jet pt response plots
+# To do: style/names/directories etc...
+index = 0
+for a in range(len(alphaBins)-1):
+    for e in range(len(jetetaBins)-1):
+       c = TCanvas('alpha=['+str(alphaBins[a])+','+str(alphaBins[a+1])+']' + ' , ' + 'eta=['+str(jetetaBins[e])+','+str(jetetaBins[e+1])+']','Canvas', 1000, 1000 )
+       jetptResponse[index].SetTitle('jet p_{T} response: #alpha=['+str(alphaBins[a])+','+str(alphaBins[a+1])+'], '+' #eta=['+str(jetetaBins[e])+','+str(jetetaBins[e+1])+']')
+       jetptResponse[index].Draw()
+       str_binalpha = "alpha{}to{}".format(alphaBins[a], alphaBins[a+1]).replace(".","p")
+       str_bineta = "eta{}to{}".format(jetetaBins[e], jetetaBins[e+1]).replace(".","p")
+       c.SaveAs('jetptReponse_'+str_binalpha + '_' + str_bineta+'.pdf')
+       index += 1

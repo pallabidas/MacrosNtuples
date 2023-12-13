@@ -10,9 +10,10 @@ from trigger import *
 
 
 ## Histograms binning definition 
-jetEtaBins = [0., 1.3, 2.5, 3., 3.5, 4., 5.]
-jetptbins = array('f', [20, 30, 40, 50, 70, 100, 150, 200, 300, 500, 1000 ]) 
-balance_bins = array('f',[0.+float(i)/100. for i in range(200)] )
+jetetaBins = [0.0, 1.3, 2.5, 3.0, 3.5, 4.0, 5.0]
+alphaBins = [0.00, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.50, 1.00]
+jetptBins = array('f', [20, 30, 40, 50, 70, 100, 150, 200, 300, 500, 1000 ]) 
+ptbalanceBins = array('f',[0.+float(i)/100. for i in range(200)] )
 
 
 def SinglePhotonSelection(df, triggers):
@@ -78,9 +79,8 @@ def CleanJets(df):
     df = df.Define('cleanJet_Phi','Jet_phi[isCleanJet]')
     df = df.Filter('Sum(isCleanJet)==1','=1 clean jet with p_{T}>20/30 GeV')
 
-
-
     return df
+
     
 def PtBalanceSelection(df):
     '''
@@ -96,16 +96,24 @@ def PtBalanceSelection(df):
     df = df.Define('probe_Eta','cleanJet_Eta[0]') 
     df = df.Define('probe_Phi','cleanJet_Phi[0]')
 
+    #Calculate also alpha = pt(subleading_jet_pt)/pt(ref)
+    df = df.Define('alpha','cleanJet_Pt[1]/ref_Pt')
+
     return df
+
 
 def AnalyzePtBalance(df, suffix = ''):
     histos = {}
-    df_JetsBinnedInEta ={}
+    df_JetsBinnedInEta = {}
+    df_BalanceBinnedInAlpha = {}
 
-    for i_etabin in range(len(jetEtaBins)-1): 
-        str_bineta = "eta{}to{}".format(jetEtaBins[i_etabin], jetEtaBins[i_etabin+1]).replace(".","p")
-        df_JetsBinnedInEta[str_bineta] = df.Filter('abs(cleanJet_Eta[0])>={}&&abs(cleanJet_Eta[0])<{}'.format(jetEtaBins[i_etabin], jetEtaBins[i_etabin+1]))
-        histos['balancevsrefpt'+str_bineta+suffix] = df_JetsBinnedInEta[str_bineta].Histo2D(ROOT.RDF.TH2DModel('h_BalanceVsRefPt_{}'.format(str_bineta)+suffix, 'ptbalance', len(jetptbins)-1,jetptbins, len(balance_bins)-1, balance_bins), 'ref_Pt','ptbalance')
-        
+    for a in range(len(alphaBins)-1):
+        str_binalpha = "alpha{}to{}".format(alphaBins[a], alphaBins[a+1]).replace(".","p")
+        df_BalanceBinnedInAlpha[str_binalpha] = df.Filter('alpha>={}&&alpha<{}'.format(alphaBins[a], alphaBins[a+1]))
+        for e in range(len(jetetaBins)-1):
+            str_bineta = "eta{}to{}".format(jetetaBins[e], jetetaBins[e+1]).replace(".","p")
+            df_JetsBinnedInEta[str_bineta] = df.Filter('abs(cleanJet_Eta[0])>={}&&abs(cleanJet_Eta[0])<{}'.format(jetetaBins[e], jetetaBins[e+1]))
+
+            histos['balancevsrefpt'+str_bineta+str_binalpha+suffix] = df_JetsBinnedInEta[str_bineta].Histo2D(ROOT.RDF.TH2DModel('h_BalanceVsRefPt_{}_{}'.format(str_bineta, str_binalpha)+suffix, 'ptbalance', len(jetptBins)-1,jetptBins, len(ptbalanceBins)-1, ptbalanceBins), 'ref_Pt','ptbalance')
 
     return df, histos

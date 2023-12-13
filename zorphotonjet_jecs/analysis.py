@@ -96,6 +96,7 @@ def main():
         df_report = df.Report()
         
         for i in all_histos_balance:
+            # To do: Create alpha directories and put the corresponding histograms inside
             all_histos_balance[i].GetValue().Write()
 
         df_report.Print()
