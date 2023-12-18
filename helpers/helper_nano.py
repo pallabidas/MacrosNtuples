@@ -289,10 +289,10 @@ def DiJetSelection(df):
     '''
 
     df = df.Filter('HLT_AK8PFJet500&&PuppiMET_pt<300')
-    df = df.Define('isHighPtJet','Jet_jetId>=6&&Jet_pt>500&&Jet_muEF<0.5&&Jet_chEmEF<0.5')
-
-    df = df.Filter('Sum(isHighPtJet)>=2','>=2 jets with pt>500 GeV')
+    df = df.Define('isHighPtJet','Jet_jetId>=6&&Jet_pt>500&&Jet_muEF<0.5&&Jet_chEmEF<0.5&&Jet_neEmEF<0.8')
     
+    df = df.Filter('Sum(isHighPtJet)==2','=2 jets with pt>500 GeV')
+    df = df.Filter('isHighPtJet[0]&&isHighPtJet[1]','First 2 jets are the cleaned jets')
     df = df.Define('highPtJet_Pt','Jet_pt[isHighPtJet]')
     df = df.Define('highPtJet_Eta','Jet_eta[isHighPtJet]')
     df = df.Define('highPtJet_Phi','Jet_phi[isHighPtJet]')
@@ -301,7 +301,10 @@ def DiJetSelection(df):
     df = df.Define('_mjj', 'mll(Jet_pt, Jet_eta, Jet_phi, isHighPtJet, isHighPtJet)')
     df = df.Filter('_mjj>1000')
 
-
+    df = df.Define('barrelbarrel','abs(highPtJet_Eta[0])<1.3&&abs(highPtJet_Eta[1])<1.3')
+    df = df.Define('endcapendcap','abs(highPtJet_Eta[0])>1.3&&abs(highPtJet_Eta[1])>1.3')
+    
+    
     return df
 
 
@@ -843,6 +846,17 @@ def AnalyzeCleanJets(df, JetRecoPtCut, L1JetPtCut, suffix = ''):
 
 
 
+
+    return df, histos
+
+
+    
+def PrefiringVsMjj(df): 
+    histos = {}
+    histos['mjj_unpref_barrelbarrel'] =  df.Filter('(L1_UnprefireableEvent_TriggerRules||L1_UnprefireableEvent_FirstBxInTrain)').Filter('barrelbarrel').Histo1D(ROOT.RDF.TH1DModel('mjj_unpref_barrelbarrel', '', len(ht_bins)-1, array('d',ht_bins) ), '_mjj')
+    histos['mjj_unpref_L1FinalORBXmin1_barrelbarrel'] =  df.Filter('L1_FinalOR_BXmin1').Filter('(L1_UnprefireableEvent_TriggerRules||L1_UnprefireableEvent_FirstBxInTrain)').Filter('barrelbarrel').Histo1D(ROOT.RDF.TH1DModel('mjj_unpref_L1FinalORBXmin1_barrelbarrel', '', len(ht_bins)-1, array('d',ht_bins) ), '_mjj')
+    histos['mjj_unpref_endcapendcap'] =  df.Filter('(L1_UnprefireableEvent_TriggerRules||L1_UnprefireableEvent_FirstBxInTrain)').Filter('endcapendcap').Histo1D(ROOT.RDF.TH1DModel('mjj_unpref_endcapendcap', '', len(ht_bins)-1, array('d',ht_bins) ), '_mjj')
+    histos['mjj_unpref_L1FinalORBXmin1_endcapendcap'] =  df.Filter('L1_FinalOR_BXmin1').Filter('(L1_UnprefireableEvent_TriggerRules||L1_UnprefireableEvent_FirstBxInTrain)').Filter('endcapendcap').Histo1D(ROOT.RDF.TH1DModel('mjj_unpref_L1FinalORBXmin1_endcapendcap', '', len(ht_bins)-1, array('d',ht_bins) ), '_mjj')
 
     return df, histos
 

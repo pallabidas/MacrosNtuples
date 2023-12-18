@@ -303,12 +303,14 @@ def main():
         all_histos_jets = {}
 
         df, histos_jets = h.AnalyzeCleanJets(df, 100, 50 )
-        #histos = {}
+        
+        df, histos_mjj = h.PrefiringVsMjj(df)
         
         for i in histos_jets:
             histos_jets[i].GetValue().Write()
 
-
+        for i in histos_mjj:
+            histos_mjj[i].GetValue().Write()
             
     nvtx_histo.GetValue().Write()
 
