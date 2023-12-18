@@ -95,7 +95,15 @@ def main():
         df = df.Filter(fltr)
     nEvents = df.Count().GetValue()
 
+    if not 'L1_UnprefireableEvent_TriggerRules' in df.GetColumnNames():
+        df = df.Define('L1_UnprefireableEvent_TriggerRules','L1_UnprefireableEvent')
+    if not 'L1_UnprefireableEvent_FirstBxInTrain' in df.GetColumnNames():
+        df = df.Define('L1_UnprefireableEvent_FirstBxInTrain','return false;')
+    
+
     print('There are {} events'.format(nEvents))
+
+    
 
     #Max events to run on 
     max_events = min(nEvents, args.max_events) if args.max_events >=0 else nEvents
