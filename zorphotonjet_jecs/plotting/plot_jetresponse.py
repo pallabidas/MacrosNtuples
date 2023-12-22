@@ -20,7 +20,7 @@ alphaBins = array('f', [0.00, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.40, 0.50, 0.
 nalphaBins = len(alphaBins)-1
 str_binalphas = []
 for a in range(len(alphaBins)-1):
-    str_binalphas.append("alpha{}to{}".format(round(alphaBins[a],3), round(alphaBins[a+1],3)).replace(".","p"))
+    str_binalphas.append("alpha{}to{}".format("{:.2f}".format(alphaBins[a]), "{:.2f}".format(alphaBins[a+1])).replace(".","p"))
 #print('Alpha bins as strings: ',str_binalphas)
 
 # Get the 2D histograms with the pt balance and create the Y projections
@@ -55,9 +55,9 @@ os.makedirs(dir0, exist_ok = True)
 
 index = 0
 for e in range(len(jetetaBins)-1):
-    str1 = '[' + str(round(jetetaBins[e],3)) + ',' + str(round(jetetaBins[e+1],3)) + ')'
+    str1 = '[' + str("{:.1f}".format(jetetaBins[e])) + ',' + str("{:.1f}".format(jetetaBins[e+1])) + ')' 
     for a in range(len(alphaBins)-1):
-        str2='[' + str(round(alphaBins[a],3)) + ',' + str(round(alphaBins[a+1],3)) +')'
+        str2='[' + str("{:.2f}".format(alphaBins[a])) + ',' + str("{:.2f}".format(alphaBins[a+1])) +')'
         c = TCanvas(str1 + ',' + str2, str1 + ',' + str2, 1000, 1000)
         h_ptBalance[index].SetTitle('p_{T} balance: #eta=' + str1 + ', ' + '#alpha=' + str2)
         h_ptBalance[index].GetXaxis().SetTitle('p_{T}^{jet}/p_{T}^{#gamma}')
@@ -76,9 +76,9 @@ os.makedirs(dir1, exist_ok = True)
 
 index = 0
 for e in range(len(jetetaBins)-1):
-    str1 = '[' + str(round(jetetaBins[e],3)) + ',' + str(round(jetetaBins[e+1],3)) + ')'
+    str1 = '[' + str("{:.1f}".format(jetetaBins[e])) + ',' + str("{:.1f}".format(jetetaBins[e+1])) + ')' 
     for a in range(len(alphaBins)-1):
-        str2='[' + str(round(alphaBins[a],3)) + ',' + str(round(alphaBins[a+1],3)) +')'
+        str2='[' + str("{:.2f}".format(alphaBins[a])) + ',' + str("{:.2f}".format(alphaBins[a+1])) +')'
         c = TCanvas(str1 + ',' + str2, str1 + ',' + str2, 1000, 1000)
         gStyle.SetOptStat(0)
         gPad.SetLogx()
@@ -124,7 +124,7 @@ for e in range(len(str_binetas)):
     h_jetresponse.append(h)
 
 for e in range(len(jetetaBins)-1):
-    str1='[' + str(round(jetetaBins[e],3)) + ',' + str(round(jetetaBins[e+1],3)) + ')'
+    str1 = '[' + str("{:.1f}".format(jetetaBins[e])) + ',' + str("{:.1f}".format(jetetaBins[e+1])) + ')' 
     c = TCanvas(str1, str1, 1000, 1000)
     gStyle.SetOptStat(0)
     h_jetresponse[e].SetMarkerStyle(8)
