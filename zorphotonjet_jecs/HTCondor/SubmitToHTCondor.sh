@@ -83,11 +83,11 @@ else
     exit 1
 fi
 
-# To do: pick the list of files in a generic way depending on the dataset/year/era
-# This will be done from the txt files in the Datasets directory 
-# Here we hardcode EGamma 2022 RunC --> to be replaced.
-#files="/pnfs/iihe/cms/ph/sc4/store/data/Run2022C/EGamma/NANOAOD/JMENano12p5-v1/60000/e*.root"  # Small subset 7 files
-files="/pnfs/iihe/cms/ph/sc4/store/data/Run2022C/EGamma/NANOAOD/JMENano12p5-v1/*/*.root" # All files
+# Adapted to EGamma 2022 for the moment --> to be replaced for other years/channels.
+if [[ "$year" -eq 2022 ]]; then
+    #files="/pnfs/iihe/cms/ph/sc4/store/data/Run${year}${era}/${dataset}/NANOAOD/JMENano12p5-v1/70000/*.root" # Small subset of files
+    files="/pnfs/iihe/cms/ph/sc4/store/data/Run${year}${era}/${dataset}/NANOAOD/JMENano12p5-v1/*/*.root"      # All files
+fi
 
 # Modify the template scripts and store the submitted files in the submission directory
 # Template scripts
