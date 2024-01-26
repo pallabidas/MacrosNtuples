@@ -7,32 +7,11 @@ import sys
 
 gROOT.SetBatch(True)
 
-sys.path.insert(1, '../') # for importing the binning
+sys.path.insert(1, '../') # for importing the binning from another directory
 from binning import *
 
 # Input file : TODO Make it an argument
 infile = TFile('/pnfs/iihe/cms/store/user/gparaske/JEC/2022/EGamma/RunC/v1/All.root')
-
-# Eta bins as strings
-str_binetas = []
-for e in range(len(jetetaBins)-1):
-    str_binetas.append("eta{}to{}".format(jetetaBins[e], jetetaBins[e+1]).replace(".","p"))
-#print('Eta bins as strings: ',str_binetas)
-
-# pT bins as strings
-nptBins = len(jetptBins)-1
-str_binpts = []
-for p in range(len(jetptBins)-1):
-    str_binpts.append("pt{}to{}".format(int(jetptBins[p]), int(jetptBins[p+1])))
-#print('Pt bins as strings: ',str_binpts)
-
-# Alpha bins as floats and as strings (Define also here as array for histogram booking later)
-alphaBins = array('f', [0.00, 0.05, 0.10, 0.15, 0.20, 0.25, 0.30, 0.40, 0.50, 0.60, 0.80, 1.00])
-nalphaBins = len(alphaBins)-1
-str_binalphas = []
-for a in range(len(alphaBins)-1):
-    str_binalphas.append("alpha{}to{}".format("{:.2f}".format(alphaBins[a]), "{:.2f}".format(alphaBins[a+1])).replace(".","p"))
-#print('Alpha bins as strings: ',str_binalphas)
 
 # Get the 2D histograms with the pt balance and create the Y projections
 keys = infile.GetListOfKeys()
@@ -78,11 +57,11 @@ dir0 = 'jet_response'
 os.makedirs(dir0, exist_ok = True)
 
 index = 0
-for e in range(len(jetetaBins)-1):
+for e in range(NetaBins):
     str1 = '[' + str("{:.1f}".format(jetetaBins[e])) + ',' + str("{:.1f}".format(jetetaBins[e+1])) + ')' 
-    for a in range(len(alphaBins)-1):
+    for a in range(NalphaBins):
         str2='[' + str("{:.2f}".format(alphaBins[a])) + ',' + str("{:.2f}".format(alphaBins[a+1])) +')'
-        for p in range(len(jetptBins)-1):
+        for p in range(NptBins):
             str3 = '[' + str(jetptBins[p]) + ',' + str(jetptBins[p+1]) + ')'
 
             c = TCanvas(str1 + ',' + str2 + ',' + str3, str1 + ',' + str2 + ',' + str3, 1000, 1000)
@@ -103,14 +82,14 @@ dir1 = 'jet_response_vs_refpt'
 os.makedirs(dir1, exist_ok = True)
 
 index = 0
-for e in range(len(jetetaBins)-1):
+for e in range(NetaBins):
     str1 = '[' + str("{:.1f}".format(jetetaBins[e])) + ',' + str("{:.1f}".format(jetetaBins[e+1])) + ')' 
-    for a in range(len(alphaBins)-1):
+    for a in range(NalphaBins):
         str2='[' + str("{:.2f}".format(alphaBins[a])) + ',' + str("{:.2f}".format(alphaBins[a+1])) +')'
 
         #print('Adding histograms to: ', h_ptBalance_vs_refpt[index].GetName())
         # Here we add all the different pt histograms such that we have one histogram per eta and alpha bin
-        for p in range(len(jetptBins)-2):
+        for p in range(NptBins-1):
             h_ptBalance_vs_refpt[index].Add(h_ptBalance_vs_refpt[index+p+1])
             #print(' adding: ', h_ptBalance_vs_refpt[index+p+1].GetName())
 
@@ -135,7 +114,7 @@ for e in range(len(jetetaBins)-1):
 
         c.SaveAs(dir1 + '/ptBalance_' + str_binetas[e] + '_' + str_binalphas[a] + '.png')
         #c.SaveAs(dir1 + '/ptBalance_' + str_binetas[e] + '_' + str_binalphas[a] + '.pdf')
-        index += nptBins
+        index += NptBins
 
 # Then for each eta and each pt bin we take the mean (pt balance) and draw it as a function of alpha
 # Here we use the dictionary with the lists of histograms
@@ -165,7 +144,7 @@ for etapt, histo in h_ptBalance_per_eta_per_pt.items():
 # Create a list with the final histograms jet response vs alpha for each eta, pt bin
 h_jetresponse = []
 for (etapt1,mean), (etapt2,error) in zip(h_means.items(), h_errors.items()):
-    h = TH1F(etapt1, etapt1, nalphaBins, alphaBins)
+    h = TH1F(etapt1, etapt1, NalphaBins, alphaBins)
     ibin = 1
     for m,e in zip(mean,error):
         h.SetBinContent(ibin, m)
@@ -180,9 +159,9 @@ for (etapt1,mean), (etapt2,error) in zip(h_means.items(), h_errors.items()):
 
 # Draw of the above histograms
 index = 0
-for e in range(len(jetetaBins)-1):
+for e in range(NetaBins):
     str1 = '[' + str("{:.1f}".format(jetetaBins[e])) + ',' + str("{:.1f}".format(jetetaBins[e+1])) + ')' 
-    for p in range(len(jetptBins)-1):
+    for p in range(NptBins):
         str2 = '[' + str(jetptBins[p]) + ',' + str(jetptBins[p+1]) + ')'
 
         c = TCanvas(str1+str2, str1+str2, 1000, 1000)

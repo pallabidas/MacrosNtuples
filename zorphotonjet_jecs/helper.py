@@ -1,8 +1,4 @@
 import ROOT
-import yaml
-import fnmatch
-from array import array
-from math import floor, ceil
 
 
 ## Importing stuff from other python files 
@@ -11,13 +7,13 @@ from binning import *
 
 
 ## C++ function for alpha calculation
-ROOT.gInterpreter.Declare("""
-float Alpha_func(ROOT::VecOps::RVec<float> pt_jet, float pt_ref){
+ROOT.gInterpreter.Declare('''
+inline float Alpha_func(const ROOT::VecOps::RVec<float> &pt_jet, const float pt_ref){
 
       return pt_jet.size()>1 ? pt_jet[1]/pt_ref : 0.0;
 
 }
-""")
+''')
 
 
 def SinglePhotonSelection(df, triggers):
@@ -73,17 +69,17 @@ def ZMuMu_MuSelection(df):
 
     
 def CleanJets(df):
-    #List of cleaned jets (noise cleaning + lepton/photon overlap removal)
+    # List of cleaned jets (noise cleaning + lepton/photon overlap removal)
     df = df.Define('_jetPassID', 'Jet_jetId>=6')
 
-    #Next line to make sure we remove the leptons/the photon
+    # Next line to make sure we remove the leptons/the photon
     df = df.Define('isCleanJet','_jetPassID&&(Jet_pt>30||(Jet_pt>20&&abs(Jet_eta)<2.4))&&Jet_muEF<0.5&&Jet_chEmEF<0.5&&Jet_neEmEF<0.8 ')
     df = df.Define('cleanJet_Pt','Jet_pt[isCleanJet]')
     df = df.Define('cleanJet_Eta','Jet_eta[isCleanJet]')
     df = df.Define('cleanJet_Phi','Jet_phi[isCleanJet]')
     df = df.Filter('Sum(isCleanJet)>=1','>=1 clean jet with p_{T}>20/30 GeV')
 
-    #For the subleading jet (alpha calculation) we do not apply any pt cut
+    # For the subleading jet (alpha calculation) we do not apply any pt cut
     df = df.Define('isCleanJet_noPtcut','_jetPassID&&Jet_muEF<0.5&&Jet_chEmEF<0.5&&Jet_neEmEF<0.8 ')
     df = df.Define('cleanJet_Pt_noPtcut','Jet_pt[isCleanJet_noPtcut]')
 
@@ -95,40 +91,39 @@ def PtBalanceSelection(df):
     Compute pt balance = pt(jet)/pt(ref) and alpha=pt(subleading_jet)/pt(ref)
     ref can be a photon or a Z.
     '''
-    #Back to back condition
+    # Back to back condition
     df = df.Filter('abs(acos(cos(ref_Phi-cleanJet_Phi[0])))>2.9','DeltaPhi(ph,jet)>2.9')
 
-    #Compute Pt balance = pt(jet)/pt(ref)    
+    # Compute Pt balance = pt(jet)/pt(ref)    
     df = df.Define('ptbalance','cleanJet_Pt[0]/ref_Pt')
     df = df.Define('probe_Eta','cleanJet_Eta[0]') 
     df = df.Define('probe_Phi','cleanJet_Phi[0]')
 
-    #Compute alpha=pt(subleading_jet)/pt(ref) using the Alpha_func
+    # Compute alpha=pt(subleading_jet)/pt(ref) using the Alpha_func
     df = df.Define('alpha','Alpha_func(cleanJet_Pt_noPtcut,ref_Pt)')
 
     return df
 
 
 def AnalyzePtBalance(df, suffix = ''):
-    histos = {}                                 #Dictionary for histograms (one histo per eta,alpha,ref_Pt)
-    df_ptBalanceBinnedInEtaAndAlphaPerPt = {}   #RDataFrame for filtering on eta, alpha and ref_Pt bins
+    histos = {}                                 # Dictionary for histograms (one histo per eta, alpha and ref_Pt)
+    df_ptBalanceBinnedInEtaAndAlphaPerPt = {}   # RDataFrame for filtering on eta, alpha and ref_Pt bins
 
-    #Loop over eta bins
-    for e in range(len(jetetaBins)-1):
-        str_bineta = "eta{}to{}".format(jetetaBins[e], jetetaBins[e+1]).replace(".","p")
+    # Loop over eta bins
+    for e in range(NetaBins):
+        # Loop over alpha bins
+        for a in range(NalphaBins):
+            # Loop over pt bins
+            for p in range(NptBins):
+                # Filtering on eta, alpha and pt bins
+                key = '_' + str_binetas[e] + '_' + str_binalphas[a] + '_' + str_binpts[p]
+                df_ptBalanceBinnedInEtaAndAlphaPerPt[key] = df.Filter('abs(cleanJet_Eta[0])>={}&&abs(cleanJet_Eta[0])<{}'.format(jetetaBins[e], jetetaBins[e+1]))\
+                                                              .Filter('alpha>={}&&alpha<{}'.format(alphaBins[a], alphaBins[a+1]))\
+                                                              .Filter('ref_Pt>={}&&ref_Pt<{}'.format(jetptBins[p], jetptBins[p+1]))
 
-        #Loop over alpha bins
-        for a in range(len(alphaBins)-1):
-            str_binalpha = "alpha{}to{}".format(alphaBins[a], alphaBins[a+1]).replace(".","p")
-
-            #Loop over pt bins
-            for p in range(len(jetptBins)-1):
-                str_binpt = "pt{}to{}".format(jetptBins[p], jetptBins[p+1]).replace(".0","")
-
-                #Filtering on eta, alpha and pt bins
-                df_ptBalanceBinnedInEtaAndAlphaPerPt[str_bineta+str_binalpha+str_binpt] = df.Filter('abs(cleanJet_Eta[0])>={}&&abs(cleanJet_Eta[0])<{}'.format(jetetaBins[e], jetetaBins[e+1])).Filter('alpha>={}&&alpha<{}'.format(alphaBins[a], alphaBins[a+1])).Filter('ref_Pt>={}&&ref_Pt<{}'.format(jetptBins[p], jetptBins[p+1]))
-
-                #One histogram per eta, alpha, ref_Pt bin
-                histos['balancevsrefpt'+str_bineta+str_binalpha+str_binpt+suffix] = df_ptBalanceBinnedInEtaAndAlphaPerPt[str_bineta+str_binalpha+str_binpt].Histo2D(ROOT.RDF.TH2DModel('h_BalanceVsRefPt_{}_{}_{}'.format(str_bineta, str_binalpha, str_binpt)+suffix, 'ptbalance', len(jetptBins)-1,jetptBins, len(ptbalanceBins)-1, ptbalanceBins), 'ref_Pt','ptbalance')
+                # One histogram per eta, alpha, ref_Pt bin
+                histos['balancevsrefpt' + key + suffix] = df_ptBalanceBinnedInEtaAndAlphaPerPt[key]\
+                                                          .Histo2D(ROOT.RDF.TH2DModel('h_BalanceVsRefPt{}'.format(key)+suffix,'ptbalance',\
+                                                          NptBins, jetptBins, NptbalanceBins, ptbalanceBins), 'ref_Pt','ptbalance')
 
     return df, histos
