@@ -4,6 +4,7 @@ import ROOT
 ## Importing stuff from other python files 
 from trigger import *
 from binning import *
+from corrections import *
 
 
 ## C++ function for alpha calculation
@@ -73,14 +74,20 @@ def CleanJets(df):
     df = df.Define('_jetPassID', 'Jet_jetId>=6')
 
     # Next line to make sure we remove the leptons/the photon
-    df = df.Define('isCleanJet','_jetPassID&&(Jet_pt>30||(Jet_pt>20&&abs(Jet_eta)<2.4))&&Jet_muEF<0.5&&Jet_chEmEF<0.5&&Jet_neEmEF<0.8 ')
+    # TODO: Make a flag to run on raw or corrected jet pt
+    # Corrected jet pt
+    df = df.Define('Jet_ptCor', 'JetEnergyCorrections(Jet_area, Jet_eta, Jet_pt, Rho_fixedGridRhoAll)')
+    df = df.Define('isCleanJet_corPt','_jetPassID&&(Jet_ptCor>30||(Jet_ptCor>20&&abs(Jet_eta)<2.4))&&Jet_muEF<0.5&&Jet_chEmEF<0.5&&Jet_neEmEF<0.8')
+
+    # Raw jet pt
+    df = df.Define('isCleanJet','_jetPassID&&(Jet_pt>30||(Jet_pt>20&&abs(Jet_eta)<2.4))&&Jet_muEF<0.5&&Jet_chEmEF<0.5&&Jet_neEmEF<0.8')
     df = df.Define('cleanJet_Pt','Jet_pt[isCleanJet]')
     df = df.Define('cleanJet_Eta','Jet_eta[isCleanJet]')
     df = df.Define('cleanJet_Phi','Jet_phi[isCleanJet]')
     df = df.Filter('Sum(isCleanJet)>=1','>=1 clean jet with p_{T}>20/30 GeV')
 
     # For the subleading jet (alpha calculation) we do not apply any pt cut
-    df = df.Define('isCleanJet_noPtcut','_jetPassID&&Jet_muEF<0.5&&Jet_chEmEF<0.5&&Jet_neEmEF<0.8 ')
+    df = df.Define('isCleanJet_noPtcut','_jetPassID&&Jet_muEF<0.5&&Jet_chEmEF<0.5&&Jet_neEmEF<0.8')
     df = df.Define('cleanJet_Pt_noPtcut','Jet_pt[isCleanJet_noPtcut]')
 
     return df
