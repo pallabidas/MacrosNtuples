@@ -2,11 +2,12 @@
 
 ## Data
 
-### EGamma 2022 : CDEF
+### EGamma 2022 : CDEFG
 /pnfs/iihe/cms/ph/sc4/store/data/Run2022C/EGamma/NANOAOD/JMENano12p5-v1  
 /pnfs/iihe/cms/ph/sc4/store/data/Run2022D/EGamma/NANOAOD/JMENano12p5-v1  
 /pnfs/iihe/cms/ph/sc4/store/data/Run2022E/EGamma/NANOAOD/JMENano12p5-v1  
-/pnfs/iihe/cms/ph/sc4/store/data/Run2022F/EGamma/NANOAOD/JMENano12p5-v1
+/pnfs/iihe/cms/ph/sc4/store/data/Run2022F/EGamma/NANOAOD/JMENano12p5-v1  
+/pnfs/iihe/cms/ph/sc4/store/data/Run2022G/EGamma/NANOAOD/JMENano12p5-v1
 
 ### EGamma 2023 : CD
 /pnfs/iihe/cms/ph/sc4/store/data/Run2023C/EGamma0/NANOAOD/JMENano12p5_v1-v1  

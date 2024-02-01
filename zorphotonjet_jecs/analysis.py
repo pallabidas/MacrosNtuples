@@ -1,4 +1,5 @@
 from datetime import datetime
+import time
 import ROOT
 import json
 import os
@@ -20,10 +21,10 @@ def main():
         ''',
         usage='use "%(prog)s --help" for more information',
         formatter_class=argparse.RawTextHelpFormatter)
-    parser.add_argument("--max_events", dest="max_events", help="Maximum number of events to analyze. Default=-1 i.e. run on all events.", type=int, default=-1)
-    parser.add_argument("-i", "--input", dest="inputFile", help="Input file", type=str, default='')
-    parser.add_argument("-o", "--output", dest="outputFile", help="Output file", type=str, default='')
-    parser.add_argument("-c", "--channel", dest="channel", help=
+    parser.add_argument("--max_events",    dest="max_events", help="Maximum number of events to analyze. Default=-1 i.e. run on all events.", type=int, default=-1)
+    parser.add_argument("-i", "--input",   dest="inputFile",  help="Input file", type=str, default='')
+    parser.add_argument("-o", "--output",  dest="outputFile", help="Output file", type=str, default='')
+    parser.add_argument("-c", "--channel", dest="channel",    help=
                         '''Set channel:
                         -Photon
                         -ZToMuMu
@@ -65,7 +66,7 @@ def main():
     max_events = min(nEvents, args.max_events) if args.max_events >=0 else nEvents
     df = df.Range(0, max_events)
     # Next line to monitor event loop progress
-    df = df.Filter('if(tdfentry_ %100000 == 0) {cout << "Event is  " << tdfentry_ << endl;} return true;')
+    df = df.Filter('if(tdfentry_ %100000 == 0) {cout << "Event is: " << tdfentry_ << endl;} return true;')
 
 
     ## Output root file definition
@@ -103,4 +104,7 @@ def main():
         
 
 if __name__ == '__main__':
+    #start = time.time()  # Uncomment to check the execution time
     main()
+    #end = time.time()    # Uncomment to check the execution time
+    #print('The time of execution was: ', '{:.2f}'.format((end-start)/60.), ' min') # Uncomment to check the execution time
