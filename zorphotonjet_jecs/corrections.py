@@ -2,10 +2,12 @@ import ROOT
 import correctionlib
 correctionlib.register_pyroot_binding()
 
-# json file with Jet Energy Corrections (TODO: make it generic)
+# json file with Jet Energy Corrections
+# TODO: make it generic and read the files that corresponds to the year provided when sybmitting the jobs
 ROOT.gInterpreter.Declare('auto cset = correction::CorrectionSet::from_file("JEC/2022_Summer22/jet_jerc.json.gz");')
 
-# C++ function to apply the Jet Energy Corrections (TODO: Improve and make generic)
+# C++ function to apply the Jet Energy Corrections 
+# TODO: Improve and make generic reading of file with the corrections (year, era, correction_name, algo)
 ROOT.gInterpreter.Declare('''
 ROOT::VecOps::RVec<float> JetEnergyCorrections(const ROOT::VecOps::RVec<float> &area, 
                                                const ROOT::VecOps::RVec<float> &eta,
