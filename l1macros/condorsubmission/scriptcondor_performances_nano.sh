@@ -1,8 +1,9 @@
 #!/bin/bash
 
-cd /user/lathomas/PortingCodeToGitIIHECMS/CMSSW_13_0_0/src/GenericTreeProducerMINIAOD/Ntuplizer/python
+export X509_USER_PROXY=/home/pdas/proxy/x509up_u51577
+cd /afs/cern.ch/work/p/pdas/L1TrigDPG/2024/CMSSW_14_1_0_pre2/src/
 cmsenv 
-cd /user/lathomas/GITStuff/MacrosNtuples/l1macros
+cd /afs/cern.ch/work/p/pdas/L1TrigDPG/2024/CMSSW_14_1_0_pre2/src/MacrosNtuples/l1macros/
 
 #python3 performances_nano.py --max_events -1 -i $1 -o $2 -c $3
 #python3 performances_nano.py --max_events -1 -i $1 -o $2 -c $3 -g Cert_Collisions2022_eraB_366403_367079_Golden.json
@@ -12,4 +13,3 @@ then
 else
     python3 performances_nano.py --max_events -1 -i $1 -o $2 -c $3 -g $4
 fi
-
