@@ -135,8 +135,8 @@ def main():
     nvtx_histo = df.Histo1D(ROOT.RDF.TH1DModel("h_nvtx" , "Number of reco vertices;N_{vtx};Events"  ,    100, 0., 100.), "PV_npvs")
     L1Jet_pt_histo = df.Histo1D(ROOT.RDF.TH1DModel("h_L1Jet_pt", "L1Jet pt;p_{T} [GeV];Events", 100, 0., 1500.), "L1Jet_pt")
     L1Jet_eta_histo = df.Histo1D(ROOT.RDF.TH1DModel("h_L1Jet_eta", "L1Jet eta;#eta;Events", 100, -5., 5.), "L1Jet_eta")
-    #L1EmulJet_pt_histo = df.Histo1D(ROOT.RDF.TH1DModel("h_L1EmulJet_pt", "L1EmulJet pt;p_{T} [GeV];Events", 100, 0., 1500.), "L1EmulJet_pt")
-    #L1EmulJet_eta_histo = df.Histo1D(ROOT.RDF.TH1DModel("h_L1EmulJet_eta", "L1EmulJet eta;#eta;Events", 100, -5., 5.), "L1EmulJet_eta")
+    L1EmulJet_pt_histo = df.Histo1D(ROOT.RDF.TH1DModel("h_L1EmulJet_pt", "L1EmulJet pt;p_{T} [GeV];Events", 100, 0., 1500.), "L1EmulJet_pt")
+    L1EmulJet_eta_histo = df.Histo1D(ROOT.RDF.TH1DModel("h_L1EmulJet_eta", "L1EmulJet eta;#eta;Events", 100, -5., 5.), "L1EmulJet_eta")
         
     if args.channel == 'PhotonJet':
         df = h.SinglePhotonSelection(df) 
@@ -355,8 +355,8 @@ def main():
     nvtx_histo.GetValue().Write()
     L1Jet_pt_histo.GetValue().Write()
     L1Jet_eta_histo.GetValue().Write()
-    #L1EmulJet_pt_histo.GetValue().Write()
-    #L1EmulJet_eta_histo.GetValue().Write()
+    L1EmulJet_pt_histo.GetValue().Write()
+    L1EmulJet_eta_histo.GetValue().Write()
 
 if __name__ == '__main__':
     main()
