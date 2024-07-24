@@ -700,6 +700,13 @@ def EtSum(df, suffix = ''):
     dfmetl1 = df.Filter('L1_ETMHF110')
     histos['L1_ETMHF110'+suffix] = dfmetl1.Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_ETMHF110'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
 
+
+    df = df.Define('L1EmulEtSum_isMHTHF','L1EmulEtSum_etSumType==20&&L1EmulEtSum_bx==0')
+    df = df.Define('L1EmulMHTHF_array','L1EmulEtSum_pt[L1EmulEtSum_isMHTHF]')
+    df = df.Define('L1EmulMHTHF','L1EmulMHTHF_array[0]')
+
+    histos['L1_MHTHF130'+suffix] = df.Filter('L1EmulMHTHF>130').Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_EmulMHTHF130'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
+
     histos['HLT_PFMETNoMu120_PFMHTNoMu120_IDTight'+suffix] =  df.Filter('HLT_PFMETNoMu120_PFMHTNoMu120_IDTight').Histo1D(ROOT.RDF.TH1DModel('h_HLT_PFMETNoMu120_PFMHTNoMu120_IDTight'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
     histos['HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60'+suffix] =  df.Filter('HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60').Histo1D(ROOT.RDF.TH1DModel('h_HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
     
@@ -709,6 +716,12 @@ def EtSum(df, suffix = ''):
     histos['L1_HTT280er'+suffix] = df.Filter('L1_HTT280er').Filter('PuppiMET_pt<50').Histo1D(ROOT.RDF.TH1DModel('h_HT_L1_HTT280er'+suffix, '', len(ht_bins)-1, array('d',ht_bins)), 'HT')
     histos['L1_HTT360er'+suffix] = df.Filter('L1_HTT360er').Filter('PuppiMET_pt<50').Histo1D(ROOT.RDF.TH1DModel('h_HT_L1_HTT360er'+suffix, '', len(ht_bins)-1, array('d',ht_bins)), 'HT')
     histos['HLT_PFHT1050'+suffix] =  df.Filter('HLT_PFHT1050').Filter('PuppiMET_pt<50').Histo1D(ROOT.RDF.TH1DModel('h_HLT_PFHT1050'+suffix, '', len(ht_bins)-1, array('d',ht_bins)), 'HT')
+
+    df = df.Define('L1EmulEtSum_isHT','L1EmulEtSum_etSumType==1&&L1EmulEtSum_bx==0')
+    df = df.Define('L1EmulHT_array','L1EmulEtSum_pt[L1EmulEtSum_isHT]')
+    df = df.Define('L1EmulHT','L1EmulHT_array[0]')
+
+    histos['L1_HTT280er'+suffix] = df.Filter('L1EmulHT>280').Filter('PuppiMET_pt<50').Histo1D(ROOT.RDF.TH1DModel('h_HT_L1EmulHTT280er'+suffix, '', len(ht_bins)-1, array('d',ht_bins)), 'HT')
 
     # DiJet selections:
 
