@@ -137,6 +137,26 @@ def main():
     L1Jet_eta_histo = df.Histo1D(ROOT.RDF.TH1DModel("h_L1Jet_eta", "L1Jet eta;#eta;Events", 100, -5., 5.), "L1Jet_eta")
     L1EmulJet_pt_histo = df.Histo1D(ROOT.RDF.TH1DModel("h_L1EmulJet_pt", "L1EmulJet pt;p_{T} [GeV];Events", 100, 0., 1500.), "L1EmulJet_pt")
     L1EmulJet_eta_histo = df.Histo1D(ROOT.RDF.TH1DModel("h_L1EmulJet_eta", "L1EmulJet eta;#eta;Events", 100, -5., 5.), "L1EmulJet_eta")
+
+
+    df = df.Define('L1LeadingJetPt','(L1Jet_pt.size() > 0 ) ? L1Jet_pt[0] : -99.')
+    L1LeadingJet_pt_histo = df.Histo1D(ROOT.RDF.TH1DModel("h_L1LeadingJet_pt", "L1 Leading Jet pt;p_{T} [GeV];Events", 100, 0., 1100.), 'L1LeadingJetPt')
+    df = df.Define('L1EmulLeadingJetPt','(L1EmulJet_pt.size() > 0 ) ? L1EmulJet_pt[0] : -99.')
+    L1EmulLeadingJet_pt_histo = df.Histo1D(ROOT.RDF.TH1DModel("h_L1EmulLeadingJet_pt", "L1Emul Leading Jet pt;p_{T} [GeV];Events", 100, 0., 1100.), 'L1EmulLeadingJetPt')
+
+    #Define HT
+    df = df.Define('L1EmulEtSum_isHT','L1EmulEtSum_etSumType==1&&L1EmulEtSum_bx==0')
+    df = df.Define('L1EmulHT_array','L1EmulEtSum_pt[L1EmulEtSum_isHT]')
+    df = df.Define('L1EmulHT','L1EmulHT_array[0]')
+
+    L1EmulHT_histo = df.Histo1D(ROOT.RDF.TH1DModel("h_L1EmulHT", "L1Emul HT;H_{T} [GeV];Events", 100, 0., 1100.), "L1EmulHT")
+
+    #Define MHTHF
+    df = df.Define('L1EmulEtSum_isMHTHF','L1EmulEtSum_etSumType==20&&L1EmulEtSum_bx==0')
+    df = df.Define('L1EmulMHTHF_array','L1EmulEtSum_pt[L1EmulEtSum_isMHTHF]')
+    df = df.Define('L1EmulMHTHF','L1EmulMHTHF_array[0]')
+
+    L1EmulMHTHF_histo = df.Histo1D(ROOT.RDF.TH1DModel("h_L1EmulMHTHF", "L1Emul MHTHF;Missing H_{T} [GeV];Events", 100, 0., 400.), "L1EmulMHTHF")
         
     if args.channel == 'PhotonJet':
         df = h.SinglePhotonSelection(df) 
@@ -214,41 +234,41 @@ def main():
         df = h.CleanJets(df)
         
         # make copies of df for each bin of nvtx (+1 copy of the original)
-        df_list = [df.Filter(nvtx_cut) for nvtx_cut in filter_list]
-
-        all_histos_jets = {}
-        all_histos_sum = {}
-        all_histos_hf = {}
-
-        for i, df_element in enumerate(df_list):
-            df_element, histos_jets = h.AnalyzeCleanJets(df_element, 100, 50, suffix = suffix_list[i]) 
-            df_element = h.lepton_ismuon(df_element)
-            if h.config['MET_plots']:
-                df_element, histos_sum = h.EtSum(df_element, suffix = suffix_list[i])
-            if h.config['HF_noise']:
-                df_element, histos_hf = h.HFNoiseStudy(df_element, suffix = suffix_list[i])
-
-            for key, val in histos_jets.items():
-                all_histos_jets[key] = val
-
-            if h.config['MET_plots']:
-                for key, val in histos_sum.items():
-                    all_histos_sum[key] = val
-
-            if h.config['HF_noise']:
-                for key, val in histos_hf.items():
-                    all_histos_hf[key] = val
-
-        for i in all_histos_jets:
-            all_histos_jets[i].GetValue().Write()
-            
-        if h.config['MET_plots']:
-            for i in all_histos_sum:
-                all_histos_sum[i].GetValue().Write()
-
-        if h.config['HF_noise']:
-            for i in all_histos_hf:
-                all_histos_hf[i].GetValue().Write()
+#        df_list = [df.Filter(nvtx_cut) for nvtx_cut in filter_list]
+#
+#        all_histos_jets = {}
+#        all_histos_sum = {}
+#        all_histos_hf = {}
+#
+#        for i, df_element in enumerate(df_list):
+#            df_element, histos_jets = h.AnalyzeCleanJets(df_element, 100, 50, suffix = suffix_list[i]) 
+#            df_element = h.lepton_ismuon(df_element)
+#            if h.config['MET_plots']:
+#                df_element, histos_sum = h.EtSum(df_element, suffix = suffix_list[i])
+#            if h.config['HF_noise']:
+#                df_element, histos_hf = h.HFNoiseStudy(df_element, suffix = suffix_list[i])
+#
+#            for key, val in histos_jets.items():
+#                all_histos_jets[key] = val
+#
+#            if h.config['MET_plots']:
+#                for key, val in histos_sum.items():
+#                    all_histos_sum[key] = val
+#
+#            if h.config['HF_noise']:
+#                for key, val in histos_hf.items():
+#                    all_histos_hf[key] = val
+#
+#        for i in all_histos_jets:
+#            all_histos_jets[i].GetValue().Write()
+#            
+#        if h.config['MET_plots']:
+#            for i in all_histos_sum:
+#                all_histos_sum[i].GetValue().Write()
+#
+#        if h.config['HF_noise']:
+#            for i in all_histos_hf:
+#                all_histos_hf[i].GetValue().Write()
             
 #        df, histos_jets = AnalyzeCleanJets(df, 100, 50) 
 #        
@@ -357,6 +377,10 @@ def main():
     L1Jet_eta_histo.GetValue().Write()
     L1EmulJet_pt_histo.GetValue().Write()
     L1EmulJet_eta_histo.GetValue().Write()
+    L1LeadingJet_pt_histo.GetValue().Write()
+    L1EmulLeadingJet_pt_histo.GetValue().Write()
+    L1EmulHT_histo.GetValue().Write()
+    L1EmulMHTHF_histo.GetValue().Write()
 
 if __name__ == '__main__':
     main()
