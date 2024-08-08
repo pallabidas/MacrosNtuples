@@ -43,7 +43,7 @@ cat>test.C<<EOF
   ratesHist1->SetLineColor(kBlack);
   ratesHist1->Draw();
 
-  TFile *g2 =TFile::Open("test2.root");
+  TFile *g2 =TFile::Open("test2_new.root");
   TH1F *nvtx2 = (TH1F*)g2->Get("h_nvtx");
   int num2 = nvtx2->GetEntries();
   TH1F *h2 = (TH1F*)g2->Get("h_${variable}");
@@ -59,12 +59,12 @@ cat>test.C<<EOF
 
   float firstBin2 = ratesHist2->GetBinContent(1);
   ratesHist2->Scale((double) 1.00 / firstBin1);
-  ratesHist2->Scale((h1->GetEntries()/num1) * 40.0 * 1000000.0 / 1000.0);
+  ratesHist2->Scale((h2->GetEntries()/num2) * 40.0 * 1000000.0 / 1000.0);
   ratesHist2->SetLineWidth(2.);
   ratesHist2->SetLineColor(kRed);
-  ratesHist2->Draw();
- 
-  TLegend *legend1 = new TLegend(0.45, 0.68, 0.85, 0.88);
+  ratesHist2->Draw("same");
+
+  TLegend *legend1 = new TLegend(0.25, 0.68, 0.85, 0.88);
   legend1->SetTextFont(42);
   legend1->SetLineColor(0);
   legend1->SetTextSize(0.04);
@@ -80,7 +80,7 @@ cat>test.C<<EOF
   t2a->SetTextAlign(20);
   t2a->Draw("same");
   
-  c1->SaveAs("emulated_rate_${variable}.pdf");
+  c1->SaveAs("emulated_rate_new_${variable}.pdf");
 
 }
 

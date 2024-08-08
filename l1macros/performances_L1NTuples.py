@@ -8,7 +8,7 @@ import argparse
 sys.path.insert(0, '../helpers')
 from helper_L1Ntuples import *
 
-ROOT.gInterpreter.Declare('#include "../helper/Helper.h"')
+ROOT.gInterpreter.Declare('#include "../helpers/Helper.h"')
 def main():
     parser = argparse.ArgumentParser(
         description='''L1 performance studies (turnons, scale/resolution/...)                                                                                                                                
@@ -31,15 +31,15 @@ def main():
     tree = inputFile.Get('l1EventTree/L1EventTree')
     tree_Upgrade = inputFile.Get('l1UpgradeEmuTree/L1UpgradeTree')
     tree_uGT  = inputFile.Get('l1uGTTree/L1uGTTree')
-    tree_Reco = inputFile.Get('l1RecoTree/RecoTree')
-    tree_RecoJet = inputFile.Get('l1JetRecoTree/JetRecoTree')
-    tree_RecoMuon = inputFile.Get('l1MuonRecoTree/Muon2RecoTree')
-    tree_RecoElectron = inputFile.Get('l1ElectronRecoTree/ElectronRecoTree')
+#    tree_Reco = inputFile.Get('l1RecoTree/RecoTree')
+#    tree_RecoJet = inputFile.Get('l1JetRecoTree/JetRecoTree')
+#    tree_RecoMuon = inputFile.Get('l1MuonRecoTree/Muon2RecoTree')
+#    tree_RecoElectron = inputFile.Get('l1ElectronRecoTree/ElectronRecoTree')
     tree.AddFriend(tree_Upgrade)
     tree.AddFriend(tree_uGT)
-    tree.AddFriend(tree_Reco)
-    tree.AddFriend(tree_RecoMuon)
-    tree.AddFriend(tree_RecoJet)
+#    tree.AddFriend(tree_Reco)
+#    tree.AddFriend(tree_RecoMuon)
+#    tree.AddFriend(tree_RecoJet)
     
 
     #tree = ROOT.TTree(ROOT.TFile(inputFile,'open').Get('l1UpgradeTree/L1UpgradeTree'))
@@ -59,19 +59,39 @@ def main():
     df = df.Filter("L1uGT.m_algoDecisionInitial[460]","zb")
     h = df.Histo1D(ROOT.RDF.TH1DModel('h_evtbx', '', 4000, 0, 4000), 'Event.bx')
 
+    #add histos
+    L1Jet_pt_histo = df.Histo1D(ROOT.RDF.TH1DModel("h_L1Jet_pt", "L1Jet pt;p_{T} [GeV];Events", 100, 0., 1500.), "L1Upgrade.jetEt")
+    L1Jet_eta_histo = df.Histo1D(ROOT.RDF.TH1DModel("h_L1Jet_eta", "L1Jet eta;#eta;Events", 100, -5., 5.), "L1Upgrade.jetEta")
 
+
+    df = df.Define('L1LeadingJetPt','(L1Upgrade.jetEt.size() > 0 ) ? L1Upgrade.jetEt[0] : -99.')
+    L1LeadingJet_pt_histo = df.Histo1D(ROOT.RDF.TH1DModel("h_L1LeadingJet_pt", "L1 Leading Jet pt;p_{T} [GeV];Events", 100, 0., 1100.), 'L1LeadingJetPt')
+
+    #Define HT
+    df = df.Define('L1EtSum_isHT','L1Upgrade.sumType==1&&L1Upgrade.sumBx==0')
+    df = df.Define('L1HT_array','L1Upgrade.sumEt[L1EtSum_isHT]')
+    df = df.Define('L1HT','L1HT_array[0]')
+
+    L1HT_histo = df.Histo1D(ROOT.RDF.TH1DModel("h_L1HT", "L1 HT;H_{T} [GeV];Events", 100, 0., 1100.), "L1HT")
+
+    #Define MHTHF
+    df = df.Define('L1EtSum_isMHTHF','L1Upgrade.sumType==20&&L1Upgrade.sumBx==0')
+    df = df.Define('L1MHTHF_array','L1Upgrade.sumEt[L1EtSum_isMHTHF]')
+    df = df.Define('L1MHTHF','L1MHTHF_array[0]')
+
+    L1MHTHF_histo = df.Histo1D(ROOT.RDF.TH1DModel("h_L1MHTHF", "L1 MHTHF;Missing H_{T} [GeV];Events", 100, 0., 400.), "L1MHTHF")
     
-    df = MuonJet_MuonSelection(df)
-    df = CleanJets(df)
-    
-    df, histos_jets = AnalyzeCleanJets(df, 100, 50)
+#    df = MuonJet_MuonSelection(df)
+#    df = CleanJets(df)
+#    
+#    df, histos_jets = AnalyzeCleanJets(df, 100, 50)
     
     #df, histos_sum = EtSum(df)
     
     df_report = df.Report()
 
-    for i in histos_jets:
-        histos_jets[i].GetValue().Write()
+#    for i in histos_jets:
+#        histos_jets[i].GetValue().Write()
 
     #for i in histos_sum:
     #    histos_sum[i].GetValue().Write()
@@ -80,6 +100,13 @@ def main():
     h.Write()
 
     df_report.Print()
+
+    L1Jet_pt_histo.GetValue().Write()
+    L1Jet_eta_histo.GetValue().Write()
+    L1LeadingJet_pt_histo.GetValue().Write()
+    L1HT_histo.GetValue().Write()
+    L1MHTHF_histo.GetValue().Write()
+
 
 if __name__ == '__main__':
     main()
