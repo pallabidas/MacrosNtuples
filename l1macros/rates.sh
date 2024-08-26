@@ -58,7 +58,7 @@ cat>test.C<<EOF
   }
 
   float firstBin2 = ratesHist2->GetBinContent(1);
-  ratesHist2->Scale((double) 1.00 / firstBin1);
+  ratesHist2->Scale((double) 1.00 / firstBin2);
   ratesHist2->Scale((h2->GetEntries()/num2) * 40.0 * 1000000.0 / 1000.0);
   ratesHist2->SetLineWidth(2.);
   ratesHist2->SetLineColor(kRed);
