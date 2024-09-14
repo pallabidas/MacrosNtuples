@@ -151,7 +151,7 @@ int FindL1EtSumIdx_setBx(ROOT::VecOps::RVec<float>L1Obj_etSumType, ROOT::VecOps:
   return idx;
 }
 
-vector<int> FindL1ObjIdx_setBx(ROOT::VecOps::RVec<float>L1Obj_eta, ROOT::VecOps::RVec<float>L1Obj_phi, ROOT::VecOps::RVec<float>L1Obj_bx, ROOT::VecOps::RVec<float>recoObj_Eta, ROOT::VecOps::RVec<float>recoObj_Phi, int bx, ROOT::VecOps::RVec<int>L1Obj_CutVar={}, int CutVar=-1, float dRminimum=0.2){
+vector<int> FindL1ObjIdx_setBx(ROOT::VecOps::RVec<float>L1Obj_eta, ROOT::VecOps::RVec<float>L1Obj_phi, ROOT::VecOps::RVec<float>L1Obj_bx, ROOT::VecOps::RVec<float>recoObj_Eta, ROOT::VecOps::RVec<float>recoObj_Phi, int bx, ROOT::VecOps::RVec<int>L1Obj_CutVar={}, int CutVar=-1, float dRminimum=0.4){
   vector <int> result={};
   for(unsigned int i = 0; i<recoObj_Eta.size(); i++){
 
@@ -402,7 +402,7 @@ vector<vector<vector<float>>> dR_mll(ROOT::VecOps::RVec<float>l_pt, ROOT::VecOps
 
 // Match offline object to TrigObj
 
-vector<int> MatchObjToTrig(ROOT::VecOps::RVec<float>Obj_eta, ROOT::VecOps::RVec<float>Obj_phi, ROOT::VecOps::RVec<float>TrigObj_pt, ROOT::VecOps::RVec<float>TrigObj_eta, ROOT::VecOps::RVec<float>TrigObj_phi, ROOT::VecOps::RVec<int>TrigObj_id, int Target_id, ROOT::VecOps::RVec<int>filterBits, int filterBitIdx=1, float dRminimum=0.2, float trigObjPtCut = -1.){
+vector<int> MatchObjToTrig(ROOT::VecOps::RVec<float>Obj_eta, ROOT::VecOps::RVec<float>Obj_phi, ROOT::VecOps::RVec<float>TrigObj_pt, ROOT::VecOps::RVec<float>TrigObj_eta, ROOT::VecOps::RVec<float>TrigObj_phi, ROOT::VecOps::RVec<int>TrigObj_id, int Target_id, ROOT::VecOps::RVec<int>filterBits, int filterBitIdx=1, float dRminimum=0.4, float trigObjPtCut = -1.){
 
   vector <int> result={};
   for(unsigned int i = 0; i<Obj_eta.size(); i++){
