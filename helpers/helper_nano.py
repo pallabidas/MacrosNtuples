@@ -691,14 +691,21 @@ def EtSum(df, suffix = ''):
 
     histos['h_MetNoMu_Denominator'+suffix] = df.Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_Denominator'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu') 
     
-    dfmetl1 = df.Filter('L1_ETMHF80')
-    histos['L1_ETMHF80'+suffix] = dfmetl1.Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_ETMHF80'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
-    dfmetl1 = df.Filter('L1_ETMHF90')
-    histos['L1_ETMHF90'+suffix] = dfmetl1.Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_ETMHF90'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
-    dfmetl1 = df.Filter('L1_ETMHF100')
-    histos['L1_ETMHF100'+suffix] = dfmetl1.Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_ETMHF100'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
-    dfmetl1 = df.Filter('L1_ETMHF110')
-    histos['L1_ETMHF110'+suffix] = dfmetl1.Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_ETMHF110'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
+    histos['L1_ETMHF80'+suffix] = df.Filter('L1_ETMHF80').Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_ETMHF80'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
+    histos['L1_ETMHF90'+suffix] = df.Filter('L1_ETMHF90').Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_ETMHF90'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
+    histos['L1_ETMHF100'+suffix] = df.Filter('L1_ETMHF100').Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_ETMHF100'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
+    histos['L1_ETMHF110'+suffix] = df.Filter('L1_ETMHF110').Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_ETMHF110'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
+    histos['L1_ETM120'+suffix] = df.Filter('L1_ETM120').Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_ETM120'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
+    histos['L1_ETM150'+suffix] = df.Filter('L1_ETM150').Histo1D(ROOT.RDF.TH1DModel('h_MetNoMu_ETM150'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
+
+    histos['h_CaloMet_Denominator'+suffix] = df.Histo1D(ROOT.RDF.TH1DModel('h_CaloMet_Denominator'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'CaloMET_pt')
+
+    histos['h_CaloMet_L1_ETMHF80'+suffix] = df.Filter('L1_ETMHF80').Histo1D(ROOT.RDF.TH1DModel('h_CaloMet_ETMHF80'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'CaloMET_pt')
+    histos['h_CaloMet_L1_ETMHF90'+suffix] = df.Filter('L1_ETMHF90').Histo1D(ROOT.RDF.TH1DModel('h_CaloMet_ETMHF90'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'CaloMET_pt')
+    histos['h_CaloMet_L1_ETMHF100'+suffix] = df.Filter('L1_ETMHF100').Histo1D(ROOT.RDF.TH1DModel('h_CaloMet_ETMHF100'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'CaloMET_pt')
+    histos['h_CaloMet_L1_ETMHF110'+suffix] = df.Filter('L1_ETMHF110').Histo1D(ROOT.RDF.TH1DModel('h_CaloMet_ETMHF110'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'CaloMET_pt')
+    histos['h_CaloMet_L1_ETM120'+suffix] = df.Filter('L1_ETM120').Histo1D(ROOT.RDF.TH1DModel('h_CaloMet_L1_ETM120'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'CaloMET_pt')
+    histos['h_CaloMet_L1_ETM150'+suffix] = df.Filter('L1_ETM150').Histo1D(ROOT.RDF.TH1DModel('h_CaloMet_L1_ETM150'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'CaloMET_pt')
 
     histos['HLT_PFMETNoMu120_PFMHTNoMu120_IDTight'+suffix] =  df.Filter('HLT_PFMETNoMu120_PFMHTNoMu120_IDTight').Histo1D(ROOT.RDF.TH1DModel('h_HLT_PFMETNoMu120_PFMHTNoMu120_IDTight'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
     histos['HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60'+suffix] =  df.Filter('HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60').Histo1D(ROOT.RDF.TH1DModel('h_HLT_PFMETNoMu120_PFMHTNoMu120_IDTight_PFHT60'+suffix, '', len(jetmetpt_bins)-1, array('d',jetmetpt_bins)), 'MetNoMu')
